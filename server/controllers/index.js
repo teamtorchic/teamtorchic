@@ -1,5 +1,5 @@
-var models = require('../models');
+const models = require('../models');
 
-module.exports={
+module.exports = {
 
 };
