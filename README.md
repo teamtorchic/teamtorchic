@@ -4,10 +4,10 @@ EatChic. For food that is chic and on fleek.
 
 ## Team
 
-  - teamMember
-  - teamMember
-  - teamMember
-  - teamMember
+  - Angela
+  - Anna
+  - David
+  - Lory
 
 ## Table of Contents
 
