@@ -5,6 +5,7 @@ import Header from './components/header.jsx';
 import Submit from './components/submit.jsx';
 import Posts from './components/posts.jsx';
 
+
 class App extends React.Component {
   constructor(props) {
     super(props);
