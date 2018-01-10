@@ -1,8 +1,6 @@
 import React from 'react';
 
-const Post = (props) => (
-  <div>
-  </div>
-)
-
+const Post = () => (
+  <div>post input</div>
+);
 export default Post;

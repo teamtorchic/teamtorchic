@@ -1,5 +1,5 @@
-var db = require('../../database');
+const db = require('../../database');
 
-module.exports={
+module.exports = {
 
 };

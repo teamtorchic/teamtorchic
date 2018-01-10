@@ -2,9 +2,9 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import $ from 'jquery';
 
-import Header from './components/header.jsx';
-import Submit from './components/submit.jsx';
-import Posts from './components/posts.jsx';
+import Header from './components/header';
+import Submit from './components/submit';
+import Posts from './components/posts';
 
 
 class App extends React.Component {
@@ -15,14 +15,14 @@ class App extends React.Component {
     };
   }
 
-  render () {
+  render() {
     return (
       <div>
-        <Header></Header>
-        <Submit></Submit>
-        <Posts></Posts>
+        <Header />
+        <Submit />
+        <Posts />
       </div>
-    )
+    );
   }
 }
 
