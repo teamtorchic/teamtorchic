@@ -4,3 +4,4 @@ const client = new Client();
 const connection = client.connect();
 
 module.exports = connection;
+
