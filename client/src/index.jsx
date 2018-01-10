@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import $ from 'jquery';
+
 import Header from './components/header.jsx';
 import Submit from './components/submit.jsx';
 import Posts from './components/posts.jsx';
