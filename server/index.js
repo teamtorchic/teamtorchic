@@ -1,6 +1,11 @@
 const express = require('express');
-const bodyParser = require('body-parser');
 const db = require('../database');
+
+//Middleware
+const bodyParser = require('body-parser');
+
+//Router
+const router = require('./routes.js');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -9,26 +14,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(express.static(__dirname + '/../client/dist'));
 
-
-app.post('/post', (req, res) => {
-
-});
-
-app.get('/get', (req, res) => {
-
-});
-
-app.post('/upvote/:dishname', (req, res) => {
-
-});
-
-app.post('/downvote/:dishname',(req, res) => {
-
-});
-
-app.get('/votes',(req, res) => {
-
-});
+app.use('/', router);
 
 app.listen(PORT, () => {
   console.log(`listening on port ${PORT}`);
