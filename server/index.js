@@ -8,6 +8,12 @@ const bodyParser = require('body-parser');
 // Router
 const router = require('./routes.js');
 
+//Middleware
+const bodyParser = require('body-parser');
+
+//Router
+const router = require('./routes.js');
+
 const app = express();
 const PORT = process.env.PORT || 3000;
 
