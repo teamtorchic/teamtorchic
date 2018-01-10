@@ -1,6 +1,6 @@
 # Project Name
 
-EatChic. For food that is chic and on fleek.
+Food that is chic and on fleek.
 
 ## Team
 
