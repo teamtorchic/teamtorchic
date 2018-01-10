@@ -1,6 +1,6 @@
 # Project Name
 
-> Pithy project description
+EatChic. For food that is chic and on fleek.
 
 ## Team
 
