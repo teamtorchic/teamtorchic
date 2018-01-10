@@ -1,15 +1,6 @@
 const express = require('express');
 const db = require('../database');
 const path = require('path');
-<<<<<<< HEAD
-
-// Middleware
-const bodyParser = require('body-parser');
-
-// Router
-const router = require('./routes.js');
-=======
->>>>>>> fixed to airBnB style for server side and database
 
 // Middleware
 const bodyParser = require('body-parser');
