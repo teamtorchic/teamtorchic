@@ -1,17 +1,19 @@
 import React from 'react';
-import Post from './Post.jsx';
+import Post from './post';
 
-class App extends React.Component {
+class Posts extends React.Component {
   constructor(props) {
     super(props);
+    this.state = {
+
+    };
   }
 
-  render () {
+  render() {
     return (
-      <div>
-      </div>
-    )
+      <div>something</div>
+    );
   }
 }
 
-export default Post;
+export default Posts;
