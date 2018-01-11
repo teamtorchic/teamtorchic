@@ -1,7 +1,7 @@
 import React from 'react';
 
 const Header = (props) => (
-  <div id="header">EatChic
+  <div id="header">eatChic
   </div>
 )
 
