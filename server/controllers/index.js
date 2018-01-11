@@ -21,6 +21,8 @@ module.exports = {
             upvote: 0,
             downvote: 0,
           };
+          console.log (results);
+          console.log (JSON.parse(JSON.stringify(results.rows)))
           JSON.parse(JSON.stringify(results.rows)).forEach((post) => {
             if (post.likesdish) {
               data.upvote += 1;
