@@ -1,8 +1,17 @@
-const { Client } = require('pg');
+const { Pool, Client } = require('pg');
 
-const client = new Client();
+const pool = new Pool();
 
-const connection = client.connect();
+pool.query('select NOW()', (err, res) => {
+  console.log (err, res);
+  pool.end();
+});
 
-module.exports = connection;
+const client = new Client({
+  user: 'eatchic',
+  password: 'eatchic',
+  database: 'eat_chic',
+});
+
+module.exports = client;
 
