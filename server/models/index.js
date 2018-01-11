@@ -1,21 +1,18 @@
 const db = require('../../database');
-const Promise = require('bluebird');
 
 db.connect();
 
 module.exports = {
   post: {
-    getAll: () => {
-      let queryString = 'select * from users';
-      return new Promise((resolve, reject) => {
-        db.query(queryString, (err, results) => {
-          if (err) {
-            reject(err);
-          } else {
-            resolve(results);
-          }
-        });
-      });
+    getAll: () => db.query('select * from posts'),
+  },
+  dishlikes: {
+    get: (dishId) => {
+      const dishlikes = {
+        text: 'select likesDish from posts inner join dishes on dishes.id = posts.dishId where dishes.id = $1',
+        values: [dishId],
+      };
+      return db.query(dishlikes);
     },
   },
 };
