@@ -1,7 +1,30 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Eat Chic</title>
+  <title>eatChic</title>
+  <link rel="stylesheet" type="text/css" href="style-posts.css">
+  <script src="https://static.filestackapi.com/v3/filestack.js"></script>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet">
+<script type="text/javascript">
+  var fsClient = filestack.init('ARd6jqM4xTeWWyfq9HBSXz');
+  function openPicker() {
+    fsClient.pick({
+      fromSources:["local_file_system","instagram"],
+      accept:["image/*"],
+      transformations:{
+      crop:{ force: true}}
+    }).then(function(response) {
+      // declare this function to handle response
+      handleFilestack(response);
+    });
+  }
+</script>
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,400i,700" rel="stylesheet">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
+  <script src="https://code.jquery.com/jquery-3.1.1.slim.min.js" integrity="sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb" crossorigin="anonymous"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script>
   <link rel="stylesheet" type="text/css" href="style.css">
 </head>
 <body>
