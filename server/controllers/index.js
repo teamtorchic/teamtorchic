@@ -17,12 +17,10 @@ module.exports = {
       const { dishId } = req.params;
       models.dishlikes.get(dishId)
         .then((results) => {
-          let data = {
+          const data = {
             upvote: 0,
             downvote: 0,
           };
-          console.log (results);
-          console.log (JSON.parse(JSON.stringify(results.rows)))
           JSON.parse(JSON.stringify(results.rows)).forEach((post) => {
             if (post.likesdish) {
               data.upvote += 1;
@@ -34,6 +32,18 @@ module.exports = {
         })
         .catch((err) => {
           res.status(404).send(err);
+        });
+    },
+    post: (req, res) => {
+      const {
+        dishId, likesdish, userId, restaurantId,
+      } = req.params;
+      models.dishlikes.post(dishId, likesdish, userId, restaurantId)
+        .then((results) => {
+          res.json(results);
+        })
+        .catch((err) => {
+          res.status(400).send(err);
         });
     },
   },

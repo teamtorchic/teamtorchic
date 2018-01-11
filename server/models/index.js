@@ -4,10 +4,7 @@ db.client.connect();
 
 module.exports = {
   post: {
-    getAll: () => db.pool.connect()
-                      .then((client) => {
-                        return client.query('select * from posts');
-                      })
+    getAll: () => db.pool.connect().then(client => client.query('select * from posts')),
   },
   dishlikes: {
     get: (dishId) => {
@@ -17,11 +14,12 @@ module.exports = {
       };
       return db.client.query(dishlikes);
     },
-    // post: (dishId, value) => {
-    //   const VoteDishLikes = {
-    //     text: 'insert into posts ',
-    //     values: [dishId, value],
-    //   };
-    // }
+    post: (dishId, likesDish, userId, restaurantId) => {
+      const voteDishLikes = {
+        text: 'insert into posts (likesDish, userId, dishId, restaurantId) values ($1, $2, $3, $4)',
+        values: [dishId, likesDish, userId, restaurantId],
+      };
+      return db.client.query(voteDishLikes);
+    },
   },
 };
