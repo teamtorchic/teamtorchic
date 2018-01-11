@@ -65,7 +65,7 @@ DROP TABLE IF EXISTS dishes;
 
 CREATE TABLE dishes (
   id SERIAL,
-  name INTEGER NOT NULL,
+  name TEXT NOT NULL,
   PRIMARY KEY (id)
 );
 
