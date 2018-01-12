@@ -8,7 +8,6 @@ const pool = new Pool({
 
 pool.query('select NOW()', (err, res) => {
   console.log(err, res);
-  pool.end();
 });
 
 const client = new Client({
@@ -17,4 +16,4 @@ const client = new Client({
   database: 'eat_chic',
 });
 
-module.exports = client;
+module.exports = { pool, client };
