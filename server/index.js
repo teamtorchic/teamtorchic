@@ -13,7 +13,7 @@ const GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
 passport.use(new GoogleStrategy({
     clientID: '862249102823-aalhroidkbb9r5ic3dfnfuinqb5nkd6b.apps.googleusercontent.com',
     clientSecret: 'Bh8gjZLqLzMPb1F3dh2UgxDk',
-    callbackURL: "http://localhost:3000"
+    callbackURL: "https://eatchictorchic.herokuapp.com/auth/google/callback"
   },
   function(accessToken, refreshToken, profile, done) {
       //  User.findOrCreate({ googleId: profile.id }, function (err, user) {
