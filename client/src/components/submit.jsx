@@ -37,12 +37,66 @@ class Submit extends React.Component {
     }).done(data => console.log('success', data));
   }
 
+  componentDidMount() {
+    function handleFiles(files) {
+      console.log('hi');
+    }
+    // function handleFiles(files) {
+    //   for (let i = 0; i < files.length; i += 1) {
+    //     const file = files[i];
+    //
+    //     if (!file.type.startsWith('image/')) {
+    //       const img = document.createElement('img');
+    //       img.classList.add('obj');
+    //       img.file = file;
+    //       const preview = document.getElementById('dropzone');
+    //       preview.appendChild(img);
+    //
+    //       const reader = new FileReader();
+    //       reader.onload = (function(aImg) { return function(e) { aImg.src = e.target.result; }; })(img);
+    //       reader.readAsDataURL(file);
+    //     }
+    //   }
+    // }
+    //
+    // function dragenter(e) {
+    //   e.stopPropagation();
+    //   e.preventDefault();
+    // }
+    //
+    // function dragover(e) {
+    //   e.stopPropagation();
+    //   e.preventDefault();
+    // }
+    //
+    // function drop(e) {
+    //   e.stopPropagation();
+    //   e.preventDefault();
+    //
+    //   const { files } = e.dataTransfer;
+    //
+    //   handleFiles(files);
+    // }
+
+    // const dropbox = document.getElementById('dropzone');
+    // dropbox.addEventListener('dragenter', dragenter, false);
+    // dropbox.addEventListener('dragover', dragover, false);
+    // dropbox.addEventListener('drop', drop, false);
+    // dropbox.addEventListener('click', drop, false);
+
+    $('#dropzone').on('click', (e) => {
+      $('#photoPicker').click();
+      e.preventDefault();
+    });
+  }
+
   render() {
     return (
       <div id="submit">
         <form>
           <div className="form-group row">
             <div className="col-5">
+              <input type="file" id="photoPicker" accept="image/*" style="display:none" onchange="handleFiles(this.files)">
               <div id="dropzone"><i className="material-icons">add_a_photo</i></div>
             </div>
             <div className="col">
