@@ -1,4 +1,5 @@
 import React from 'react';
+import $ from 'jquery';
 
 class Login extends React.Component {
   constructor() {
@@ -14,18 +15,20 @@ class Login extends React.Component {
   handleInputChange(e) {
     if (e.target.name === 'username') {
       this.setState({
-        username: this.state.username,
+        username: e.target.value,
       });
     }
     if (e.target.name === 'password') {
       this.setState({
-        password: this.target.value,
+        password: e.target.value,
       });
     }
   }
 
-  handleSubmit() {
+  handleSubmit(e) {
     const postData = JSON.stringify(this.state);
+    e.preventDefault();
+    console.log ("login post state:", this.state);
     $.post({
       url: '/login',
       data: postData,
