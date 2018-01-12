@@ -6,11 +6,12 @@ import Signup from './signup';
 const Header = () => (
   <Router>
     <div id="header">eatChic
-      <span><Link to="/login">Log In</Link></span>
+    <a href="/auth/google">Up</a>
+      {/* <span><Link to="/login">Log In</Link></span> */}
       <span><Link to="/signup">Sign Up</Link></span>
       <hr />
 
-      <Route path="/login" component={Login} />
+      {/* <Route path="/login" component={Login} /> */}
       <Route path="/signup" component={Signup} />
     </div>
   </Router>
