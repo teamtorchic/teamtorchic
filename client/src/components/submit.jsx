@@ -4,20 +4,37 @@ import $ from 'jquery';
 class Submit extends React.Component {
   constructor(props) {
     super(props);
+    this.state = {
+      likes: '',
+      dislikes: '',
+    };
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleClick = this.handleClick.bind(this);
+  }
+
+  handleClick(event) {
+    if (event.target.name === 'like' && this.state.likes !== 'likes') {
+      this.setState({ likes: 'likes', dislikes: '' });
+    } else if (event.target.name === 'like' && this.state.likes === 'likes') {
+      this.setState({ likes: '' });
+    } else if (event.target.name === 'dislike' && this.state.dislikes !== 'dislikes') {
+      this.setState({ likes: '', dislikes: 'dislikes' });
+    } else {
+      this.setState({ dislikes: '' });
+    }
+  }
+  handleChange(event) {
+    this.setState({ [event.target.id]: event.target.value });
   }
 
   handleSubmit() {
-    $.post(
-      'localhost',
-      { data: this.state },
-      data => console.log('success', data),
-    );
-  }
-
-  handleChange(event) {
-    this.setState({ [event.target.id]: event.target.value });
+    const postData = JSON.stringify(this.state);
+    $.post({
+      url: '/submit',
+      data: postData,
+      contentType: 'application/json',
+    }).done(data => console.log('success', data));
   }
 
   render() {
@@ -25,7 +42,7 @@ class Submit extends React.Component {
       <div id="submit">
         <form>
           <div className="form-group row">
-            <div className="col">
+            <div className="col-5">
               <div id="dropzone"><i className="material-icons">add_a_photo</i></div>
             </div>
             <div className="col">
@@ -75,24 +92,31 @@ class Submit extends React.Component {
                   <div className="btn-group">
                     <button
                       type="button"
-                      className="like-btn btn btn-default"
+                      className={`like-btn btn btn-default ${this.state.likes}`}
                       aria-label="Left Align"
+                      name="like"
+                      onClick={this.handleClick}
+                      value="0"
                     >
-                      <i className="material-icons like">favorite_border</i>
+                      <i id="like" className="material-icons like">favorite_border</i>
                     </button>
                     <button
                       type="button"
-                      className="like-btn btn btn-default"
+                      name="dislike"
+                      className={`like-btn btn btn-default ${this.state.dislikes}`}
                       aria-label="Center Align"
+                      onClick={this.handleClick}
+                      id="dislikes{$this.state.likes}"
                     >
-                      <i className="material-icons">mood_bad</i>
+                      <i id="dislike" className="material-icons">mood_bad</i>
                     </button>
                   </div>
                 </div>
                 <div className="col">
                   <button
                     type="button"
-                    className="btn btn-primary btn-block"
+                    id="submitButton"
+                    className="btn btn-danger btn-block"
                     onClick={this.handleSubmit}
                   >
                   Submit
