@@ -1,35 +1,64 @@
 import React from 'react';
+import $ from 'jquery';
 
 class Signup extends React.Component {
   constructor() {
     super();
     this.state = {
-      username: 'please enter your username',
-      password: 'please enter your password',
+      username: 'username',
+      password: 'password',
     };
+    this.handleInputChange = this.handleInputChange.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
   }
+
+  handleInputChange(e) {
+    if (e.target.name === 'username') {
+      this.setState({
+        username: this.state.username,
+      });
+    }
+    if (e.target.name === 'password') {
+      this.setState({
+        password: this.target.value,
+      });
+    }
+  }
+
+  handleSubmit() {
+    const postData = JSON.stringify(this.state);
+    $.post({
+      url: '/login',
+      data: postData,
+      contentType: 'application/json',
+    }).done(data => console.log('success', data));
+  }
+
   render() {
     return (
-     <form>
+      <form>
         <label>
-          Is going:
+          Username:
           <input
-            name="isGoing"
-            type="checkbox"
-            checked={this.state.isGoing}
+            name="username"
+            type="text"
+            value={this.state.username}
             onChange={this.handleInputChange} />
         </label>
         <br />
+
         <label>
-          Number of guests:
+          Password:
           <input
-            name="numberOfGuests"
-            type="number"
-            value={this.state.numberOfGuests}
+            name="password"
+            type="password"
+            value={this.state.password}
             onChange={this.handleInputChange} />
         </label>
+        <br />
+        <button type="submit" onClick={this.handleSubmit}> Sign Up</button>
       </form>
-  );
+    );
   }
 }
 
