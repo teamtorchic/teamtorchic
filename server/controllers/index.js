@@ -34,12 +34,26 @@ module.exports = {
           res.status(404).send(err);
         });
     },
-    post: (req, res) => {
+    upVote: (req, res) => {
       const {
         dishId, likesdish, userId, restaurantId,
-      } = req.params;
-      models.dishlikes.post(dishId, likesdish, userId, restaurantId)
+      } = req.body;
+      models.dishlikes.upVote(dishId, likesdish, userId, restaurantId)
         .then((results) => {
+          console.log ('results:', results);
+          res.json(results);
+        })
+        .catch((err) => {
+          res.status(400).send(err);
+        });
+    },
+    downVote: (req, res) => {
+      const {
+        dishId, likesdish, userId, restaurantId,
+      } = req.body;
+      models.dishlikes.downVote(dishId, likesdish, userId, restaurantId)
+        .then((results) => {
+          console.log ('results:', results);
           res.json(results);
         })
         .catch((err) => {
