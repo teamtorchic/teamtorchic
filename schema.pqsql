@@ -65,7 +65,7 @@ DROP TABLE IF EXISTS dishes;
 
 CREATE TABLE dishes (
   id SERIAL,
-  name INTEGER NOT NULL,
+  name TEXT NOT NULL,
   PRIMARY KEY (id)
 );
 
@@ -175,6 +175,11 @@ ALTER TABLE followers ADD FOREIGN KEY (followerId) REFERENCES users (id);
 ALTER TABLE followers ADD FOREIGN KEY (followeeId) REFERENCES users (id);
 ALTER TABLE likes ADD FOREIGN KEY (postId) REFERENCES posts (id);
 ALTER TABLE likes ADD FOREIGN KEY (userId) REFERENCES users (id);
+
+ALTER TABLE restaurants ADD CONSTRAINT restaurant_unique_name UNIQUE (name);
+ALTER TABLE dishes ADD CONSTRAINT dish_unique_name UNIQUE (name);
+ALTER TABLE menus ADD CONSTRAINT menu_unique_name UNIQUE (dish_id, restaurantcode);
+
 
 -- ---
 -- Table Properties
