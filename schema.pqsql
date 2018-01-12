@@ -33,7 +33,7 @@ CREATE TABLE posts (
   id SERIAL,
   content TEXT NULL,
   image VARCHAR NULL,
-  likesDish INTEGER NULL,
+  likesDish BIT NULL,
   userID INTEGER NULL,
   dishId INTEGER NULL,
   recipe VARCHAR NULL,
