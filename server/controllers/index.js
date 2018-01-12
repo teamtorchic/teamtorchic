@@ -17,7 +17,7 @@ module.exports = {
       const { dishId } = req.params;
       models.dishlikes.get(dishId)
         .then((results) => {
-          let data = {
+          const data = {
             upvote: 0,
             downvote: 0,
           };
@@ -32,6 +32,32 @@ module.exports = {
         })
         .catch((err) => {
           res.status(404).send(err);
+        });
+    },
+    upVote: (req, res) => {
+      const {
+        dishId, likesdish, userId, restaurantId,
+      } = req.body;
+      models.dishlikes.upVote(dishId, likesdish, userId, restaurantId)
+        .then((results) => {
+          console.log ('results:', results);
+          res.json(results);
+        })
+        .catch((err) => {
+          res.status(400).send(err);
+        });
+    },
+    downVote: (req, res) => {
+      const {
+        dishId, likesdish, userId, restaurantId,
+      } = req.body;
+      models.dishlikes.downVote(dishId, likesdish, userId, restaurantId)
+        .then((results) => {
+          console.log ('results:', results);
+          res.json(results);
+        })
+        .catch((err) => {
+          res.status(400).send(err);
         });
     },
   },
