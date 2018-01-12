@@ -1,5 +1,4 @@
 import React from 'react';
-import $ from 'jquery';
 
 
 class Comments extends React.Component {
@@ -9,45 +8,45 @@ class Comments extends React.Component {
     this.handleCommentInput = this.handleCommentInput.bind(this);
 
     this.state = {
-      comment: ''
+      comment: '',
     };
   }
 
   handleCommentInput(event) {
     this.setState({
-      comment: event.target.value
+      comment: event.target.value,
     });
   }
 
   render() {
     const style = {
-      maxHeight:'75px',
-      minHeight:'38px',
-      resize:'none',
-      padding:'9px',
-      boxSizing:'border-box',
-      fontSize:'15px'
+      maxHeight: '75px',
+      minHeight: '38px',
+      resize: 'none',
+      padding: '9px',
+      boxSizing: 'border-box',
+      fontSize: '15px',
     };
 
     return (
       <div>
         <div>
-          <label>Comments:</label>
+          <h3>Comments:</h3>
           <form onChange={this.handleCommentInput}>
             <textarea
               style={style}
-              rows={10} defaultValue=""
+              rows={10}
+              defaultValue=""
               comment={this.state.comment}
               onChange={this.handleCommentInput}
             />
-            <input type="submit" value="Post Comment"/>
+            <input type="submit" value="Post Comment" />
           </form>
         </div>
 
       </div>
     );
   }
-
 }
 
 export default Comments;
