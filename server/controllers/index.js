@@ -1,10 +1,5 @@
 const models = require('../models');
 
-const app = require('express')();
-const bodyParser = require('body-parser');
-
-app.use(bodyParser.json()); // for parsing application/json
-
 module.exports = {
   post: {
     getAll: (req, res) => {
