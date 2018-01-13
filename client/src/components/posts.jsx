@@ -8,16 +8,37 @@ class Posts extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      posts: fakePostsData,
-      dishLikes: 'dishLikes',
-      upvote: 1,
-      downvote: 2,
+      posts: fakePostsData.post,
+      posterLikes: '',
+      upvote: 0,
+      downvote: 0,
+      dislikeIconClass: 'dislike-mouse-off',
+      likeIconClass: 'like-mouse-off',
     };
     this.handleClick = this.handleClick.bind(this);
-    this.dishGetUpVotes = this.dishPostUpVotes.bind(this);
-    this.dishGetDownVotes = this.dishPostDownVotes.bind(this);
+    this.handleMouseOver = this.handleMouseOver.bind(this);
+    this.handleMouseOut = this.handleMouseOut.bind(this);
+    this.userLikes = this.userLikes.bind(this);
+    this.dishPostUpVotes = this.dishPostUpVotes.bind(this);
+    this.dishPostDownVotes = this.dishPostDownVotes.bind(this);
     this.dishGetPosts = this.dishGetPosts.bind(this);
     this.dishGetLikes = this.dishGetLikes.bind(this);
+  }
+
+  handleMouseOver(event) {
+    if (event === 'dislike') {
+      this.setState({ dislikeIconClass: 'dislike-mouse-on' });
+    } else if (event === 'like') {
+      this.setState({ likeIconClass: 'dislike-mouse-on' });
+    }
+  }
+
+  handleMouseOut(event) {
+    if (event === 'dislike') {
+      this.setState({ dislikeIconClass: 'like-mouse-off' });
+    } else if (event === 'like') {
+      this.setState({ likeIconClass: 'like-mouse-off' });
+    }
   }
 
   handleClick(event) {
@@ -25,6 +46,16 @@ class Posts extends React.Component {
       this.setState({ upvote: this.state.upvote + 1 });
     } else if (event === 'dislike') {
       this.setState({ downvote: this.state.downvote + 1 });
+    }
+  }
+
+  userLikes() {
+    if (this.state.dishLikes === 1) {
+      this.setState({ posterLikes: this.state.posterLikes += 'likes' });
+    } else if (this.state.dishLikes === 0) {
+      this.setState({ posterLikes: this.state.posterLikes += 'dislikes' });
+    } else {
+      this.setState({});
     }
   }
 
@@ -49,7 +80,7 @@ class Posts extends React.Component {
   }
 
   dishGetPosts() {
-    this.b = 'a';
+    this.state.dishLikes = 2;
     // $.ajax({
     //   method: 'GET',
     //   url: 'http://localhost:3000/post',
@@ -59,7 +90,7 @@ class Posts extends React.Component {
   }
 
   dishGetLikes() {
-    this.state.dishLikes = 'a';
+    this.state.posts = 'a';
     // $.ajax({
     //   method: 'GET',
     //   url: 'http://localhost:3000/post/votes/:dishId',
@@ -71,17 +102,26 @@ class Posts extends React.Component {
   render() {
     return (
       <div>
-        { this.state.posts.post.map(item =>
+        { this.state.posts.map(item =>
           (<Post
             key={item.content}
             postData={item}
+            postImage={item.image}
+            postContent={item.content}
+            postUserid={item.userid}
+            postDishid={item.dishid}
             votesPos={this.state.upvote}
             votesNeg={this.state.downvote}
             clickyclick={this.handleClick}
+            mouseYes={this.handleMouseOver}
+            mouseNo={this.handleMouseOut}
+            dislikeIconClassColor={this.state.dislikeIconClass}
+            likeIconClassColor={this.state.likeIconClass}
           />))}
       </div>
     );
   }
 }
+
 
 export default Posts;
