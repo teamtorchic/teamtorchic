@@ -1,33 +1,33 @@
 const express = require('express');
 const path = require('path');
 const session = require('express-session');
-
-// Middleware
 const bodyParser = require('body-parser');
 const passport = require('passport');
 const GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
 const LocalStrategy = require('passport-local').Strategy;
 const flash = require('flash');
-
+const cookieParser = require('cookie-parser');
 const router = require('./routes.js');
 
+const PORT = process.env.PORT || 3000;
+
 const app = express();
-// app.set('trust proxy', 1) // trust first proxy
+// Middleware
+app.use(express.static(path.join(__dirname, '/../client/dist')));
+app.use(cookieParser());
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(passport.initialize());
+app.use(passport.session());
+app.use(passport.initialize());
+app.use(flash());
 app.use(session({
   secret: 'keyboard cat',
   resave: false,
   saveUninitialized: true,
   cookie: { secure: true },
 }));
-
-const PORT = process.env.PORT || 3000;
-
-app.use(flash());
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(passport.initialize());
-app.use(passport.session());
-app.use(express.static(path.join(__dirname, '/../client/dist')));
+app.use('/', router);
 
 passport.use(new LocalStrategy((username, password, done) => done(null, { username, passport })));
 // User.findOne({ username: username }, function(err, user) {
@@ -59,7 +59,6 @@ passport.deserializeUser((id, done) => {
   done(null, { id });
 });
 
-app.use('/', router);
 app.get('/auth/google', passport.authenticate('google', { scope: ['https://www.googleapis.com/auth/plus.login'] }));
 app.get('/login', passport.authenticate('local', { successRedirect: '/', failureRedirect: '/login', failureFlash: true }));
 app.get('/signup', passport.authenticate('local', { successRedirect: '/', failureRedirect: '/signup', failureFlash: true }));
