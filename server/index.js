@@ -15,16 +15,8 @@ passport.use(new GoogleStrategy({
   clientSecret: 'Bh8gjZLqLzMPb1F3dh2UgxDk',
   callbackURL: 'https://eatchictorchic.herokuapp.com/auth/google/callback',
 }, (accessToken, refreshToken, profile, done) => {
-  console.log (accessToken, refreshToken, profile);
-  //  User.findOrCreate({ googleId: profile.id }, function (err, user) {
-  //    return done(err, user);
-  //  });
-  const fake = {
-    username: 'Lory',
-    id: 3,
-    password: '123',
-  };
-  return done(fake);
+    return done(null, profile);
+  });
 }));
 
 // Router
@@ -46,9 +38,7 @@ app.get('/auth/google',
 //   request.  If authentication fails, the user will be redirected back to the
 //   login page.  Otherwise, the primary route function function will be called,
 //   which, in this example, will redirect the user to the home page.
-app.get('/auth/google/callback', passport.authenticate('google', { failureRedirect: '/login' }), (req, res) => {
-  res.redirect('/');
-});
+app.get('/auth/google/callback', passport.authenticate('google', { successRedirect: '/' }));
 
 app.listen(PORT, () => {
   console.log(`listening on port ${PORT}`);
