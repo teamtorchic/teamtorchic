@@ -10,12 +10,10 @@ class Posts extends React.Component {
     this.state = {
       posts: fakePostsData,
       dishLikes: 'dishLikes',
-      voteCountUp: { upvote: 1 },
-      voteCountDown: { downvote: 2 },
+      upvote: 1,
+      downvote: 2,
     };
     this.handleClick = this.handleClick.bind(this);
-    this.addVote = this.addVote.bind(this);
-    this.subtractVote = this.addVote.bind(this);
     this.dishGetUpVotes = this.dishPostUpVotes.bind(this);
     this.dishGetDownVotes = this.dishPostDownVotes.bind(this);
     this.dishGetPosts = this.dishGetPosts.bind(this);
@@ -24,20 +22,10 @@ class Posts extends React.Component {
 
   handleClick(event) {
     if (event === 'like') {
-      this.setState({});
+      this.setState({ upvote: this.state.upvote + 1 });
+    } else if (event === 'dislike') {
+      this.setState({ downvote: this.state.downvote + 1 });
     }
-  }
-
-  addVote() {
-    this.setState({
-      voteCountUp: this.state.voteCountUp.upvote + 1,
-    });
-  }
-
-  subtractVote() {
-    this.setState({
-      voteCountDown: this.state.voteCountDown.downvote - 1,
-    });
   }
 
   dishPostUpVotes() {
@@ -85,11 +73,10 @@ class Posts extends React.Component {
       <div>
         { this.state.posts.post.map(item =>
           (<Post
+            key={item.content}
             postData={item}
-            votesPos={this.state.voteCountUp}
-            votesNeg={this.state.voteCountDown}
-            add={this.addVote}
-            subtract={this.subtractVote}
+            votesPos={this.state.upvote}
+            votesNeg={this.state.downvote}
             clickyclick={this.handleClick}
           />))}
       </div>
