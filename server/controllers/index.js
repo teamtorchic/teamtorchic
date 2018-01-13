@@ -42,7 +42,7 @@ module.exports = {
             upvote: 0,
             downvote: 0,
           };
-          JSON.parse(JSON.stringify(results.rows)).forEach((post) => {
+          results.rows.forEach((post) => {
             if (post.likesdish) {
               data.upvote += 1;
             } else {
@@ -79,6 +79,26 @@ module.exports = {
         })
         .catch((err) => {
           res.status(400).send(err);
+        });
+    },
+  },
+  signup: {
+    submit: (req, res) => {
+      const { username, password } = req.body;
+      models.users.findByUsername(username)
+        .then((results) => {
+          console.log(results);
+          if (results.rows.length === 0) {
+            models.users.create(username, password)
+              .then(() => {
+                res.redirect('/');
+              })
+              .catch((err) => {
+                res.status(500).send(err);
+              });
+          } else {
+            res.send({ message: 'username already exists. Please log in.' });
+          }
         });
     },
   },
