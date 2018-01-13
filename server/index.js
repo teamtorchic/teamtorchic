@@ -24,6 +24,7 @@ const PORT = process.env.PORT || 3000;
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(passport.initialize());
 app.use(express.static(path.join(__dirname, '/../client/dist')));
 
 // app.use('/', router);
