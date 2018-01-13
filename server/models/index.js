@@ -106,14 +106,16 @@ module.exports = {
   },
   users: {
     findByUsername: (username) => {
+      console.log ('finduser')
       const findUser = {
-        text: 'select * from users where username = $1',
+        text: 'select username from users where username = $1',
         values: [username],
         rowMode: 'array',
       };
       return db.client.query(findUser);
     },
     create: (username, password) => {
+      console.log('create user')
       const createUser = {
         text: 'insert into users (username, password) values ($1, $2)',
         values: [username, password],
@@ -122,8 +124,9 @@ module.exports = {
       return db.client.query(createUser);
     },
     checkUserCredential: (username, password) => {
+      console.log ('check credential')
       const checkCredential = {
-        text: 'select * from users where username = $1 and password = $2',
+        text: 'select username from users where username = $1 and password = $2',
         values: [username, password],
         rowMode: 'array',
       };

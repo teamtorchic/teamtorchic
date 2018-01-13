@@ -18,10 +18,12 @@ passport.use(localLogIn());
 passport.use(googleLogIn());
 
 passport.serializeUser((user, done) => {
-  done(null, user[1]);
+  console.log ("serialize")
+  done(null, user[0]);
 });
 
 passport.deserializeUser((username, done) => {
+  console.log ("unserialize")
   models.users.findByUsername(username)
     .then((results) => {
       if (results.rowCount === 1) {

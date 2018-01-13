@@ -87,14 +87,15 @@ module.exports = {
   },
   signup: {
     submit: (req, res) => {
+      console.log ('submit signup')
       const { username, password } = req.body;
       models.users.findByUsername(username)
         .then((results) => {
           console.log(results);
-          if (results.rows.length === 0) {
+          if (results.rowCount === 0) {
             models.users.create(username, password)
               .then(() => {
-                res.redirect('/');
+                res.redirect(`/users/${req.body.username}`);
               })
               .catch((err) => {
                 res.status(500).send(err);
@@ -103,6 +104,11 @@ module.exports = {
             res.send({ message: 'username already exists. Please log in.' });
           }
         });
+    },
+  },
+  user: {
+    landing: (req, res) => {
+      res.redirect(`/users/${req.body.username}`);
     },
   },
 };

@@ -7,9 +7,13 @@ module.exports = {
     models.users.checkUserCredential(username, password)
       .then((results) => {
         if (results.rowCount === 1) {
+          console.log ("right user in strategy");
+          console.log (results)
           done(null, results.rows[0]);
         } else {
-          done(null, false);
+          console.log ("wrong user in strategy");
+          console.log (results)
+          done(null, false, { message: 'Incorrect username or password.' });
         }
       })
       .catch((err) => {
