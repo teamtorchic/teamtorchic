@@ -16,12 +16,12 @@ passport.use(new GoogleStrategy({
   callbackURL: process.env.EATCHIC_CALLBACK_URL || 'YOUR CALLBACK URL HERE',
 }, (accessToken, refreshToken, profile, done) => done(null, profile)));
 
-passport.serializeUser(function(user, done) {
+passport.serializeUser((user, done) => {
   done(null, user.id);
 });
 
-passport.deserializeUser(function(id, done) {
-  done(null, {id});
+passport.deserializeUser((id, done) => {
+  done(null, { id });
 });
 
 // Router
@@ -36,9 +36,8 @@ app.use(passport.initialize());
 app.use(passport.session());
 app.use(express.static(path.join(__dirname, '/../client/dist')));
 
-// app.use('/', router);
-app.get('/auth/google',
-  passport.authenticate('google', { scope: ['https://www.googleapis.com/auth/plus.login'] }));
+app.use('/', router);
+app.get('/auth/google', passport.authenticate('google', { scope: ['https://www.googleapis.com/auth/plus.login'] }));
 
 // GET /auth/google/callback
 //   Use passport.authenticate() as route middleware to authenticate the
