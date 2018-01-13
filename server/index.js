@@ -29,14 +29,11 @@ app.use(session({
   cookie: { secure: true },
 }));
 app.use('/', router);
-
 passport.use(localLogIn());
 passport.use(googleLogIn());
-
 passport.serializeUser((user, done) => {
   done(null, user.id);
 });
-
 passport.deserializeUser((id, done) => {
   done(null, { id });
 });
@@ -44,12 +41,6 @@ passport.deserializeUser((id, done) => {
 app.get('/auth/google', passport.authenticate('google', { scope: ['https://www.googleapis.com/auth/plus.login'] }));
 app.get('/login', passport.authenticate('local', { successRedirect: '/', failureRedirect: '/login', failureFlash: true }));
 app.get('/signup', passport.authenticate('local', { successRedirect: '/', failureRedirect: '/signup', failureFlash: true }));
-
-// GET /auth/google/callback
-//   Use passport.authenticate() as route middleware to authenticate the
-//   request.  If authentication fails, the user will be redirected back to the
-//   login page.  Otherwise, the primary route function function will be called,
-//   which, in this example, will redirect the user to the home page.
 app.get('/auth/google/callback', passport.authenticate('google', { successRedirect: '/', failureRedirect: '/login' }));
 
 app.listen(PORT, () => {
