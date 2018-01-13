@@ -11,7 +11,6 @@ const GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
 //   credentials (in this case, an accessToken, refreshToken, and Google
 //   profile), and invoke a callback with a user object.
 passport.use(new GoogleStrategy({
-<<<<<<< HEAD
   clientID: process.env.EATCHIC_CLIENT_ID || 'YOUR CLIENT ID HERE',
   clientSecret: process.env.EATCHIC_CLIENT_SECRET || 'YOUR CLIENT SECRET HERE',
   callbackURL: process.env.EATCHIC_CALLBACK_URL || 'YOUR CALLBACK URL HERE',
@@ -24,24 +23,6 @@ passport.serializeUser(function(user, done) {
 passport.deserializeUser(function(id, done) {
   done(null, {id});
 });
-=======
-    clientID: '862249102823-aalhroidkbb9r5ic3dfnfuinqb5nkd6b.apps.googleusercontent.com',
-    clientSecret: 'Bh8gjZLqLzMPb1F3dh2UgxDk',
-    callbackURL: "https://eatchictorchic.herokuapp.com/auth/google/callback"
-  },
-  function(accessToken, refreshToken, profile, done) {
-      //  User.findOrCreate({ googleId: profile.id }, function (err, user) {
-      //    return done(err, user);
-      //  });
-      const fake = {
-        username: 'Lory',
-        id: 3,
-        password: '123',
-      }
-      return done(err, fake);
-  }
-));
->>>>>>> oAuth2.0 get client id
 
 // Router
 const router = require('./routes.js');
