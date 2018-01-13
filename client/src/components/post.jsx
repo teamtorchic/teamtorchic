@@ -1,12 +1,14 @@
 import React from 'react';
 
-const Post = (props) => (
+const Post = props => (
   <div className="post-ele">
     <article className="ele">
-      <p>{props.fakeData.userIDUsername} {props.fakeData.likesDish} {props.fakeData.dishIdDishes}</p>
-      <p><img className="image" src={props.fakeData.image}/></p>
-      <p>{props.fakeData.content}</p>
-      <p>Likes: {props.fakeData.likes}</p>
+      <p>{props.postData.userid} likes {props.postData.dishid}</p>
+      <p><img className="image" src={props.postData.image} /></p>
+      <p><i className="material-icons">favorite_border</i> {props.votesPos.upvote}
+        <i className="material-icons">mood_bad</i> {props.votesNeg.downvote}
+        {props.postData.content}
+      </p>
     </article>
   </div>
 );
