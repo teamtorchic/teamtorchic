@@ -3,11 +3,12 @@ const path = require('path');
 const session = require('express-session');
 const bodyParser = require('body-parser');
 const passport = require('passport');
-const GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
-const LocalStrategy = require('passport-local').Strategy;
 const flash = require('flash');
 const cookieParser = require('cookie-parser');
 const router = require('./routes.js');
+const { localLogIn } = require('./middleware');
+const { googleLogIn } = require('./middleware');
+
 
 const PORT = process.env.PORT || 3000;
 
@@ -29,27 +30,8 @@ app.use(session({
 }));
 app.use('/', router);
 
-passport.use(new LocalStrategy((username, password, done) => done(null, { username, passport })));
-// User.findOne({ username: username }, function(err, user) {
-//   if (err) { return done(err); }
-//   if (!user) {
-//     return done(null, false, { message: 'Incorrect username.' });
-//   }
-//   if (!user.validPassword(password)) {
-//     return done(null, false, { message: 'Incorrect password.' });
-//   }
-//   return done(null, user);
-
-
-// Use the GoogleStrategy within Passport.
-//   Strategies in Passport require a `verify` function, which accept
-//   credentials (in this case, an accessToken, refreshToken, and Google
-//   profile), and invoke a callback with a user object.
-passport.use(new GoogleStrategy({
-  clientID: process.env.EATCHIC_CLIENT_ID || 'YOUR CLIENT ID HERE',
-  clientSecret: process.env.EATCHIC_CLIENT_SECRET || 'YOUR CLIENT SECRET HERE',
-  callbackURL: process.env.EATCHIC_CALLBACK_URL || 'YOUR CALLBACK URL HERE',
-}, (accessToken, refreshToken, profile, done) => done(null, profile)));
+passport.use(localLogIn());
+passport.use(googleLogIn());
 
 passport.serializeUser((user, done) => {
   done(null, user.id);
