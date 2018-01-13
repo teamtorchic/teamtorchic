@@ -5,6 +5,19 @@ const path = require('path');
 const bodyParser = require('body-parser');
 const passport = require('passport');
 const GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
+const LocalStrategy = require('passport-local').Strategy;
+
+passport.use(new LocalStrategy((username, password, done) => done(null, { username, passport })));
+// User.findOne({ username: username }, function(err, user) {
+//   if (err) { return done(err); }
+//   if (!user) {
+//     return done(null, false, { message: 'Incorrect username.' });
+//   }
+//   if (!user.validPassword(password)) {
+//     return done(null, false, { message: 'Incorrect password.' });
+//   }
+//   return done(null, user);
+
 
 // Use the GoogleStrategy within Passport.
 //   Strategies in Passport require a `verify` function, which accept
@@ -38,13 +51,15 @@ app.use(express.static(path.join(__dirname, '/../client/dist')));
 
 app.use('/', router);
 app.get('/auth/google', passport.authenticate('google', { scope: ['https://www.googleapis.com/auth/plus.login'] }));
+app.get('/login', passport.authenticate('local', { successRedirect: '/', failureRedirect: '/login', failureFlash: true }));
+app.get('/signup', passport.authenticate('local', { successRedirect: '/', failureRedirect: '/signup', failureFlash: true }));
 
 // GET /auth/google/callback
 //   Use passport.authenticate() as route middleware to authenticate the
 //   request.  If authentication fails, the user will be redirected back to the
 //   login page.  Otherwise, the primary route function function will be called,
 //   which, in this example, will redirect the user to the home page.
-app.get('/auth/google/callback', passport.authenticate('google', { successRedirect: '/' }));
+app.get('/auth/google/callback', passport.authenticate('google', { successRedirect: '/', failureRedirect: '/login' }));
 
 app.listen(PORT, () => {
   console.log(`listening on port ${PORT}`);
