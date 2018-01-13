@@ -7,19 +7,25 @@ import fakePostsData from './fakePostsData';
 class Posts extends React.Component {
   constructor(props) {
     super(props);
-
     this.state = {
       posts: fakePostsData,
       dishLikes: 'dishLikes',
       voteCountUp: { upvote: 1 },
       voteCountDown: { downvote: 2 },
     };
+    this.handleClick = this.handleClick.bind(this);
     this.addVote = this.addVote.bind(this);
     this.subtractVote = this.addVote.bind(this);
     this.dishGetUpVotes = this.dishPostUpVotes.bind(this);
     this.dishGetDownVotes = this.dishPostDownVotes.bind(this);
     this.dishGetPosts = this.dishGetPosts.bind(this);
     this.dishGetLikes = this.dishGetLikes.bind(this);
+  }
+
+  handleClick(event) {
+    if (event === 'like') {
+      this.setState({});
+    }
   }
 
   addVote() {
@@ -75,7 +81,6 @@ class Posts extends React.Component {
   }
 
   render() {
-    console.log(this.state);
     return (
       <div>
         { this.state.posts.post.map(item =>
@@ -83,6 +88,9 @@ class Posts extends React.Component {
             postData={item}
             votesPos={this.state.voteCountUp}
             votesNeg={this.state.voteCountDown}
+            add={this.addVote}
+            subtract={this.subtractVote}
+            clickyclick={this.handleClick}
           />))}
       </div>
     );
