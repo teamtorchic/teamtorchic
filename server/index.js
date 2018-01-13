@@ -14,10 +14,7 @@ passport.use(new GoogleStrategy({
   clientID: '862249102823-aalhroidkbb9r5ic3dfnfuinqb5nkd6b.apps.googleusercontent.com',
   clientSecret: 'Bh8gjZLqLzMPb1F3dh2UgxDk',
   callbackURL: 'https://eatchictorchic.herokuapp.com/auth/google/callback',
-}, (accessToken, refreshToken, profile, done) => {
-    return done(null, profile);
-  });
-}));
+}, (accessToken, refreshToken, profile, done) => done(null, profile)));
 
 // Router
 const router = require('./routes.js');
