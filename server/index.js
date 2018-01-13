@@ -16,6 +16,14 @@ passport.use(new GoogleStrategy({
   callbackURL: 'https://eatchictorchic.herokuapp.com/auth/google/callback',
 }, (accessToken, refreshToken, profile, done) => done(null, profile)));
 
+passport.serializeUser(function(user, done) {
+  done(null, user.id);
+});
+
+passport.deserializeUser(function(id, done) {
+  done(null, {id});
+});
+
 // Router
 const router = require('./routes.js');
 
@@ -25,6 +33,7 @@ const PORT = process.env.PORT || 3000;
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(passport.initialize());
+app.use(passport.session());
 app.use(express.static(path.join(__dirname, '/../client/dist')));
 
 // app.use('/', router);
