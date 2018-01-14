@@ -21,18 +21,6 @@
   margin-left: 0.3cm;
 }
 
-.like-mouse-off{
-  color: black;
-}
-
-.like-mouse-on{
-  color: red;
-}
-
-.dislike-mouse-off{
-  color: black;
-}
-
-.dislike-mouse-on{
+i:hover {
   color: red;
 }

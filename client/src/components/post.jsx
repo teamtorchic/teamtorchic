@@ -7,16 +7,12 @@ const Post = props => (
       <p><img className="image" src={props.postImage} /></p>
       <p>
         <i onClick={() => props.clickyclick('like')}
-          onMouseOver={() => props.mouseYes('like')}
-          onMouseOut={() => props.mouseNo('dislike')}
-          className={`${props.likeIconClassColor} material-icons`}>
+          className={"material-icons"}>
       favorite_border
         </i>
         {props.votesPos}
         <i onClick={() => props.clickyclick('dislike')}
-          onMouseOver={() => props.mouseYes('like')}
-          onMouseOut={() => props.mouseNo('dislike')}
-          className={`${props.dislikeIconClassColor} material-icons`}>
+          className="material-icons">
           mood_bad
         </i>
           {props.votesNeg}
