@@ -94,7 +94,7 @@ class Submit extends React.Component {
       $('#commentary').val('');
       $('#restaurant').val('');
       $('#dish').val('');
-      $('#dropzone').html('<i className="material-icons">add_a_photo</i>');
+      $('#dropzone').html('');
       this.reset();
     });
   }
