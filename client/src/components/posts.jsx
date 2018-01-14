@@ -16,29 +16,11 @@ class Posts extends React.Component {
       likeIconClass: 'like-mouse-off',
     };
     this.handleClick = this.handleClick.bind(this);
-    this.handleMouseOver = this.handleMouseOver.bind(this);
-    this.handleMouseOut = this.handleMouseOut.bind(this);
     this.userLikes = this.userLikes.bind(this);
     this.dishPostUpVotes = this.dishPostUpVotes.bind(this);
     this.dishPostDownVotes = this.dishPostDownVotes.bind(this);
     this.dishGetPosts = this.dishGetPosts.bind(this);
     this.dishGetLikes = this.dishGetLikes.bind(this);
-  }
-
-  handleMouseOver(event) {
-    if (event === 'dislike') {
-      this.setState({ dislikeIconClass: 'dislike-mouse-on' });
-    } else if (event === 'like') {
-      this.setState({ likeIconClass: 'dislike-mouse-on' });
-    }
-  }
-
-  handleMouseOut(event) {
-    if (event === 'dislike') {
-      this.setState({ dislikeIconClass: 'like-mouse-off' });
-    } else if (event === 'like') {
-      this.setState({ likeIconClass: 'like-mouse-off' });
-    }
   }
 
   handleClick(event) {
@@ -113,10 +95,6 @@ class Posts extends React.Component {
             votesPos={this.state.upvote}
             votesNeg={this.state.downvote}
             clickyclick={this.handleClick}
-            mouseYes={this.handleMouseOver}
-            mouseNo={this.handleMouseOut}
-            dislikeIconClassColor={this.state.dislikeIconClass}
-            likeIconClassColor={this.state.likeIconClass}
           />))}
       </div>
     );

@@ -12,7 +12,7 @@ const Post = props => (
         </i>
         {props.votesPos}
         <i onClick={() => props.clickyclick('dislike')}
-          className="material-icons">
+          className={"material-icons"}>
           mood_bad
         </i>
           {props.votesNeg}
