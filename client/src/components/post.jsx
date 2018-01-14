@@ -1,25 +1,44 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 const Post = props => (
   <div className="post-ele">
     <article className="ele">
       <p>{props.postUserid} likes {props.postDishid}</p>
-      <p><img className="image" src={props.postImage} /></p>
+      <p><img className="image" alt="post" src={props.postImage} /></p>
       <p>
         <i onClick={() => props.clickyclick('like')}
-          className={"material-icons"}>
+          className="material-icons">
       favorite_border
         </i>
         {props.votesPos}
         <i onClick={() => props.clickyclick('dislike')}
-          className={"material-icons"}>
+          className="material-icons">
           mood_bad
         </i>
-          {props.votesNeg}
+        {props.votesNeg}
         <span className="content-ele">{props.postContent}</span>
       </p>
     </article>
   </div>
 );
+
+Post.propTypes = {
+  postUserid: PropTypes.string,
+  postDishid: PropTypes.string,
+  postImage: PropTypes.string,
+  clickyclick: PropTypes.func,
+  votesNeg: PropTypes.func,
+  postContent: PropTypes.string,
+};
+
+Post.defaultProps = {
+  postUserid: PropTypes.string,
+  postDishid: PropTypes.string,
+  postImage: PropTypes.string,
+  clickyclick: PropTypes.func,
+  votesNeg: PropTypes.func,
+  postContent: PropTypes.string,
+};
 
 export default Post;
