@@ -11,6 +11,9 @@ module.exports = {
           res.status(404).send(err);
         });
     },
+    photo: (req, res) => {
+      res.send('image uploaded');
+    },
     submit: (req, res) => {
       const data = req.body;
       models.submit.restaurant(data)
