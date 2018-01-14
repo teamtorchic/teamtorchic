@@ -64,7 +64,6 @@ module.exports = {
             } else {
               islike = 1;
             }
-            console.log (islike);
             const updateUpVote = {
               text: 'update posts set likesDish = $1 where id = $2',
               values: [islike, updateId],
@@ -106,7 +105,6 @@ module.exports = {
   },
   users: {
     findByUsername: (username) => {
-      console.log ('finduser')
       const findUser = {
         text: 'select username from users where username = $1',
         values: [username],
@@ -115,7 +113,6 @@ module.exports = {
       return db.client.query(findUser);
     },
     create: (username, password) => {
-      console.log('create user')
       const createUser = {
         text: 'insert into users (username, password) values ($1, $2)',
         values: [username, password],
@@ -124,7 +121,6 @@ module.exports = {
       return db.client.query(createUser);
     },
     checkUserCredential: (username, password) => {
-      console.log ('check credential')
       const checkCredential = {
         text: 'select username from users where username = $1 and password = $2',
         values: [username, password],

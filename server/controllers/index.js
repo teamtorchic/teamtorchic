@@ -87,11 +87,9 @@ module.exports = {
   },
   signup: {
     submit: (req, res) => {
-      console.log ('submit signup')
       const { username, password } = req.body;
       models.users.findByUsername(username)
         .then((results) => {
-          console.log(results);
           if (results.rowCount === 0) {
             models.users.create(username, password)
               .then(() => {
@@ -101,7 +99,7 @@ module.exports = {
                 res.status(500).send(err);
               });
           } else {
-            res.send({ message: 'username already exists. Please log in.' });
+            res.send({ message: 'username already exists' });
           }
         });
     },

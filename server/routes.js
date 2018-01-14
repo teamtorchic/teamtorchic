@@ -21,6 +21,10 @@ router.get('/votes/:dishId', controller.dishlikes.get);
 router.post('/votes/upvote', controller.dishlikes.upVote);
 router.post('/votes/downvote', controller.dishlikes.downVote);
 router.post('/signup', controller.signup.submit);
+router.get('/users/:username', (req, res) => {
+  const { username } = req.params;
+  res.send({ message: username });
+});
 
 router.post('/login', (req, res, next) => {
   passport.authenticate('local', (err, user, info) => {
