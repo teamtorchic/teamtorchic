@@ -10,17 +10,19 @@ class Posts extends React.Component {
     this.state = {
       posts: fakePostsData.post,
       posterLikes: '',
-      upvote: 0,
-      downvote: 0,
-      dislikeIconClass: 'dislike-mouse-off',
-      likeIconClass: 'like-mouse-off',
     };
     this.handleClick = this.handleClick.bind(this);
+    this.getData = this.getData.bind(this);
     this.userLikes = this.userLikes.bind(this);
     this.dishPostUpVotes = this.dishPostUpVotes.bind(this);
     this.dishPostDownVotes = this.dishPostDownVotes.bind(this);
     this.dishGetPosts = this.dishGetPosts.bind(this);
     this.dishGetLikes = this.dishGetLikes.bind(this);
+  }
+  // if the user has clicked the icon, needs to add one and keep it red. If the
+  // user has clicked the icon again, need to subtract one and make it black
+  getData() {
+
   }
 
   handleClick(event) {
@@ -33,9 +35,9 @@ class Posts extends React.Component {
 
   userLikes() {
     if (this.state.dishLikes === 1) {
-      this.setState({ posterLikes: this.state.posterLikes += 'likes' });
+      this.setState({ posterLikes: this.state.posterLikes = 'likes' });
     } else if (this.state.dishLikes === 0) {
-      this.setState({ posterLikes: this.state.posterLikes += 'dislikes' });
+      this.setState({ posterLikes: this.state.posterLikes = 'dislikes' });
     } else {
       this.setState({});
     }
@@ -88,6 +90,7 @@ class Posts extends React.Component {
           (<Post
             key={item.content}
             postData={item}
+            postId={item.id}
             postImage={item.image}
             postContent={item.content}
             postUserid={item.userid}

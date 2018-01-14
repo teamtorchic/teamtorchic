@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 const Post = props => (
   <div className="post-ele">
-    <article className="ele">
+    <article className={`ele ${props.postId}`}>
       <p>{props.postUserid} likes {props.postDishid}</p>
       <p><img className="image" alt="post" src={props.postImage} /></p>
       <p>
@@ -24,20 +24,24 @@ const Post = props => (
 );
 
 Post.propTypes = {
+  postId: PropTypes.number,
   postUserid: PropTypes.string,
   postDishid: PropTypes.string,
   postImage: PropTypes.string,
   clickyclick: PropTypes.func,
   votesNeg: PropTypes.func,
+  votesPos: PropTypes.func,
   postContent: PropTypes.string,
 };
 
 Post.defaultProps = {
+  postId: PropTypes.number,
   postUserid: PropTypes.string,
   postDishid: PropTypes.string,
   postImage: PropTypes.string,
   clickyclick: PropTypes.func,
   votesNeg: PropTypes.func,
+  votesPos: PropTypes.func,
   postContent: PropTypes.string,
 };
 
