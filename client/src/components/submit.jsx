@@ -1,3 +1,6 @@
+/* global FormData */
+/* global window */
+
 import React from 'react';
 import $ from 'jquery';
 
@@ -7,10 +10,46 @@ class Submit extends React.Component {
     this.state = {
       likes: '',
       dislikes: '',
+      image: null,
     };
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleClick = this.handleClick.bind(this);
+    this.handleFiles = this.handleFiles.bind(this);
+    this.reset = this.reset.bind(this);
+  }
+
+  componentDidMount() {
+    function dragenter(e) {
+      e.stopPropagation();
+      e.preventDefault();
+    }
+
+    function dragover(e) {
+      e.stopPropagation();
+      e.preventDefault();
+    }
+
+    const drop = (e) => {
+      e.stopPropagation();
+      e.preventDefault();
+
+      const { files } = e.dataTransfer;
+      const [file] = files;
+      this.setState({ image: file });
+      const photoURL = window.URL.createObjectURL(files[0]);
+      $('#dropzone').html(`<img src="${photoURL}" id="photoPreview" />`);
+    };
+
+    const dropbox = document.getElementById('dropzone');
+    dropbox.addEventListener('dragenter', dragenter, false);
+    dropbox.addEventListener('dragover', dragover, false);
+    dropbox.addEventListener('drop', drop, false);
+
+    $('#dropzone').on('click', (e) => {
+      $('#photoPicker').click();
+      e.preventDefault();
+    });
   }
 
   handleClick(event) {
@@ -28,75 +67,58 @@ class Submit extends React.Component {
     this.setState({ [event.target.id]: event.target.value });
   }
 
-  handleSubmit() {
-    const postData = JSON.stringify(this.state);
-    $.post({
-      url: '/submit',
-      data: postData,
-      contentType: 'application/json',
-    }).done(data => console.log('success', data));
+  reset() {
+    this.setState({ likes: '', dislikes: '' });
   }
 
-  componentDidMount() {
-    function handleFiles(files) {
-      console.log('hi');
+  handleSubmit() {
+    const postData = this.state;
+    if (this.state.image !== null) {
+      const photo = this.state.image;
+      postData.photo = photo.name;
+      const photoData = new FormData();
+      photoData.append('photo', photo);
+
+      $.post({
+        url: '/photo',
+        data: photoData,
+        processData: false,
+        contentType: false,
+      }).done(this.releasePhoto);
     }
-    // function handleFiles(files) {
-    //   for (let i = 0; i < files.length; i += 1) {
-    //     const file = files[i];
-    //
-    //     if (!file.type.startsWith('image/')) {
-    //       const img = document.createElement('img');
-    //       img.classList.add('obj');
-    //       img.file = file;
-    //       const preview = document.getElementById('dropzone');
-    //       preview.appendChild(img);
-    //
-    //       const reader = new FileReader();
-    //       reader.onload = (function(aImg) { return function(e) { aImg.src = e.target.result; }; })(img);
-    //       reader.readAsDataURL(file);
-    //     }
-    //   }
-    // }
-    //
-    // function dragenter(e) {
-    //   e.stopPropagation();
-    //   e.preventDefault();
-    // }
-    //
-    // function dragover(e) {
-    //   e.stopPropagation();
-    //   e.preventDefault();
-    // }
-    //
-    // function drop(e) {
-    //   e.stopPropagation();
-    //   e.preventDefault();
-    //
-    //   const { files } = e.dataTransfer;
-    //
-    //   handleFiles(files);
-    // }
-
-    // const dropbox = document.getElementById('dropzone');
-    // dropbox.addEventListener('dragenter', dragenter, false);
-    // dropbox.addEventListener('dragover', dragover, false);
-    // dropbox.addEventListener('drop', drop, false);
-    // dropbox.addEventListener('click', drop, false);
-
-    $('#dropzone').on('click', (e) => {
-      $('#photoPicker').click();
-      e.preventDefault();
+    $.post({
+      url: '/submit',
+      data: JSON.stringify(postData),
+      contentType: 'application/json',
+    }).done(() => {
+      $('#commentary').val('');
+      $('#restaurant').val('');
+      $('#dish').val('');
+      $('#dropzone').html('<i className="material-icons">add_a_photo</i>');
+      this.reset();
     });
+  }
+
+  handleFiles() {
+    const photo = document.getElementById('photoPicker').files[0];
+    this.setState({ image: photo });
+    const photoURL = window.URL.createObjectURL(photo);
+    $('#dropzone').html(`<img src="${photoURL}" id="photoPreview" />`);
   }
 
   render() {
     return (
       <div id="submit">
-        <form>
+        <form onSubmit={this.handleSubmit} id="form" encType="multipart/form-data">
           <div className="form-group row">
             <div className="col-5">
-              <input type="file" id="photoPicker" accept="image/*" style="display:none" onchange="handleFiles(this.files)">
+              <input
+                type="file"
+                id="photoPicker"
+                name="photo"
+                accept="image/*"
+                onChange={this.handleFiles}
+              />
               <div id="dropzone"><i className="material-icons">add_a_photo</i></div>
             </div>
             <div className="col">
