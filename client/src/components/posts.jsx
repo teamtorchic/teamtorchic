@@ -22,7 +22,6 @@ class Posts extends React.Component {
   // if the user has clicked the icon, needs to add one and keep it red. If the
   // user has clicked the icon again, need to subtract one and make it black
   getData() {
-
   }
 
   handleClick(event) {
