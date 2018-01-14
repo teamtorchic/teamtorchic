@@ -5,9 +5,10 @@ class Signup extends React.Component {
   constructor() {
     super();
     this.state = {
-      username: 'username',
-      password: 'password',
+      username: '',
+      password: '',
     };
+
     this.handleInputChange = this.handleInputChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
@@ -28,7 +29,6 @@ class Signup extends React.Component {
   handleSubmit(e) {
     const postData = JSON.stringify(this.state);
     e.preventDefault();
-    console.log ("signup post state:", this.state);
     $.post({
       url: '/signup',
       data: postData,
@@ -39,24 +39,22 @@ class Signup extends React.Component {
   render() {
     return (
       <form>
-        <label>
-          Username:
-          <input
-            name="username"
-            type="text"
-            value={this.state.username}
-            onChange={this.handleInputChange} />
-        </label>
+        <label> Username: </label>
+        <input
+          name="username"
+          type="text"
+          placeholder="username"
+          value={this.state.username}
+          onChange={this.handleInputChange} />
         <br />
 
-        <label>
-          Password:
-          <input
-            name="password"
-            type="password"
-            value={this.state.password}
-            onChange={this.handleInputChange} />
-        </label>
+        <label> Password: </label>
+        <input
+          name="password"
+          type="password"
+          placeholder="password"
+          value={this.state.password}
+          onChange={this.handleInputChange} />
         <br />
         <button type="submit" onClick={this.handleSubmit}> Sign Up</button>
       </form>

@@ -4,7 +4,13 @@ db.client.connect();
 
 module.exports = {
   post: {
-    getAll: () => db.pool.connect().then(client => client.query('select * from posts')),
+    getAll: () => {
+      const getAllPost = {
+        text: 'select * from posts',
+        rowMode: 'array',
+      };
+      return db.client.query(getAllPost);
+    },
   },
   submit: {
     dish: ({ dish }) => db.client.query(`insert into dishes (name) values ('${dish}') ON CONFLICT (name) DO UPDATE SET name='${dish}' RETURNING id`),
@@ -34,6 +40,7 @@ module.exports = {
       const dishlikes = {
         text: 'select * from posts inner join dishes on dishes.id = posts.dishId where dishes.id = $1',
         values: [dishId],
+        rowMode: 'array',
       };
       return db.client.query(dishlikes);
     },
@@ -49,7 +56,7 @@ module.exports = {
       };
       return db.client.query(checkVote)
         .then((data) => {
-          if (data.rows.length) {
+          if (data.rowCount) {
             let islike = data.rows[0][0];
             const updateId = data.rows[0][1];
             if (islike) {
@@ -57,6 +64,7 @@ module.exports = {
             } else {
               islike = 1;
             }
+            console.log (islike);
             const updateUpVote = {
               text: 'update posts set likesDish = $1 where id = $2',
               values: [islike, updateId],
@@ -78,7 +86,7 @@ module.exports = {
       };
       return db.client.query(checkVote)
         .then((data) => {
-          if (data.rows.length) {
+          if (data.rowCount) {
             let notLike = data.rows[0][0];
             const updateId = data.rows[0][1];
             if (notLike === 0) {
@@ -94,6 +102,32 @@ module.exports = {
           }
           return db.client.query(insertVote);
         });
+    },
+  },
+  users: {
+    findByUsername: (username) => {
+      const findUser = {
+        text: 'select * from users where username = $1',
+        values: [username],
+        rowMode: 'array',
+      };
+      return db.client.query(findUser);
+    },
+    create: (username, password) => {
+      const createUser = {
+        text: 'insert into users (username, password) values ($1, $2)',
+        values: [username, password],
+        rowMode: 'array',
+      };
+      return db.client.query(createUser);
+    },
+    checkUserCredential: (username, password) => {
+      const checkCredential = {
+        text: 'select * from users where username = $1 and password = $2',
+        values: [username, password],
+        rowMode: 'array',
+      };
+      return db.client.query(checkCredential);
     },
   },
 };
