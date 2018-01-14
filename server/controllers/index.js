@@ -90,19 +90,23 @@ module.exports = {
       const { username, password } = req.body;
       models.users.findByUsername(username)
         .then((results) => {
-          console.log(results);
-          if (results.rows.length === 0) {
+          if (results.rowCount === 0) {
             models.users.create(username, password)
               .then(() => {
-                res.redirect('/');
+                res.redirect(`/users/${req.body.username}`);
               })
               .catch((err) => {
                 res.status(500).send(err);
               });
           } else {
-            res.send({ message: 'username already exists. Please log in.' });
+            res.send({ message: 'username already exists' });
           }
         });
+    },
+  },
+  user: {
+    landing: (req, res) => {
+      res.redirect(`/users/${req.body.username}`);
     },
   },
 };

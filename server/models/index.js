@@ -64,7 +64,6 @@ module.exports = {
             } else {
               islike = 1;
             }
-            console.log (islike);
             const updateUpVote = {
               text: 'update posts set likesDish = $1 where id = $2',
               values: [islike, updateId],
@@ -107,7 +106,7 @@ module.exports = {
   users: {
     findByUsername: (username) => {
       const findUser = {
-        text: 'select * from users where username = $1',
+        text: 'select username from users where username = $1',
         values: [username],
         rowMode: 'array',
       };
@@ -123,7 +122,7 @@ module.exports = {
     },
     checkUserCredential: (username, password) => {
       const checkCredential = {
-        text: 'select * from users where username = $1 and password = $2',
+        text: 'select username from users where username = $1 and password = $2',
         values: [username, password],
         rowMode: 'array',
       };

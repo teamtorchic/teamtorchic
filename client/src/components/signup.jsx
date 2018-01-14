@@ -2,11 +2,11 @@ import React from 'react';
 import $ from 'jquery';
 
 class Signup extends React.Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
       username: '',
-      password: '',
+      loginUnsuccessful: false,
     };
 
     this.handleInputChange = this.handleInputChange.bind(this);
@@ -19,26 +19,36 @@ class Signup extends React.Component {
         username: e.target.value,
       });
     }
-    if (e.target.name === 'password') {
-      this.setState({
-        password: e.target.value,
-      });
-    }
   }
 
   handleSubmit(e) {
-    const postData = JSON.stringify(this.state);
     e.preventDefault();
+    const { handleLogin, changeView } = this.props;
     $.post({
       url: '/signup',
-      data: postData,
       contentType: 'application/json',
-    }).done(data => console.log('success', data));
+      data: JSON.stringify({ username: this.state.username, password: $('#password').val() }),
+      success: (result) => {
+        if (result.message !== 'username already exists' && result.message !== 'Missing credentials') {
+          handleLogin(result.message);
+          changeView();
+        } else {
+          this.setState({
+            username: '',
+            loginUnsuccessful: result.message,
+          });
+        }
+        $('#password').val('');
+      },
+      error: (err) => {
+        console.log(err);
+      },
+    });
   }
 
   render() {
     return (
-      <form>
+      <form onSubmit={this.handleSubmit}>
         <label> Username: </label>
         <input
           name="username"
@@ -50,13 +60,14 @@ class Signup extends React.Component {
 
         <label> Password: </label>
         <input
+          id="password"
           name="password"
           type="password"
           placeholder="password"
-          value={this.state.password}
-          onChange={this.handleInputChange} />
+        />
         <br />
-        <button type="submit" onClick={this.handleSubmit}> Sign Up</button>
+        { this.state.loginUnsuccessful && <span style={{ color: 'red', fontSize: '18px' }}>{this.state.loginUnsuccessful}</span> }
+        <button type="submit"> Submit </button>
       </form>
     );
   }

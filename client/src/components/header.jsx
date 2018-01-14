@@ -1,20 +1,49 @@
 import React from 'react';
-import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
 import Login from './login';
 import Signup from './signup';
 
-const Header = () => (
-  <Router>
-    <div id="header">eatChic
-      <a href="/auth/google"> Log In Through Google </a>
-      <span><Link to="/login">Log In</Link></span>
-      <span><Link to="/signup">Sign Up</Link></span>
-      <hr />
+class Header extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      view: 'none',
+    };
+    this.changeLoginView = this.changeLoginView.bind(this);
+    this.changeSignupView = this.changeSignupView.bind(this);
+    this.changeView = this.changeView.bind(this);
+  }
 
-      <Route path="/login" component={Login} />
-      <Route path="/signup" component={Signup} />
-    </div>
-  </Router>
-);
+  changeView() {
+    this.setState({
+      view: 'none',
+    });
+  }
+  changeLoginView() {
+    this.setState({
+      view: 'login',
+    });
+  }
+
+  changeSignupView() {
+    this.setState({
+      view: 'signup',
+    });
+  }
+
+  render() {
+    const { handleLogin, user } = this.props;
+    return (
+      <div id="header">{ user && <span>Welcome, {user}!   </span> }<span>eatChic</span>
+        { !user && <a href="/auth/google"> Log In Through Google </a> }
+        { !user && <button onClick={this.changeLoginView}>Log In</button> }
+        { !user && <button onClick={this.changeSignupView}>Sign Up</button> }
+        <hr />
+
+        { this.state.view === 'login' && <Login user={user} handleLogin={handleLogin} changeView={this.changeView} /> }
+        { this.state.view === 'signup' && <Signup user={user} handleLogin={handleLogin} changeView={this.changeView} /> }
+      </div>
+    );
+  }
+}
 
 export default Header;

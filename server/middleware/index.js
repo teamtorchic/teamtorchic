@@ -9,7 +9,7 @@ module.exports = {
         if (results.rowCount === 1) {
           done(null, results.rows[0]);
         } else {
-          done(null, false);
+          done(null, false, { message: 'Incorrect username or password' });
         }
       })
       .catch((err) => {
