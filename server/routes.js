@@ -7,7 +7,7 @@ const storageObject = multer.diskStorage({
     cb(null, '/images');
   },
   filename(req, file, cb) {
-    cb(null, file.originalname);
+    cb(null, Date.now() + file.originalname);
   },
 });
 
@@ -15,8 +15,7 @@ const upload = multer({ storage: storageObject });
 const passport = require('passport');
 
 router.get('/post', controller.post.getAll);
-router.post('/photo', upload.single('photo'), controller.post.photo);
-router.post('/submit', controller.post.submit);
+router.post('/submit', upload.single('image'), controller.post.submit);
 router.get('/votes/:dishId', controller.dishlikes.get);
 router.post('/votes/upvote', controller.dishlikes.upVote);
 router.post('/votes/downvote', controller.dishlikes.downVote);
