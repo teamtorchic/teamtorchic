@@ -35,7 +35,7 @@ class App extends React.Component {
           />
           { this.state.user && <button onClick={this.handleLogout}> Logout</button> }
         </div>
-        <Submit />
+        {this.state.user && <Submit user={this.state.user} />}
         <Posts />
       </div>
     );
