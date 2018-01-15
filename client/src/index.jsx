@@ -28,12 +28,14 @@ class App extends React.Component {
   render() {
     return (
       <div>
-        { this.state.user && <button onClick={this.handleLogout}> Logout</button> }
-        <Header
-          user={this.state.user}
-          handleLogin={this.handleLogin}
-        />
-        <Submit />
+        <div id="header">
+          <Header
+            user={this.state.user}
+            handleLogin={this.handleLogin}
+          />
+          { this.state.user && <button onClick={this.handleLogout}> Logout</button> }
+        </div>
+        {this.state.user && <Submit user={this.state.user} />}
         <Posts />
       </div>
     );
