@@ -9,7 +9,6 @@ class Posts extends React.Component {
     super(props);
     this.state = {
       posts: fakePostsData.post,
-      posterLikes: '',
     };
     this.handleClick = this.handleClick.bind(this);
     this.getData = this.getData.bind(this);
