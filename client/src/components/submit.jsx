@@ -20,6 +20,7 @@ class Submit extends React.Component {
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleClick = this.handleClick.bind(this);
     this.handleFiles = this.handleFiles.bind(this);
+    this.handleDrop = this.handleDrop.bind(this);
   }
 
   componentDidMount() {
@@ -33,19 +34,19 @@ class Submit extends React.Component {
       e.preventDefault();
     }
 
-    const drop = (e) => {
-      e.stopPropagation();
-      e.preventDefault();
-
-      const { files } = e.dataTransfer;
-      const [file] = files;
-      this.setState({ image: file, photoURL: window.URL.createObjectURL(file) });
-    };
-
     const dropbox = document.getElementById('dropzone');
     dropbox.addEventListener('dragenter', dragenter, false);
     dropbox.addEventListener('dragover', dragover, false);
-    dropbox.addEventListener('drop', drop, false);
+    dropbox.addEventListener('drop', this.handleDrop, false);
+  }
+
+  handleDrop(e) {
+    e.stopPropagation();
+    e.preventDefault();
+
+    const { files } = e.dataTransfer;
+    const [file] = files;
+    this.setState({ image: file, photoURL: window.URL.createObjectURL(file) });
   }
 
   handleClick(event) {
