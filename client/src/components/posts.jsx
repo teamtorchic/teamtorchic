@@ -9,29 +9,30 @@ class Posts extends React.Component {
     super(props);
     this.state = {
       posts: fakePostsData.post,
+      userLikes: '',
     };
     this.handleClick = this.handleClick.bind(this);
-    this.getData = this.getData.bind(this);
-    this.userLikes = this.userLikes.bind(this);
-    this.dishPostUpVotes = this.dishPostUpVotes.bind(this);
-    this.dishPostDownVotes = this.dishPostDownVotes.bind(this);
-    this.dishGetLikes = this.dishGetLikes.bind(this);
+    this.getPostsData = this.getPostsData.bind(this);
+    this.voteChange = this.voteChange.bind(this);
+    this.populateVerb = this.populateVerb.bind(this);
   }
   // if the user has clicked the icon, needs to add one and keep it red. If the
   // user has clicked the icon again, need to subtract one and make it black
   componentDidMount() {
+    this.getPostsData();
+    this.populateVerb();
+  }
+
+  getPostsData() {
     $.ajax({
       method: 'GET',
       url: 'http://localhost:3000/post',
       dataType: 'json',
-      success: (data) => { this.setState(this.state.posts = data.rows); },
+      success: (data) => { this.setState(this.state.posts = data); },
     });
   }
 
-  getData() {
-    this.state.posterLikes = '';
-  }
-
+  //  need to refactor
   handleClick(event) {
     if (event === 'like') {
       this.setState({ upvote: this.state.upvote + 1 });
@@ -40,7 +41,8 @@ class Posts extends React.Component {
     }
   }
 
-  userLikes() {
+  //  need to refactor
+  voteChange() {
     if (this.state.dishLikes === 1) {
       this.setState({ posterLikes: this.state.posterLikes = 'likes' });
     } else if (this.state.dishLikes === 0) {
@@ -50,34 +52,16 @@ class Posts extends React.Component {
     }
   }
 
-  dishPostUpVotes() {
-    this.d = 'a';
-    // $.ajax({
-    //   method: 'POST',
-    //   url: 'http://localhost:3000/votes/downvote',
-    //   dataType: 'json',
-    //   success: (data) => { this.setState(this.state.voteCountUp = data.upvote); },
-    // });
-  }
-
-  dishPostDownVotes() {
-    this.c = 'a';
-    // $.ajax({
-    //   method: 'POST',
-    //   url: 'http://localhost:3000/votes/upvote',
-    //   dataType: 'json',
-    //   success: (data) => { this.setState(this.state.voteCount = data.downvote); },
-    // });
-  }
-
-  dishGetLikes() {
-    // this.state.posts = 'a';
-    // $.ajax({
-    //   method: 'GET',
-    //   url: 'http://localhost:3000/votes/:dishId',
-    //   dataType: 'json',
-    //   success: (data) => { this.setState(this.state.dishLikes = data.dishid); },
-    // });
+  populateVerb(verb) {
+    if (verb.likesDish === 1) {
+      this.setState({ userLikes: this.state.userLikes = 'likes' });
+    } else if (verb.likesDish === 0) {
+      this.setState({ userLikes: this.state.userLikes = 'dislikes' });
+    }
+  //  have this in the post component - pass the populated thing as a prop
+  //  and have it show up in the posts
+  //  pass this func in as a prop
+  //  this will check the dishlike of each item and spit out the correct title
   }
 
   render() {
@@ -93,9 +77,11 @@ class Posts extends React.Component {
             postContent={item.content}
             postUserid={item.userid}
             postDishid={item.dishid}
-            votesPos={this.state.upvote}
-            votesNeg={this.state.downvote}
+            votesPos={item.votes.upvote}
+            votesNeg={item.votes.downvote}
             clickyclick={this.handleClick}
+            verbFunc={this.populateVerb}
+            verb={this.state.userLikes}
           />))}
       </div>
     );

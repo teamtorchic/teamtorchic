@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 const Post = props => (
   <div className="post-ele">
     <article className={`ele ${props.postId}`}>
-      <p>{props.postUserid} likes {props.postDishid}</p>
+      <p>{props.postUserid} {props.verb} {props.postDishid}</p>
       <p><img className="image" alt="post" src={props.postImage} /></p>
       <p>
         <i onClick={() => props.clickyclick('like')}
