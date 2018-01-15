@@ -4,8 +4,33 @@ module.exports = {
   post: {
     getAll: (req, res) => {
       models.post.getAll()
-        .then((results) => {
-          res.json(results.rows);
+      .then(results => {
+        results = JSON.parse(JSON.stringify(results.rows));
+        res.body = {};
+        res.body.data = results;
+        const Promises = results.map(post => {
+          const {dishid} = post;
+          return models.dishlikes.get(dishid);
+        });
+          return Promise.all(Promises);
+        })
+        .then(results => {
+          results = results.map(result => result.rows);
+          const likeCounts = results.forEach((dish, i) => {
+            const vote = {
+              upvote: 0,
+              downvote: 0,
+            };
+            dish.forEach(votes => {
+              if (votes.likesdish) {
+                vote.upvote += 1;
+              } else {
+                vote.downvote += 1;
+              }
+            })
+            res.body.data[i].votes = vote;
+          });
+          res.json(res.body.data);
         })
         .catch((err) => {
           res.status(404).send(err);

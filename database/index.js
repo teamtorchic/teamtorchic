@@ -7,7 +7,7 @@ const pool = new Pool({
 });
 
 pool.query('select NOW()', (err, res) => {
-  console.log(err, res);
+  // console.log(err, res);
 });
 
 const client = new Client({
