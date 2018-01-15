@@ -31,7 +31,7 @@ module.exports = {
       } else {
         likesDish = null;
       }
-      const query = `insert into posts (content, likesDish, userId, dishId, restaurantId) values ('${data.commentary}', ${likesDish}, 1, ${data.dishId}, ${data.restaurantId})`;
+      const query = `insert into posts (content, likesDish, userId, dishId, restaurantId, image) values ('${data.commentary}', ${likesDish}, 1, ${data.dishId}, ${data.restaurantId}, '${data.image}')`;
       db.client.query(query);
     },
   },

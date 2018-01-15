@@ -1,0 +1,55 @@
+#submit {
+  width: 600px
+  margin: 40px auto
+
+  #photoPicker { display: none }
+
+  #dropzone{
+    align-items: center
+    justify-content: center
+    height: 232px
+    display: flex
+    border: 1px solid rgba(0,0,0,.15)
+    border-radius: .25em
+
+    &:hover .material-icons {
+      color: #5cb3fd
+      transition-property: color
+      transition-duration: .25s
+    }
+  }
+
+  button:hover .material-icons {
+    color: red
+  }
+
+  .likes .material-icons, .dislikes .material-icons { color: red }
+
+  .like-btn {
+    padding: 7px 16px 6px 0
+    background: white
+    font-size: 20px
+    border: 0 solid #fff
+  }
+
+  .btn:focus { box-shadow: none }
+
+  .col-3 {
+    color: #AD1457
+    line-height: 36px
+    text-align: right
+  }
+
+  .glyphicon {
+    font-family: 'Glyphicons'
+  }
+
+  input {
+    display: block
+    margin-bottom: 12px
+  }
+
+  textarea {
+    margin-bottom: 13px
+  }
+}

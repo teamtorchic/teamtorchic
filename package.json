@@ -11,7 +11,9 @@
   "scripts": {
     "start": "node server/index.js",
     "start-dev": "nodemon server/index.js",
-    "dev:react": "webpack -d --watch"
+    "dev:react": "webpack -d --watch",
+    "stylus": "stylus -w client/src/index.styl -o client/dist/stylus.css",
+    "dev": "start nodemon server/index.js && start webpack -d --watch && start stylus -w client/src/index.styl -o client/dist/stylus.css"
   },
   "dependencies": {
     "bluebird": "^3.5.1",

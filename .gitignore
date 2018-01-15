@@ -23,6 +23,7 @@ coverage
 # Compiled Dirs (http://nodejs.org/api/addons.html)
 build/
 bundle.js
+stylus.css
 
 # Dependency directorys
 # Deployed apps should consider commenting these lines out:
@@ -30,3 +31,4 @@ bundle.js
 node_modules/
 bower_components/
 client/dist/bundle.js
+client/dist/stylus.css

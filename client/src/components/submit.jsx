@@ -1,5 +1,6 @@
 /* global FormData */
 /* global window */
+/* eslint react/no-unused-state: "off" */
 
 import React from 'react';
 import $ from 'jquery';
@@ -11,12 +12,14 @@ class Submit extends React.Component {
       likes: '',
       dislikes: '',
       image: null,
+      dish: '',
+      restaurant: '',
+      commentary: '',
     };
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleClick = this.handleClick.bind(this);
     this.handleFiles = this.handleFiles.bind(this);
-    this.reset = this.reset.bind(this);
   }
 
   componentDidMount() {
@@ -36,20 +39,13 @@ class Submit extends React.Component {
 
       const { files } = e.dataTransfer;
       const [file] = files;
-      this.setState({ image: file });
-      const photoURL = window.URL.createObjectURL(files[0]);
-      $('#dropzone').html(`<img src="${photoURL}" id="photoPreview" />`);
+      this.setState({ image: file, photoURL: window.URL.createObjectURL(file) });
     };
 
     const dropbox = document.getElementById('dropzone');
     dropbox.addEventListener('dragenter', dragenter, false);
     dropbox.addEventListener('dragover', dragover, false);
     dropbox.addEventListener('drop', drop, false);
-
-    $('#dropzone').on('click', (e) => {
-      $('#photoPicker').click();
-      e.preventDefault();
-    });
   }
 
   handleClick(event) {
@@ -67,46 +63,41 @@ class Submit extends React.Component {
     this.setState({ [event.target.id]: event.target.value });
   }
 
-  reset() {
-    this.setState({ likes: '', dislikes: '' });
-  }
-
   handleSubmit() {
-    const postData = this.state;
-    if (this.state.image !== null) {
-      const photo = this.state.image;
-      postData.photo = photo.name;
-      const photoData = new FormData();
-      photoData.append('photo', photo);
+    const postData = new FormData();
 
-      $.post({
-        url: '/photo',
-        data: photoData,
-        processData: false,
-        contentType: false,
-      }).done(this.releasePhoto);
-    }
+    Object.entries(this.state).forEach((pair) => {
+      postData.append(pair[0], pair[1]);
+    });
+
     $.post({
       url: '/submit',
-      data: JSON.stringify(postData),
-      contentType: 'application/json',
+      data: postData,
+      processData: false,
+      contentType: false,
     }).done(() => {
-      $('#commentary').val('');
-      $('#restaurant').val('');
-      $('#dish').val('');
-      $('#dropzone').html('');
-      this.reset();
+      this.setState({
+        commentary: '',
+        restaurant: '',
+        dish: '',
+        photoURL: undefined,
+        likes: '',
+        dislikes: '',
+      });
     });
   }
 
   handleFiles() {
     const photo = document.getElementById('photoPicker').files[0];
-    this.setState({ image: photo });
-    const photoURL = window.URL.createObjectURL(photo);
-    $('#dropzone').html(`<img src="${photoURL}" id="photoPreview" />`);
+    this.setState({ image: photo, photoURL: window.URL.createObjectURL(photo) });
   }
 
   render() {
+    const dropzoneClick = (e) => {
+      $('#photoPicker').click();
+      e.preventDefault();
+    };
+
     return (
       <div id="submit">
         <form onSubmit={this.handleSubmit} id="form" encType="multipart/form-data">
@@ -119,7 +110,17 @@ class Submit extends React.Component {
                 accept="image/*"
                 onChange={this.handleFiles}
               />
-              <div id="dropzone"><i className="material-icons">add_a_photo</i></div>
+              <div
+                id="dropzone"
+                onClick={dropzoneClick}
+                onKeyDown={dropzoneClick}
+                role="button"
+                tabIndex={0}
+              >
+                { this.state.photoURL &&
+                <img alt="dish" src={this.state.photoURL} id="photoPreview" /> }
+                { !this.state.photoURL && <i className="material-icons">add_a_photo</i> }
+              </div>
             </div>
             <div className="col">
               <div className="row">
@@ -130,6 +131,7 @@ class Submit extends React.Component {
                   <input
                     id="dish"
                     className="form-control"
+                    value={this.state.dish}
                     onChange={this.handleChange}
                     placeholder="dish"
                     type="text"
@@ -144,6 +146,7 @@ class Submit extends React.Component {
                   <input
                     id="restaurant"
                     className="form-control"
+                    value={this.state.restaurant}
                     onChange={this.handleChange}
                     placeholder="the place"
                     type="text"
@@ -158,6 +161,7 @@ class Submit extends React.Component {
                   <textarea
                     id="commentary"
                     className="form-control"
+                    value={this.state.commentary}
                     onChange={this.handleChange}
                     placeholder="...delicious?"
                   />
@@ -172,7 +176,6 @@ class Submit extends React.Component {
                       aria-label="Left Align"
                       name="like"
                       onClick={this.handleClick}
-                      value="0"
                     >
                       <i id="like" className="material-icons like">favorite_border</i>
                     </button>
@@ -182,7 +185,6 @@ class Submit extends React.Component {
                       className={`like-btn btn btn-default ${this.state.dislikes}`}
                       aria-label="Center Align"
                       onClick={this.handleClick}
-                      id="dislikes{$this.state.likes}"
                     >
                       <i id="dislike" className="material-icons">mood_bad</i>
                     </button>
