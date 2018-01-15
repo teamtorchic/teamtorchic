@@ -5,7 +5,7 @@ module.exports = {
     getAll: (req, res) => {
       models.post.getAll()
         .then((results) => {
-          res.json(results);
+          res.json(results.rows);
         })
         .catch((err) => {
           res.status(404).send(err);

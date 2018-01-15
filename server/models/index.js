@@ -6,8 +6,7 @@ module.exports = {
   post: {
     getAll: () => {
       const getAllPost = {
-        text: 'select * from posts',
-        rowMode: 'array',
+        text: 'select * from posts'
       };
       return db.client.query(getAllPost);
     },
