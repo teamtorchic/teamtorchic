@@ -2,8 +2,6 @@
 
 -- table
 
-INSERT into service_lines (name, color, origin_id, destination_id) VALUES ("Red: towards Richmond", "e11a57", 26, 34);
-
 INSERT into users (username, password) VALUES ('Ang', 'Ang');
 INSERT into users (username, password) VALUES ('Lory', 'Lory');
 INSERT into users (username, password) VALUES ('David', 'David');
