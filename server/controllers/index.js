@@ -19,30 +19,30 @@ module.exports = {
   post: {
     getAll: (req, res) => {
       models.post.getAll()
-      .then(results => {
-        results = JSON.parse(JSON.stringify(results.rows));
-        res.body = {};
-        res.body.data = results;
-        const Promises = results.map(post => {
-          const {dishid} = post;
-          return models.dishlikes.get(dishid);
-        });
+        .then((results) => {
+          results = JSON.parse(JSON.stringify(results.rows));
+          res.body = {};
+          res.body.data = results;
+          const Promises = results.map((post) => {
+            const { dishid } = post;
+            return models.dishlikes.get(dishid);
+          });
           return Promise.all(Promises);
         })
-        .then(results => {
+        .then((results) => {
           results = results.map(result => result.rows);
-          const likeCounts = results.forEach((dish, i) => {
+          results.forEach((dish, i) => {
             const vote = {
               upvote: 0,
               downvote: 0,
             };
-            dish.forEach(votes => {
+            dish.forEach((votes) => {
               if (votes.likesdish) {
                 vote.upvote += 1;
               } else if ((votes.likesdish === 0)) {
                 vote.downvote += 1;
               }
-            })
+            });
             res.body.data[i].votes = vote;
           });
           res.json(res.body.data);
