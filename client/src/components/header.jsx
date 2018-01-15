@@ -33,7 +33,7 @@ class Header extends React.Component {
   render() {
     const { handleLogin, user } = this.props;
     return (
-      <div>{ user && <span>Welcome, {user}!   </span> }<span>eatChic</span>
+      <div>{ user && <span>Welcome, {user} to </span> }<span>eatChic</span>
         { !user && <a href="/auth/google"> Log In Through Google </a> }
         { !user && <button onClick={this.changeLoginView}>Log In</button> }
         { !user && <button onClick={this.changeSignupView}>Sign Up</button> }
