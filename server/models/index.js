@@ -6,12 +6,12 @@ module.exports = {
   post: {
     getAll: () => {
       const getAllPost = {
-        text: 'select * from posts'
+        text: 'select content, image, dishid, userid, restaurantid, likesdish, users.username, restaurants.name as restaurantname, dishes.name as dishname from posts inner join users on users.id = userid inner join restaurants on restaurants.id = restaurantid inner join dishes on dishes.id = dishid where content IS NOT NULL',
       };
       return db.client.query(getAllPost);
     },
   },
-  submit: {
+  submit: { 
     dish: ({ dish }) => db.client.query(`insert into dishes (name) values ('${dish}') ON CONFLICT (name) DO UPDATE SET name='${dish}' RETURNING id`),
     restaurant: ({ restaurant }) => {
       const query = `insert into restaurants (name) values ('${restaurant}') ON CONFLICT (name) DO UPDATE SET name='${restaurant}' RETURNING id`;
@@ -39,7 +39,6 @@ module.exports = {
       const dishlikes = {
         text: 'select * from posts inner join dishes on dishes.id = posts.dishId where dishes.id = $1',
         values: [dishId],
-        rowMode: 'array',
       };
       return db.client.query(dishlikes);
     },
