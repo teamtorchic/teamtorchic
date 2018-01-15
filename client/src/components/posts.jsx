@@ -20,13 +20,17 @@ class Posts extends React.Component {
   }
   // if the user has clicked the icon, needs to add one and keep it red. If the
   // user has clicked the icon again, need to subtract one and make it black
-  getData() {
+  componentDidMount() {
     $.ajax({
       method: 'GET',
       url: 'http://localhost:3000/post',
       dataType: 'json',
-      success: (data) => { this.setState(this.state.posts = data); },
+      success: (data) => { this.setState(this.state.posts = data.rows); },
     });
+  }
+
+  getData() {
+    this.state.posterLikes = '';
   }
 
   handleClick(event) {
@@ -78,6 +82,7 @@ class Posts extends React.Component {
   }
 
   render() {
+    {console.log('this', this.state.posts)}
     return (
       <div>
         { this.state.posts.map(item =>
