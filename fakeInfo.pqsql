@@ -1,0 +1,24 @@
+
+
+-- table
+
+INSERT into service_lines (name, color, origin_id, destination_id) VALUES ("Red: towards Richmond", "e11a57", 26, 34);
+
+INSERT into users (username, password) VALUES ('Ang', 'Ang');
+INSERT into users (username, password) VALUES ('Lory', 'Lory');
+INSERT into users (username, password) VALUES ('David', 'David');
+
+INSERT into dishes (name) VALUES ('Sandwiches');
+INSERT into dishes (name) VALUES ('Mac n Cheese');
+INSERT into dishes (name) VALUES ('Cookie cereal');
+
+INSERT into posts (content, image, likesDish, userID, dishId) VALUES
+('Nom nom nom', 'https://www.aiche.org/sites/default/files/images/conference/event/1200-dietitian-lunch-wide-sandwich.jpg', 1, 1, 1);
+INSERT into posts (content, image, likesDish, userID, dishId) VALUES
+('Cheesy McCheese', 'https://static1.squarespace.com/static/515ecaf0e4b0875140cb8775/59a6ebc715d5dbf2569d69fc/59a6ec1ff9a61e863f312fd1/1504111648572/cheesy+spatzle-2.jpg?format=2500w', 0, 2, 2);
+INSERT into posts (content, image, likesDish, userID, dishId) VALUES
+('Cookies in cereal', 'https://static1.squarespace.com/static/515ecaf0e4b0875140cb8775/5a3abf3e0d9297e5adc2d82e/5a3ac15c24a694af280afcde/1513800031398/new+years+cookie+cereal-15.jpg?format=2500w', null, 3, 3);
+
+INSERT into likes (postId, userId) VALUES (1, 1);
+INSERT into likes (postId, userId) VALUES (2, 2);
+INSERT into likes (postId, userId) VALUES (3, 3);

@@ -16,12 +16,17 @@ class Posts extends React.Component {
     this.userLikes = this.userLikes.bind(this);
     this.dishPostUpVotes = this.dishPostUpVotes.bind(this);
     this.dishPostDownVotes = this.dishPostDownVotes.bind(this);
-    this.dishGetPosts = this.dishGetPosts.bind(this);
     this.dishGetLikes = this.dishGetLikes.bind(this);
   }
   // if the user has clicked the icon, needs to add one and keep it red. If the
   // user has clicked the icon again, need to subtract one and make it black
   getData() {
+    $.ajax({
+      method: 'GET',
+      url: 'http://localhost:3000/post',
+      dataType: 'json',
+      success: (data) => { this.setState(this.state.posts = data); },
+    });
   }
 
   handleClick(event) {
@@ -62,21 +67,11 @@ class Posts extends React.Component {
     // });
   }
 
-  dishGetPosts() {
-    this.state.dishLikes = 2;
-    // $.ajax({
-    //   method: 'GET',
-    //   url: 'http://localhost:3000/post',
-    //   dataType: 'json',
-    //   success: (data) => { this.setState(this.state = data); },
-    // });
-  }
-
   dishGetLikes() {
-    this.state.posts = 'a';
+    // this.state.posts = 'a';
     // $.ajax({
     //   method: 'GET',
-    //   url: 'http://localhost:3000/post/votes/:dishId',
+    //   url: 'http://localhost:3000/votes/:dishId',
     //   dataType: 'json',
     //   success: (data) => { this.setState(this.state.dishLikes = data.dishid); },
     // });
