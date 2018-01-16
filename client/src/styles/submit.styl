@@ -4,6 +4,32 @@
 
   #photoPicker { display: none }
 
+  .suggestions {
+    border: 1px solid rgba(0,0,0,.15);
+    border-radius: 0 0 .25rem .25rem;
+    background: white;
+    position: absolute;
+    width: 100%;
+    z-index: 10;
+    padding-left: 0;
+  }
+
+  .suggestions li {
+    padding: .5rem .75rem;
+    list-style-type: none;
+
+    &:hover {
+      background-color: #f2f2f2;
+    }
+    button {
+      padding: 0;
+      background: transparent;
+      border: none;
+      outline: none;
+      drop-shadow: none;
+    }
+  }
+
   #dropzone{
     align-items: center
     justify-content: center
@@ -17,6 +43,7 @@
       transition-property: color
       transition-duration: .25s
     }
+    img {max-width: 100%; max-height: 100%}
   }
 
   button:hover .material-icons {

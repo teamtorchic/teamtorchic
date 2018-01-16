@@ -3,8 +3,11 @@ const router = require('express').Router();
 const multer = require('multer');
 
 const storageObject = multer.diskStorage({
+
+// var path = path.join(__dirname, '/../client/dist');
+
   destination(req, file, cb) {
-    cb(null, '/images');
+    cb(null, './images');
   },
   filename(req, file, cb) {
     cb(null, Date.now() + file.originalname);
@@ -13,6 +16,10 @@ const storageObject = multer.diskStorage({
 
 const upload = multer({ storage: storageObject });
 const passport = require('passport');
+
+
+router.get('/comments', controller.comments.get);
+router.post('/comments', controller.comments.post);
 
 router.get('/post', controller.post.getAll);
 router.post('/submit', upload.single('image'), controller.post.submit);

@@ -1,6 +1,5 @@
 import React from 'react';
 
-
 class Comments extends React.Component {
   constructor(props) {
     super(props);
@@ -43,7 +42,6 @@ class Comments extends React.Component {
             <input type="submit" value="Post Comment" />
           </form>
         </div>
-
       </div>
     );
   }
