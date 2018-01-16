@@ -4,7 +4,7 @@
 
 import React from 'react';
 import $ from 'jquery';
-// import io from 'socket.io-client';
+import io from 'socket.io-client';
 import Suggestions from './suggestions';
 
 const dishes = [
@@ -84,13 +84,16 @@ class Submit extends React.Component {
     dropbox.addEventListener('dragover', dragover, false);
     dropbox.addEventListener('drop', this.handleDrop, false);
 
+    const socket = io.connect('http://localhost');
 
-    // const socket = io.connect('http://localhost');
+    socket.on('connect', () => {
+      console.log('meow! we\'re connected');
+    });
+
+
     // const restaurantSocket = io('/restaurant');
     // // const dishSocket = io('/dish');
-    // socket.on('connect', () => {
-    //   console.log(socket.id);
-    // });
+
     //
     // restaurantSocket.on('news', (data) => {
     //   console.log(data);

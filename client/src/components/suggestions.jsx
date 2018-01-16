@@ -11,7 +11,12 @@ function Suggestions(props) {
     </li>
   ));
   return (
-    <ul className="suggestions"><li key="1"><button onClick={props.handleAdd} onKeyPress={props.handleAdd}>Add {props.item}</button></li>{options}</ul>
+    <ul className="suggestions">
+      <li key="1">
+        <button onClick={props.handleAdd} onKeyPress={props.handleAdd}>Add {props.item}</button>
+      </li>
+      {options}
+    </ul>
   );
 }
 
