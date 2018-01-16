@@ -45,6 +45,7 @@ module.exports = {
             });
             res.body.data[i].votes = vote;
           });
+          console.log('req.user', req.user);
           res.json(res.body.data);
         })
         .catch((err) => {

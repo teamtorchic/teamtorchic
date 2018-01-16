@@ -1,6 +1,7 @@
 const controller = require('./controllers');
 const router = require('express').Router();
 const multer = require('multer');
+const { isLoggedIn } = require('./middleware');
 
 const storageObject = multer.diskStorage({
 
@@ -29,6 +30,13 @@ router.get('/votes/:dishId', controller.dishlikes.get);
 router.post('/votes/upvote', controller.dishlikes.upVote);
 router.post('/votes/downvote', controller.dishlikes.downVote);
 router.post('/signup', controller.signup.submit);
+router.get('/login', isLoggedIn, (req, res) => {
+  console.log ("isLoggedIn? ", isLoggedIn);
+  res.redirect('/');
+});
+router.get('/signup', (req, res) => {
+  res.redirect('/');
+});
 router.get('/users/:username', (req, res) => {
   const { username } = req.params;
   res.send({ message: username });
@@ -36,17 +44,18 @@ router.get('/users/:username', (req, res) => {
 
 router.post('/login', (req, res, next) => {
   passport.authenticate('local', (err, user, info) => {
-    console.log ("req.user", req.session)
     if (err) { return next(err); }
     if (!user) {
       return res.send(info);
     }
     req.logIn(user, (e) => {
       if (e) { return next(e); }
+      console.log ("req.user", req.session)
       return res.redirect(`/users/${user[0]}`);
     });
   })(req, res, next);
 });
+
 router.get('/auth/google', passport.authenticate('google', { scope: ['https://www.googleapis.com/auth/plus.login'] }));
 router.get('/auth/google/callback', passport.authenticate('google'), controller.user.landing);
 

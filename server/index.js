@@ -25,6 +25,22 @@ const app = express();
 passport.use(localLogIn());
 passport.use(googleLogIn());
 
+// Middleware
+app.use(express.static(path.join(__dirname, '/../client/dist')));
+app.use(cookieParser());
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(session({
+  secret: 'keyboard cat',
+  name: 'eatchic',
+  resave: false,
+  saveUninitialized: true,
+  cookie: { secure: true },
+}));
+app.use(passport.initialize());
+app.use(passport.session());
+app.use(flash());
+
 passport.serializeUser((user, done) => {
   done(null, user[0]);
 });
@@ -59,7 +75,6 @@ app.use(passport.initialize());
 app.use(passport.session());
 app.use(flash());
 app.use('/', router);
-
 
 app.listen(PORT, () => {
   console.log(`listening on port ${PORT}`);
