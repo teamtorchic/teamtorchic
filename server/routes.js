@@ -27,14 +27,25 @@ router.get('/votes/:dishId', controller.dishlikes.get);
 router.post('/votes/upvote', controller.dishlikes.upVote);
 router.post('/votes/downvote', controller.dishlikes.downVote);
 router.post('/signup', controller.signup.submit);
-router.get('/login', (req, res) => {
-  res.redirect('/');
+router.get('/users/:username', (req, res) => {
+  const { username } = req.params;
+  res.send({ message: username });
 });
-router.get('/signup', (req, res) => {
-  res.redirect('/');
+
+router.post('/login', (req, res, next) => {
+  passport.authenticate('local', (err, user, info) => {
+    console.log ("req.user", req.session)
+    if (err) { return next(err); }
+    if (!user) {
+      return res.send(info);
+    }
+    req.logIn(user, (e) => {
+      if (e) { return next(e); }
+      return res.redirect(`/users/${user[0]}`);
+    });
+  })(req, res, next);
 });
-router.post('/login', passport.authenticate('local', { successRedirect: '/', failureRedirect: '/login', failureFlash: true }));
 router.get('/auth/google', passport.authenticate('google', { scope: ['https://www.googleapis.com/auth/plus.login'] }));
-router.get('/auth/google/callback', passport.authenticate('google', { successRedirect: '/', failureRedirect: '/login' }));
+router.get('/auth/google/callback', passport.authenticate('google'), controller.user.landing);
 
 module.exports = router;

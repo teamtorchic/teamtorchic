@@ -26,7 +26,7 @@ passport.use(localLogIn());
 passport.use(googleLogIn());
 
 passport.serializeUser((user, done) => {
-  done(null, user[1]);
+  done(null, user[0]);
 });
 
 passport.deserializeUser((username, done) => {

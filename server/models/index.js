@@ -6,8 +6,7 @@ module.exports = {
   post: {
     getAll: () => {
       const getAllPost = {
-        text: 'select * from posts',
-        rowMode: 'array',
+        text: 'select content, image, dishid, userid, restaurantid, likesdish, users.username, restaurants.name as restaurantname, dishes.name as dishname from posts inner join users on users.id = userid inner join restaurants on restaurants.id = restaurantid inner join dishes on dishes.id = dishid where content IS NOT NULL',
       };
       return db.client.query(getAllPost);
     },
@@ -24,6 +23,7 @@ module.exports = {
     }
   },
   submit: {
+  submit: { 
     dish: ({ dish }) => db.client.query(`insert into dishes (name) values ('${dish}') ON CONFLICT (name) DO UPDATE SET name='${dish}' RETURNING id`),
     restaurant: ({ restaurant }) => {
       const query = `insert into restaurants (name) values ('${restaurant}') ON CONFLICT (name) DO UPDATE SET name='${restaurant}' RETURNING id`;
@@ -51,7 +51,6 @@ module.exports = {
       const dishlikes = {
         text: 'select * from posts inner join dishes on dishes.id = posts.dishId where dishes.id = $1',
         values: [dishId],
-        rowMode: 'array',
       };
       return db.client.query(dishlikes);
     },
@@ -75,7 +74,6 @@ module.exports = {
             } else {
               islike = 1;
             }
-            console.log (islike);
             const updateUpVote = {
               text: 'update posts set likesDish = $1 where id = $2',
               values: [islike, updateId],
@@ -118,7 +116,7 @@ module.exports = {
   users: {
     findByUsername: (username) => {
       const findUser = {
-        text: 'select * from users where username = $1',
+        text: 'select username from users where username = $1',
         values: [username],
         rowMode: 'array',
       };
@@ -134,7 +132,7 @@ module.exports = {
     },
     checkUserCredential: (username, password) => {
       const checkCredential = {
-        text: 'select * from users where username = $1 and password = $2',
+        text: 'select username from users where username = $1 and password = $2',
         values: [username, password],
         rowMode: 'array',
       };

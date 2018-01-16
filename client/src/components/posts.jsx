@@ -7,82 +7,82 @@ import fakePostsData from './fakePostsData';
 class Posts extends React.Component {
   constructor(props) {
     super(props);
-
     this.state = {
-      posts: fakePostsData,
-      dishLikes: 'dishLikes',
-      voteCountUp: { upvote: 1 },
-      voteCountDown: { downvote: 2 },
+      posts: fakePostsData.post,
     };
-    this.addVote = this.addVote.bind(this);
-    this.subtractVote = this.addVote.bind(this);
-    this.dishGetUpVotes = this.dishPostUpVotes.bind(this);
-    this.dishGetDownVotes = this.dishPostDownVotes.bind(this);
-    this.dishGetPosts = this.dishGetPosts.bind(this);
-    this.dishGetLikes = this.dishGetLikes.bind(this);
+    this.handleClick = this.handleClick.bind(this);
+    this.getPostsData = this.getPostsData.bind(this);
+    this.postUpvote = this.postUpvote.bind(this);
+    this.postDownvote = this.postDownvote.bind(this);
+    this.getVotes = this.getVotes.bind(this);
+  }
+  // if the user has clicked the icon, needs to add one and keep it red. If the
+  // user has clicked the icon again, need to subtract one and make it black
+  componentDidMount() {
+    this.getPostsData();
   }
 
-  addVote() {
-    this.setState({
-      voteCountUp: this.state.voteCountUp.upvote + 1,
+  getPostsData() {
+    $.ajax({
+      method: 'GET',
+      url: '/post',
+      dataType: 'json',
+      success: (data) => { this.setState(this.state.posts = data); },
     });
   }
 
-  subtractVote() {
-    this.setState({
-      voteCountDown: this.state.voteCountDown.downvote - 1,
-    });
-  }
-
-  dishPostUpVotes() {
-    this.d = 'a';
+  postUpvote(info) {
     // $.ajax({
     //   method: 'POST',
-    //   url: 'http://localhost:3000/votes/downvote',
     //   dataType: 'json',
-    //   success: (data) => { this.setState(this.state.voteCountUp = data.upvote); },
+    //   data: {
+    //     'dishid': info.dishid,
+    //   },
+    //   url: '/votes/upvote',
+    //   success: (data) => { console.log('upvote success: ', data); },
+    //   error: () => { console.log('upvote err: ', data); },
     // });
   }
 
-  dishPostDownVotes() {
-    this.c = 'a';
+  postDownvote(info) {
     // $.ajax({
     //   method: 'POST',
-    //   url: 'http://localhost:3000/votes/upvote',
     //   dataType: 'json',
-    //   success: (data) => { this.setState(this.state.voteCount = data.downvote); },
+    //   url: '/votes/downvote',
+    //   success: (data) => { console.log('downvote success: ', data); },
+    //   error: () => { console.log('downvote err: ', data); },
     // });
   }
 
-  dishGetPosts() {
-    this.b = 'a';
-    // $.ajax({
-    //   method: 'GET',
-    //   url: 'http://localhost:3000/post',
-    //   dataType: 'json',
-    //   success: (data) => { this.setState(this.state = data); },
-    // });
+  getVotes(info) {
+
+  }
+  //  need to refactor
+  handleClick(event) {
+    if (event === 'like') {
+      this.postUpvote();
+    } else if (event === 'dislike') {
+      this.postDownvote();
+    }
   }
 
-  dishGetLikes() {
-    this.state.dishLikes = 'a';
-    // $.ajax({
-    //   method: 'GET',
-    //   url: 'http://localhost:3000/post/votes/:dishId',
-    //   dataType: 'json',
-    //   success: (data) => { this.setState(this.state.dishLikes = data.dishid); },
-    // });
-  }
 
   render() {
-    console.log(this.state);
     return (
       <div>
-        { this.state.posts.post.map(item =>
+        { this.state.posts.map(item =>
           (<Post
+            key={item.content}
             postData={item}
-            votesPos={this.state.voteCountUp}
-            votesNeg={this.state.voteCountDown}
+            postId={item.id}
+            postImage={item.image}
+            postContent={item.content}
+            postUserid={item.username}
+            postDishid={item.dishname}
+            votesPos={item.votes.upvote}
+            votesNeg={item.votes.downvote}
+            clickyclick={this.handleClick}
+            likeylike={item.likesdish}
           />))}
       </div>
     );
