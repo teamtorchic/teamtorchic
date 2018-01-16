@@ -33,6 +33,7 @@ const Post = props => (
         <span className="content-ele">{props.postContent}</span>
       </p>
     </article>
+
   </div>
 );
 

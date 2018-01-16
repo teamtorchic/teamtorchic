@@ -31,40 +31,50 @@ class Posts extends React.Component {
     });
   }
 
+  getVotes(info) {
+  }
+
   postUpvote(info) {
-    // $.ajax({
-    //   method: 'POST',
-    //   dataType: 'json',
-    //   data: {
-    //     'dishid': info.dishid,
-    //   },
-    //   url: '/votes/upvote',
-    //   success: (data) => { console.log('upvote success: ', data); },
-    //   error: () => { console.log('upvote err: ', data); },
-    // });
+    $.ajax({
+      method: 'POST',
+      dataType: 'json',
+      url: '/votes/upvote',
+      data: {
+        dishid: info.postData.dishid,
+        likesdish: 1,
+        userId: info.postData.userid,
+        restaurantId: info.postData.restaurantid,
+      },
+      success: () => {
+        console.log('upvote success: ', info);
+      },
+      error: () => { console.log('upvote err: ', info); },
+    });
   }
 
   postDownvote(info) {
-    // $.ajax({
-    //   method: 'POST',
-    //   dataType: 'json',
-    //   url: '/votes/downvote',
-    //   success: (data) => { console.log('downvote success: ', data); },
-    //   error: () => { console.log('downvote err: ', data); },
-    // });
+    $.ajax({
+      method: 'POST',
+      dataType: 'json',
+      url: '/votes/downvote',
+      data: {
+        dishid: info.postData.dishid,
+        likesdish: 0,
+        userId: info.postData.userid,
+        restaurantId: info.postData.restaurantid,
+      },
+      success: () => { console.log('downvote success: ', info); },
+      error: () => { console.log('downvote err:', info); },
+    });
   }
 
-  getVotes(info) {
-
-  }
-  //  need to refactor
   handleClick(event, likes) {
     if (likes === 'like') {
       console.log('event: ', event, 'likes: ', likes);
-      // this.postUpvote();
+      this.postUpvote(event);
     } else if (likes === 'dislike') {
       console.log('event: ', event, 'likes: ', likes);
-      // this.postDownvote();
+      this.postDownvote(event);
     }
   }
 
