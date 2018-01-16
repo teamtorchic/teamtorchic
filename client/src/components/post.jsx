@@ -9,7 +9,7 @@ const Post = props => (
         {props.likeylike === 1 ? ' likes ' : null }
         {props.likeylike === 0 ? ' dislikes ' : null}
         {props.likeylike === null ? ' doesn\'t care for ' : null}
-        {props.postDishid}
+        {props.postDish}
       </p>
       <p><img className="image" alt="post" src={props.postImage} /></p>
       <p>
@@ -38,26 +38,26 @@ const Post = props => (
   </div>
 );
 
-Post.propTypes = {
-  postUserid: PropTypes.string,
-  likeylike: PropTypes.number,
-  postDishid: PropTypes.string,
-  postImage: PropTypes.string,
-  clickyclick: PropTypes.func,
-  votesNeg: PropTypes.number,
-  votesPos: PropTypes.number,
-  postContent: PropTypes.string,
-};
-
-Post.defaultProps = {
-  postUserid: PropTypes.string,
-  likeylike: PropTypes.number,
-  postDishid: PropTypes.string,
-  postImage: PropTypes.string,
-  clickyclick: PropTypes.func,
-  votesNeg: PropTypes.number,
-  votesPos: PropTypes.number,
-  postContent: PropTypes.string,
-};
+// Post.propTypes = {
+//   postUserid: PropTypes.string,
+//   likeylike: PropTypes.number,
+//   postDish: PropTypes.string,
+//   postImage: PropTypes.string,
+//   clickyclick: PropTypes.func,
+//   votesNeg: PropTypes.number,
+//   votesPos: PropTypes.number,
+//   postContent: PropTypes.string,
+// };
+//
+// Post.defaultProps = {
+//   postUserid: PropTypes.string,
+//   likeylike: PropTypes.number,
+//   postDish: PropTypes.string,
+//   postImage: PropTypes.string,
+//   clickyclick: PropTypes.func,
+//   votesNeg: PropTypes.number,
+//   votesPos: PropTypes.number,
+//   postContent: PropTypes.string,
+// };
 
 export default Post;

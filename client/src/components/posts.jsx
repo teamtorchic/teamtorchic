@@ -9,12 +9,16 @@ class Posts extends React.Component {
     super(props);
     this.state = {
       posts: fakePostsData.post,
+      headers: {
+        'access-control-allow-origin': '*',
+        'access-control-allow-methods': 'GET, POST, PUT, DELETE, OPTIONS',
+        'access-control-allow-headers': 'content-type, accept',
+      },
     };
     this.handleClick = this.handleClick.bind(this);
     this.getPostsData = this.getPostsData.bind(this);
     this.postUpvote = this.postUpvote.bind(this);
     this.postDownvote = this.postDownvote.bind(this);
-    this.getVotes = this.getVotes.bind(this);
   }
   // if the user has clicked the icon, needs to add one and keep it red. If the
   // user has clicked the icon again, need to subtract one and make it black
@@ -31,23 +35,19 @@ class Posts extends React.Component {
     });
   }
 
-  getVotes(info) {
-  }
-
   postUpvote(info) {
     $.ajax({
       method: 'POST',
       dataType: 'json',
+      headers: this.state.headers,
       url: '/votes/upvote',
       data: {
-        dishid: info.postData.dishid,
-        likesdish: 1,
-        userId: info.postData.userid,
-        restaurantId: info.postData.restaurantid,
+        'dishId': info.postData.dishid,
+        'likesDish': 1,
+        'userId': info.postData.userid,
+        'restaurantId': info.postData.restaurantid,
       },
-      success: () => {
-        console.log('upvote success: ', info);
-      },
+      success: () => { this.getPostsData(); console.log('upvote success: '); },
       error: () => { console.log('upvote err: ', info); },
     });
   }
@@ -57,13 +57,14 @@ class Posts extends React.Component {
       method: 'POST',
       dataType: 'json',
       url: '/votes/downvote',
+      headers: this.state.headers,
       data: {
-        dishid: info.postData.dishid,
-        likesdish: 0,
-        userId: info.postData.userid,
-        restaurantId: info.postData.restaurantid,
+        'dishId': info.postData.dishid,
+        'likesDish': 0,
+        'userId': info.postData.userid,
+        'restaurantId': info.postData.restaurantid,
       },
-      success: () => { console.log('downvote success: ', info); },
+      success: () => { console.log('downvote success: '); },
       error: () => { console.log('downvote err:', info); },
     });
   }
@@ -90,7 +91,7 @@ class Posts extends React.Component {
             postImage={item.image}
             postContent={item.content}
             postUserid={item.username}
-            postDishid={item.dishname}
+            postDish={item.dishname}
             votesPos={item.votes.upvote}
             votesNeg={item.votes.downvote}
             clickyclick={this.handleClick}
