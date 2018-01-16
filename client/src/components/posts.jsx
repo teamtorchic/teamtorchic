@@ -47,8 +47,11 @@ class Posts extends React.Component {
         'userId': info.postData.userid,
         'restaurantId': info.postData.restaurantid,
       },
-      success: () => { this.getPostsData(); console.log('upvote success: '); },
-      error: () => { console.log('upvote err: ', info); },
+      success: () => {
+        this.getPostsData();
+        console.log('upvote success: ');
+      },
+      error: () => { },
     });
   }
 
@@ -64,17 +67,20 @@ class Posts extends React.Component {
         'userId': info.postData.userid,
         'restaurantId': info.postData.restaurantid,
       },
-      success: () => { console.log('downvote success: '); },
-      error: () => { console.log('downvote err:', info); },
+      success: () => {
+        this.getPostsData();
+        // console.log('downvote success: ');
+      },
+      error: () => { },
     });
   }
 
   handleClick(event, likes) {
     if (likes === 'like') {
-      console.log('event: ', event, 'likes: ', likes);
+      // console.log('event: ', event, 'likes: ', likes);
       this.postUpvote(event);
     } else if (likes === 'dislike') {
-      console.log('event: ', event, 'likes: ', likes);
+      // console.log('event: ', event, 'likes: ', likes);
       this.postDownvote(event);
     }
   }
