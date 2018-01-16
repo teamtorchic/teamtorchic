@@ -13,7 +13,7 @@ class Comment extends React.Component {
 
     $.get({
       url: '/comments',
-      data: { post: 2 },
+      data: { post: this.props.post },
       contentType: 'application/json',
     }).done((data) => {
       this.setState({ comments: data.rows });
@@ -32,12 +32,12 @@ class Comment extends React.Component {
       $.post({
         url: '/comments',
         contentType: 'application/json',
-        data: JSON.stringify({ comment: content, userId: 1, postId: 2 }),
+        data: JSON.stringify({ comment: content, userId: 2, postId: this.props.post || 72 }),
       }).done(() => {
         this.setState({ comment: '' });
         $.get({
           url: '/comments',
-          data: { post: 2 },
+          data: { post: 72 },
           contentType: 'application/json',
         }).done((data) => {
           this.setState({ comments: data.rows });
