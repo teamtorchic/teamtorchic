@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import Comment from './comment';
 
 const Post = props => (
   <div className="post-ele">
@@ -33,7 +34,7 @@ const Post = props => (
         <span className="content-ele">{props.postContent}</span>
       </p>
     </article>
-
+    <Comment post={props.postData.id} />
   </div>
 );
 

@@ -14,13 +14,13 @@ const PORT = process.env.PORT || 3000;
 
 const app = express();
 
-const io = require('socket.io')(80);
+// const io = require('socket.io')(80);
 
-const restaurant = io.of('/restaurant');
-restaurant.on('connection', (socket) => {
-  console.log(socket);
-});
-restaurant.emit('hi', 'everyone!');
+// const restaurant = io.of('/restaurant');
+// restaurant.on('connection', (socket) => {
+// console.log(socket);
+// });
+// restaurant.emit('hi', 'everyone!');
 
 passport.use(localLogIn());
 passport.use(googleLogIn());
