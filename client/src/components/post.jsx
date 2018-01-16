@@ -13,18 +13,18 @@ const Post = props => (
       <p><img className="image" alt="post" src={props.postImage} /></p>
       <p>
         <i
-          onClick={() => {}}
+          onClick={() => props.clickyclick(props, 'like')}
           role="presentation"
-          onKeyDown={props.clickyclick({ props })}
+          onKeyDown={() => props.clickyclick(props, 'like')}
           className="material-icons"
         >
       favorite_border
         </i>
         {props.votesPos}
         <i
-          onClick={() => {}}
+          onClick={() => props.clickyclick(props, 'dislike')}
           role="presentation"
-          onKeyUp={props.clickyclick('dislike')}
+          onKeyUp={() => props.clickyclick(props, 'dislike')}
           className="material-icons"
         >
           mood_bad

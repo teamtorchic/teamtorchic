@@ -58,11 +58,13 @@ class Posts extends React.Component {
 
   }
   //  need to refactor
-  handleClick(event) {
-    if (event === 'like') {
-      this.postUpvote();
-    } else if (event === 'dislike') {
-      this.postDownvote();
+  handleClick(event, likes) {
+    if (likes === 'like') {
+      console.log('event: ', event, 'likes: ', likes);
+      // this.postUpvote();
+    } else if (likes === 'dislike') {
+      console.log('event: ', event, 'likes: ', likes);
+      // this.postDownvote();
     }
   }
 
