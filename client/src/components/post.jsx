@@ -3,17 +3,30 @@ import PropTypes from 'prop-types';
 
 const Post = props => (
   <div className="post-ele">
-    <article className={`ele ${props.postId}`}>
-      <p>{props.postUserid} {props.verb} {props.postDishid}</p>
+    <article className="ele">
+      <p>{props.postUserid}
+        {props.likeylike === 1 ? ' likes ' : null }
+        {props.likeylike === 0 ? ' dislikes ' : null}
+        {props.likeylike === null ? ' doesn\'t care for ' : null}
+        {props.postDishid}
+      </p>
       <p><img className="image" alt="post" src={props.postImage} /></p>
       <p>
-        <i onClick={() => props.clickyclick('like')}
-          className="material-icons">
+        <i
+          onClick={() => {}}
+          role="presentation"
+          onKeyDown={props.clickyclick({ props })}
+          className="material-icons"
+        >
       favorite_border
         </i>
         {props.votesPos}
-        <i onClick={() => props.clickyclick('dislike')}
-          className="material-icons">
+        <i
+          onClick={() => {}}
+          role="presentation"
+          onKeyUp={props.clickyclick('dislike')}
+          className="material-icons"
+        >
           mood_bad
         </i>
         {props.votesNeg}
@@ -24,24 +37,24 @@ const Post = props => (
 );
 
 Post.propTypes = {
-  postId: PropTypes.number,
   postUserid: PropTypes.string,
+  likeylike: PropTypes.number,
   postDishid: PropTypes.string,
   postImage: PropTypes.string,
   clickyclick: PropTypes.func,
-  votesNeg: PropTypes.func,
-  votesPos: PropTypes.func,
+  votesNeg: PropTypes.number,
+  votesPos: PropTypes.number,
   postContent: PropTypes.string,
 };
 
 Post.defaultProps = {
-  postId: PropTypes.number,
   postUserid: PropTypes.string,
+  likeylike: PropTypes.number,
   postDishid: PropTypes.string,
   postImage: PropTypes.string,
   clickyclick: PropTypes.func,
-  votesNeg: PropTypes.func,
-  votesPos: PropTypes.func,
+  votesNeg: PropTypes.number,
+  votesPos: PropTypes.number,
   postContent: PropTypes.string,
 };
 
