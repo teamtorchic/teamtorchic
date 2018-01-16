@@ -66,6 +66,17 @@ class Submit extends React.Component {
     this.endSuggest = this.endSuggest.bind(this);
     this.handleAcceptDish = this.handleAcceptDish.bind(this);
     this.handleAcceptRestaurant = this.handleAcceptRestaurant.bind(this);
+
+    $.get({
+      url: '/restaurants',
+    }).done((data) => {
+      this.setState({ comments: data.rows });
+    });
+    $.get({
+      url: '/dishes',
+    }).done((data) => {
+      this.setState({ comments: data.rows });
+    });
   }
 
   componentDidMount() {
