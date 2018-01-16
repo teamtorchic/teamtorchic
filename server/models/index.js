@@ -12,6 +12,17 @@ module.exports = {
       return db.client.query(getAllPost);
     },
   },
+  comments: {
+    post: (comment) => {
+      const query = `insert into comments (content, userId, postId) values ('${comment.comment}', ${comment.userId}, ${comment.postId}) RETURNING id`;
+      return db.client.query(query);
+    },
+    get: (post) => {
+      const query = `select comments.*, users.username from comments left join users on comments.userId=users.id WHERE postId = ${post}`;
+      console.log(query);
+      return db.client.query(query);
+    }
+  },
   submit: {
     dish: ({ dish }) => db.client.query(`insert into dishes (name) values ('${dish}') ON CONFLICT (name) DO UPDATE SET name='${dish}' RETURNING id`),
     restaurant: ({ restaurant }) => {

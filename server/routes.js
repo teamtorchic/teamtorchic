@@ -3,8 +3,11 @@ const router = require('express').Router();
 const multer = require('multer');
 
 const storageObject = multer.diskStorage({
+
+// var path = path.join(__dirname, '/../client/dist');
+
   destination(req, file, cb) {
-    cb(null, '/images');
+    cb(null, './images');
   },
   filename(req, file, cb) {
     cb(null, Date.now() + file.originalname);

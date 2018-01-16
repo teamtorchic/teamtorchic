@@ -107,13 +107,15 @@ class Submit extends React.Component {
 
     const { files } = e.dataTransfer;
     const [file] = files;
+    console.log(file.name);
     this.setState({ image: file, photoURL: window.URL.createObjectURL(file) });
   }
 
   handleClick(event) {
     if (event.target.name === 'like' && this.state.likes !== 'likes') {
+      console.log(event.currentTarget.name);
       this.setState({ likes: 'likes', dislikes: '' });
-    } else if (event.target.name === 'like' && this.state.likes === 'likes') {
+    } else if (event.currentTarget.name === 'like' && this.state.likes === 'likes') {
       this.setState({ likes: '' });
     } else if (event.target.name === 'dislike' && this.state.dislikes !== 'dislikes') {
       this.setState({ likes: '', dislikes: 'dislikes' });
@@ -175,7 +177,7 @@ class Submit extends React.Component {
   }
 
   handleFiles() {
-    const photo = document.getElementById('photoPicker').files[0];
+    const photo = this.fileInput.files[0];
     this.setState({ image: photo, photoURL: window.URL.createObjectURL(photo) });
   }
 
@@ -196,6 +198,9 @@ class Submit extends React.Component {
                 name="photo"
                 accept="image/*"
                 onChange={this.handleFiles}
+                ref={(input) => {
+                  this.fileInput = input;
+                }}
               />
               <div
                 id="dropzone"

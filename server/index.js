@@ -22,7 +22,6 @@ restaurant.on('connection', (socket) => {
 });
 restaurant.emit('hi', 'everyone!');
 
-
 passport.use(localLogIn());
 passport.use(googleLogIn());
 
@@ -46,6 +45,7 @@ passport.deserializeUser((username, done) => {
 
 // Middleware
 app.use(express.static(path.join(__dirname, '/../client/dist')));
+app.use('/images', express.static(path.join(__dirname, '/images')));
 app.use(cookieParser());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));

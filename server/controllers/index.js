@@ -1,6 +1,15 @@
 const models = require('../models');
 
 module.exports = {
+  comments: {
+    get: (req, res) => {
+      const { post } = req.query;
+      models.comments.get(post).then(results => res.json(results));
+    },
+    post: (data, res) => {
+      models.comments.post(data.body).then(() => res.send('success')).catch(err => console.log(err));
+    },
+  },
   post: {
     getAll: (req, res) => {
       models.post.getAll()
