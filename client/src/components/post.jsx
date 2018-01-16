@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import Comment from './comment';
 
 const Post = props => (
   <div className="post-ele">
@@ -13,18 +14,18 @@ const Post = props => (
       <p><img className="image" alt="post" src={props.postImage} /></p>
       <p>
         <i
-          onClick={() => {}}
+          onClick={() => props.clickyclick(props, 'like')}
           role="presentation"
-          onKeyDown={props.clickyclick({ props })}
+          onKeyDown={() => props.clickyclick(props, 'like')}
           className="material-icons"
         >
       favorite_border
         </i>
         {props.votesPos}
         <i
-          onClick={() => {}}
+          onClick={() => props.clickyclick(props, 'dislike')}
           role="presentation"
-          onKeyUp={props.clickyclick('dislike')}
+          onKeyUp={() => props.clickyclick(props, 'dislike')}
           className="material-icons"
         >
           mood_bad
@@ -33,6 +34,7 @@ const Post = props => (
         <span className="content-ele">{props.postContent}</span>
       </p>
     </article>
+    <Comment post={props.postData.id} />
   </div>
 );
 
