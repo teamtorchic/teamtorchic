@@ -22,7 +22,6 @@ module.exports = {
       return db.client.query(query);
     }
   },
-  submit: {
   submit: { 
     dish: ({ dish }) => db.client.query(`insert into dishes (name) values ('${dish}') ON CONFLICT (name) DO UPDATE SET name='${dish}' RETURNING id`),
     restaurant: ({ restaurant }) => {
