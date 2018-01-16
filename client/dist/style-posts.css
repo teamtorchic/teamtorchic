@@ -16,3 +16,11 @@
   margin: auto;
   border-style: solid;
 }
+
+.content-ele {
+  margin-left: 0.3cm;
+}
+
+i:hover {
+  color: red;
+}
