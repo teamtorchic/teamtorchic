@@ -18,7 +18,8 @@ const Post = props => (
           role="presentation"
           onKeyDown={() => props.clickyclick(props, 'like')}
           className="material-icons"
-          id={props.likeylike === 1 ? 'likes-selected' : null}
+          id={props.likeylike === 1 && props.loggedUser === props.postUserid ?
+            'likes-selected' : null}
         >
       favorite_border
         </i>
@@ -28,7 +29,8 @@ const Post = props => (
           role="presentation"
           onKeyUp={() => props.clickyclick(props, 'dislike')}
           className="material-icons"
-          id={props.likeylike === 0 ? 'dislikes-selected' : null}
+          id={props.likeylike === 0 && props.loggedUser === props.postUserid ?
+            'dislikes-selected' : null}
         >
           mood_bad
         </i>
@@ -46,6 +48,7 @@ Post.propTypes = {
   votesNeg: PropTypes.number,
   votesPos: PropTypes.number,
   postContent: PropTypes.string,
+  loggedUser: PropTypes.string,
 };
 
 Post.defaultProps = {
@@ -54,6 +57,7 @@ Post.defaultProps = {
   votesNeg: PropTypes.number,
   votesPos: PropTypes.number,
   postContent: PropTypes.string,
+  loggedUser: PropTypes.string,
 };
 
 export default Post;
