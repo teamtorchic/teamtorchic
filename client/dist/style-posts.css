@@ -21,6 +21,14 @@
   margin-left: 0.3cm;
 }
 
+#dislikes-selected {
+  color: red;
+}
+
+#likes-selected {
+  color: red;
+}
+
 i:hover {
   color: red;
 }

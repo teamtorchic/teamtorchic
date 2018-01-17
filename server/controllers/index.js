@@ -39,7 +39,7 @@ module.exports = {
             dish.forEach(votes => {
               if (votes.likesdish) {
                 vote.upvote += 1;
-              } else {
+              } else if ((votes.likesdish === 0)) {
                 vote.downvote += 1;
               }
             })

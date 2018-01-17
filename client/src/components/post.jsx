@@ -9,7 +9,7 @@ const Post = props => (
         {props.likeylike === 1 ? ' likes ' : null }
         {props.likeylike === 0 ? ' dislikes ' : null}
         {props.likeylike === null ? ' doesn\'t care for ' : null}
-        {props.postDishid}
+        {props.postDish}
       </p>
       <p><img className="image" alt="post" src={props.postImage} /></p>
       <p>
@@ -18,6 +18,7 @@ const Post = props => (
           role="presentation"
           onKeyDown={() => props.clickyclick(props, 'like')}
           className="material-icons"
+          id={props.likeylike === 1 ? 'likes-selected' : null}
         >
       favorite_border
         </i>
@@ -27,6 +28,7 @@ const Post = props => (
           role="presentation"
           onKeyUp={() => props.clickyclick(props, 'dislike')}
           className="material-icons"
+          id={props.likeylike === 0 ? 'dislikes-selected' : null}
         >
           mood_bad
         </i>
@@ -39,9 +41,6 @@ const Post = props => (
 );
 
 Post.propTypes = {
-  postUserid: PropTypes.string,
-  likeylike: PropTypes.number,
-  postDishid: PropTypes.string,
   postImage: PropTypes.string,
   clickyclick: PropTypes.func,
   votesNeg: PropTypes.number,
@@ -50,9 +49,6 @@ Post.propTypes = {
 };
 
 Post.defaultProps = {
-  postUserid: PropTypes.string,
-  likeylike: PropTypes.number,
-  postDishid: PropTypes.string,
   postImage: PropTypes.string,
   clickyclick: PropTypes.func,
   votesNeg: PropTypes.number,
