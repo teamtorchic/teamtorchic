@@ -58,24 +58,32 @@ module.exports = {
       } else {
         data.image = null;
       }
-      models.submit.restaurant(data)
-        .then((id) => {
-          data.restaurantId = id.rows[0].id;
-          return id;
-        })
-        .catch(e => res.status(404).send(e))
-        .then(() => models.submit.dish(data))
-        .catch(e => res.status(404).send(e))
-        .then((id) => {
-          data.dishId = id.rows[0].id;
-          return id;
-        })
-        .then(() => models.submit.post(data))
-        .catch(e => res.status(404).send(e))
-        .then(() => res.send('successful post'))
-        .catch((err) => {
-          res.status(404).send(err);
-        });
+      if (data.recipe.length > 0) {
+        models.submit.recipe(data)
+          .then(() => res.send('successful post'))
+          .catch((err) => {
+            res.status(404).send(err);
+          });
+      } else {
+        models.submit.restaurant(data)
+          .then((id) => {
+            data.restaurantId = id.rows[0].id;
+            return data.restaurantId;
+          })
+          .catch(e => res.status(404).send(e))
+          .then(() => models.submit.dish(data))
+          .catch(e => res.status(404).send(e))
+          .then((id) => {
+            data.dishId = id.rows[0].id;
+            return id;
+          })
+          .then(() => models.submit.post(data))
+          .catch(e => res.status(404).send(e))
+          .then(() => res.send('successful post'))
+          .catch((err) => {
+            res.status(404).send(err);
+          });
+      }
     },
   },
   dishlikes: {

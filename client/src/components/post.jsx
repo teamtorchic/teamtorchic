@@ -11,7 +11,7 @@ const Post = props => (
         {props.likeylike === null ? ' doesn\'t care for ' : null}
         {props.postDish}
       </p>
-      <p><img className="image" alt="post" src={props.postImage} /></p>
+      <img className="image" src={"/images/" + props.postData.image} />
       <p>
         <i
           onClick={() => props.clickyclick(props, 'like')}
