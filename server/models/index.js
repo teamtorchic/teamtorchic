@@ -6,7 +6,7 @@ module.exports = {
   post: {
     getAll: () => {
       const getAllPost = {
-        text: 'select content, image, dishid, userid, restaurantid, likesdish, users.username, restaurants.name as restaurantname, dishes.name as dishname from posts inner join users on users.id = userid inner join restaurants on restaurants.id = restaurantid inner join dishes on dishes.id = dishid where content IS NOT NULL',
+        text: 'select content, posts.id, image, dishid, userid, restaurantid, likesdish, users.username, restaurants.name as restaurantname, dishes.name as dishname from posts inner join users on users.id = userid inner join restaurants on restaurants.id = restaurantid inner join dishes on dishes.id = dishid where (posts.content IS NOT NULL OR posts.image IS NOT NULL)',
       };
       return db.client.query(getAllPost);
     },
@@ -15,7 +15,8 @@ module.exports = {
   restaurants: () => db.client.query('select * from restaurants'),
   comments: {
     post: (comment) => {
-      const query = `insert into comments (content, userId, postId) values ('${comment.comment}', ${comment.userId}, ${comment.postId}) RETURNING id`;
+      const encodedComment = comment.comment.replace("'", "''");
+      const query = `insert into comments (content, userId, postId) values ('${encodedComment}', ${comment.userId}, ${comment.postId}) RETURNING id`;
       return db.client.query(query);
     },
     get: (post) => {
@@ -43,8 +44,9 @@ module.exports = {
       } else {
         likesDish = null;
       }
-      const query = `insert into posts (content, likesDish, userId, dishId, restaurantId, image) values ('${data.commentary}', ${likesDish}, 1, ${data.dishId}, ${data.restaurantId}, '${data.image}')`;
-      db.client.query(query);
+      const encodedCommentary = data.commentary.replace("'", "''");
+      const query = `insert into posts (content, likesDish, userId, dishId, restaurantId, image) values ('${encodedCommentary}', ${likesDish}, 2, ${data.dishId}, ${data.restaurantId}, '${data.image}')`;
+      return db.client.query(query);
     },
   },
   dishlikes: {
