@@ -45,7 +45,6 @@ module.exports = {
             });
             res.body.data[i].votes = vote;
           });
-          console.log('req.user', req.user);
           res.json(res.body.data);
         })
         .catch((err) => {
@@ -128,28 +127,52 @@ module.exports = {
         });
     },
   },
-  signup: {
-    submit: (req, res) => {
-      const { username, password } = req.body;
-      models.users.findByUsername(username)
+  user: {
+    getProfile: (req, res) => {
+      const { username } = req.params;
+      models.users.getProfile(username)
         .then((results) => {
-          if (results.rowCount === 0) {
-            models.users.create(username, password)
-              .then(() => {
-                res.redirect(`/users/${req.body.username}`);
-              })
-              .catch((err) => {
-                res.status(500).send(err);
-              });
-          } else {
-            res.send({ message: 'username already exists' });
-          }
+          res.json(results);
+        })
+        .catch((err) => {
+          res.status(401).send(err);
         });
     },
-  },
-  user: {
-    landing: (req, res) => {
-      res.redirect(`/users/${req.body.username}`);
+    getAllPost: (req, res) => {
+      const { username } = req.params;
+      models.post.getByUsername(username)
+        .then((results) => {
+          results = JSON.parse(JSON.stringify(results.rows));
+          res.body = {};
+          res.body.data = results;
+          const Promises = results.map((post) => {
+            const { dishid } = post;
+            return models.dishlikes.get(dishid);
+          });
+          return Promise.all(Promises);
+        })
+        .catch(err => console.log(err))
+        .then((results) => {
+          results = results.map(result => result.rows);
+          results.forEach((dish, i) => {
+            const vote = {
+              upvote: 0,
+              downvote: 0,
+            };
+            dish.forEach((votes) => {
+              if (votes.likesdish) {
+                vote.upvote += 1;
+              } else {
+                vote.downvote += 1;
+              }
+            });
+            res.body.data[i].votes = vote;
+          });
+          res.json(res.body.data);
+        })
+        .catch((err) => {
+          res.status(404).send(err);
+        });
     },
   },
 };

@@ -22,11 +22,10 @@ module.exports = {
     callbackURL: process.env.EATCHIC_CALLBACK_URL || 'YOUR CALLBACK URL HERE',
   }, (accessToken, refreshToken, profile, done) => done(null, profile)),
   isLoggedIn: (req, res, next) => {
-    console.log ("inside is loggedin ", req);
-    if (req.user) {
+    if (req.session.user) {
       next();
     } else {
-      next();
+      res.redirect('/login');
     }
   },
 };

@@ -10,6 +10,12 @@ module.exports = {
       };
       return db.client.query(getAllPost);
     },
+    getByUsername: (username) => {
+      const getAllPostByUsername = {
+        text: `select content, image, dishid, userid, restaurantid, likesdish, users.username, restaurants.name as restaurantname, dishes.name as dishname from posts inner join users on users.id = userid inner join restaurants on restaurants.id = restaurantid inner join dishes on dishes.id = dishid where users.username = '${username}' and content IS NOT NULL`,
+      };
+      return db.client.query(getAllPostByUsername);
+    },
   },
   dishes: () => db.client.query('select * from dishes'),
   restaurants: () => db.client.query('select * from restaurants'),
@@ -140,6 +146,13 @@ module.exports = {
         rowMode: 'array',
       };
       return db.client.query(checkCredential);
+    },
+    getProfile: (username) => {
+      const getUserInfo = {
+        text: 'select * from users where username = $1',
+        value: [username],
+      };
+      return db.client.query(getUserInfo);
     },
   },
 };
