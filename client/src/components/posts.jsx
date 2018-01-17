@@ -90,9 +90,9 @@ class Posts extends React.Component {
       <div>
         { this.state.posts.map(item =>
           (<Post
-            key={item.content}
-            postData={item}
             postId={item.id}
+            key={item.id}
+            postData={item}
             postImage={item.image}
             postContent={item.content}
             postUserid={item.username}

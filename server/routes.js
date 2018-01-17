@@ -17,9 +17,11 @@ const storageObject = multer.diskStorage({
 const upload = multer({ storage: storageObject });
 const passport = require('passport');
 
-
 router.get('/comments', controller.comments.get);
 router.post('/comments', controller.comments.post);
+
+router.get('/restaurants', controller.restaurants);
+router.get('/dishes', controller.dishes);
 
 router.get('/post', controller.post.getAll);
 router.post('/submit', upload.single('image'), controller.post.submit);

@@ -7,43 +7,6 @@ import $ from 'jquery';
 // import io from 'socket.io-client';
 import Suggestions from './suggestions';
 
-const dishes = [
-  { id: 1, name: 'chicken tikka masala' },
-  { id: 2, name: 'general Tsou\'s Chicken' },
-  { id: 3, name: 'fried chicken' },
-  { id: 4, name: 'black bean chicken' },
-  { id: 5, name: 'chicken katsu curry' },
-];
-
-const restaurants = [
-  { id: 1, name: 'City View Restaurant' },
-  { id: 2, name: 'Tommaso\'s' },
-  { id: 3, name: 'The Slanted Door' },
-  { id: 4, name: 'House of Nanking' },
-  { id: 5, name: 'Hog Island Oyster Company' },
-  { id: 6, name: 'Honey Honey' },
-  { id: 7, name: 'Uncle Vito\'s Pizzeria' },
-  { id: 8, name: 'Johnny Foley\'s' },
-  { id: 9, name: 'Tommy\'s Joynt' },
-  { id: 10, name: 'King Of Thai Noodle' },
-  { id: 11, name: 'Calzone\'s Pizza Cucina' },
-  { id: 12, name: 'Lers Ros Thai' },
-  { id: 13, name: 'Little Delhi' },
-  { id: 14, name: 'In-N-Out Burger' },
-  { id: 15, name: 'Boudin Bakery' },
-  { id: 16, name: 'Ghirardelli Ice Cream and Chocolate Shop' },
-  { id: 17, name: 'Scoma\'s' },
-  { id: 18, name: 'Brenda\'s French Soul Food' },
-  { id: 19, name: 'The Cheesecake Factory' },
-  { id: 20, name: '21st Amendment Brewery' },
-  { id: 21, name: 'Amber' },
-  { id: 22, name: 'Dottie\'s' },
-  { id: 23, name: 'Sears Fine Food' },
-  { id: 24, name: 'Honey Honey' },
-  { id: 25, name: 'Thirsty Bear' },
-  { id: 26, name: 'Farallon' },
-];
-
 class Submit extends React.Component {
   constructor(props) {
     super(props);
@@ -66,6 +29,17 @@ class Submit extends React.Component {
     this.endSuggest = this.endSuggest.bind(this);
     this.handleAcceptDish = this.handleAcceptDish.bind(this);
     this.handleAcceptRestaurant = this.handleAcceptRestaurant.bind(this);
+
+    $.get({
+      url: '/restaurants',
+    }).done((data) => {
+      this.setState({ restaurants: data.rows });
+    });
+    $.get({
+      url: '/dishes',
+    }).done((data) => {
+      this.setState({ dishes: data.rows });
+    });
   }
 
   componentDidMount() {
@@ -83,22 +57,6 @@ class Submit extends React.Component {
     dropbox.addEventListener('dragenter', dragenter, false);
     dropbox.addEventListener('dragover', dragover, false);
     dropbox.addEventListener('drop', this.handleDrop, false);
-
-    // const socket = io.connect('http://localhost');
-
-    // socket.on('connect', () => {
-    //   console.log('meow! we\'re connected');
-    // });
-
-
-    // const restaurantSocket = io('/restaurant');
-    // // const dishSocket = io('/dish');
-
-    //
-    // restaurantSocket.on('news', (data) => {
-    //   console.log(data);
-    //   restaurantSocket.emit('my other event', { my: 'data' });
-    // });
   }
 
   handleDrop(e) {
@@ -107,7 +65,6 @@ class Submit extends React.Component {
 
     const { files } = e.dataTransfer;
     const [file] = files;
-    console.log(file.name);
     this.setState({ image: file, photoURL: window.URL.createObjectURL(file) });
   }
 
@@ -140,10 +97,10 @@ class Submit extends React.Component {
     const keyword = event.target.value;
     const type = event.target.id;
     if (type === 'restaurant') {
-      options = restaurants.filter(restaurant => RegExp(keyword, 'i').test(restaurant.name));
+      options = this.state.restaurants.filter(restaurant => RegExp(keyword, 'i').test(restaurant.name));
     }
     if (type === 'dish') {
-      options = dishes.filter(dish => (dish.name).match(keyword));
+      options = this.state.dishes.filter(dish => (dish.name).match(keyword));
     }
     this.setState({ suggestions: options, active: type });
   }
