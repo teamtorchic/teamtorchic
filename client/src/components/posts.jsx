@@ -3,7 +3,6 @@ import $ from 'jquery';
 
 import Post from './post';
 
-
 class Posts extends React.Component {
   constructor(props) {
     super(props);
@@ -17,16 +16,13 @@ class Posts extends React.Component {
         'access-control-allow-headers': 'content-type, accept',
       },
     };
-    
+
     this.handleClick = this.handleClick.bind(this);
     this.getPostsData = this.getPostsData.bind(this);
     this.postUpvote = this.postUpvote.bind(this);
     this.postDownvote = this.postDownvote.bind(this);
   }
 
-  // componentWillMount() {
-  //   this.getPostsData();
-  // }
 
   componentWillReceiveProps(nextProps) {
     if (this.props.posts !== nextProps.posts) {
@@ -100,18 +96,18 @@ class Posts extends React.Component {
   }
 
   handleClick(event, likes) {
-    if (likes === 'like') {
-      console.log('event: ', event, 'likes: ', likes, 'user', this.props.user);
-      this.postUpvote(event, this.props.user);
+    if (likes === 'like' && this.props.user) {
+      console.log('event: ', event, 'likes: ', likes, 'user', this.props.id);
+      this.postUpvote(event, this.props.id);
     } else if (likes === 'dislike' && this.props.user) {
       console.log('event: ', event, 'likes: ', likes);
-      this.postDownvote(event, this.props.user);
+      this.postDownvote(event, this.props.id);
     }
   }
 
 
   render() {
-    console.log(this.state.posts);
+    console.log('user: ', this.props.user);
     return (
       <div>
         { this.state.posts.map(item =>
@@ -122,6 +118,7 @@ class Posts extends React.Component {
             postImage={item.image}
             postContent={item.content}
             postUserid={item.username}
+            loggedUser={this.props.user}
             postDish={item.dishname}
             votesPos={item.votes.upvote}
             votesNeg={item.votes.downvote}
