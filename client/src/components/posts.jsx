@@ -33,7 +33,7 @@ class Posts extends React.Component {
     });
   }
 
-  postUpvote(info) {
+  postUpvote(info, otherid) {
     $.ajax({
       method: 'POST',
       dataType: 'json',
@@ -42,18 +42,18 @@ class Posts extends React.Component {
       data: {
         'dishId': info.postData.dishid,
         'likesDish': 1,
-        'userId': info.postData.userid,
+        'userId': otherid,
         'restaurantId': info.postData.restaurantid,
       },
       success: () => {
         this.getPostsData();
-        console.log('upvote success: ', info);
+        console.log('upvote success: ', otherid);
       },
-      error: () => { },
+      error: () => { console.log('MISH IS MY BEST FRIEND'); },
     });
   }
 
-  postDownvote(info) {
+  postDownvote(info, otherid) {
     $.ajax({
       method: 'POST',
       dataType: 'json',
@@ -62,29 +62,30 @@ class Posts extends React.Component {
       data: {
         'dishId': info.postData.dishid,
         'likesDish': 0,
-        'userId': info.postData.userid,
+        'userId': otherid,
         'restaurantId': info.postData.restaurantid,
       },
       success: () => {
         this.getPostsData();
-        console.log('downvote success: ');
+        console.log('downvote success: ', otherid);
       },
-      error: () => { },
+      error: () => { console.log('LORY IS MY BEST FRIEND'); },
     });
   }
 
   handleClick(event, likes) {
     if (likes === 'like') {
-      // console.log('event: ', event, 'likes: ', likes);
-      this.postUpvote(event);
-    } else if (likes === 'dislike') {
-      // console.log('event: ', event, 'likes: ', likes);
-      this.postDownvote(event);
+      console.log('event: ', event, 'likes: ', likes, 'user', this.props.userInfo);
+      this.postUpvote(event, this.props.userInfo);
+    } else if (likes === 'dislike' && this.props.userInfo) {
+      console.log('event: ', event, 'likes: ', likes);
+      this.postDownvote(event, this.props.userInfo);
     }
   }
 
 
   render() {
+    console.log('checking for users info:', this)
     return (
       <div>
         { this.state.posts.map(item =>

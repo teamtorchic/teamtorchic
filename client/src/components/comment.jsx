@@ -28,7 +28,7 @@ class Comment extends React.Component {
     if (event.key === 'Enter') {
       const content = event.target.value;
       console.log('enter pressed');
-      console.log(content);
+      // console.log(content);
       $.post({
         url: '/comments',
         contentType: 'application/json',

@@ -36,7 +36,9 @@ class App extends React.Component {
           { this.state.user && <button onClick={this.handleLogout}> Logout</button> }
         </div>
         {this.state.user && <Submit user={this.state.user} />}
-        <Posts />
+        <Posts
+          userInfo={this.state.user}
+        />
       </div>
     );
   }
