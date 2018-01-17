@@ -1,5 +1,4 @@
-import React from 'react'
-import Blubird from 'bluebird';
+import React from 'react';
 import $ from 'jquery';
 import Posts from '../components/posts';
 import Header from '../components/header';
@@ -19,14 +18,13 @@ class Home extends React.Component {
     $.get({
       url: '/session',
       success: (data) => {
-        console.log('----=------', data)
         this.setState({
           user: data,
         });
       },
     });
     $.get({
-      url: '/Lory' || `/${this.state.user}`,
+      url: '/Lory',
       contentType: 'application/json',
       success: (data) => {
         console.log("incoming datqa", data);

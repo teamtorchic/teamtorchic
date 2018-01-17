@@ -6,13 +6,20 @@ class Header extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      user: props.user,
       view: 'none',
     };
     this.changeLoginView = this.changeLoginView.bind(this);
     this.changeSignupView = this.changeSignupView.bind(this);
     this.changeView = this.changeView.bind(this);
   }
-
+  componentWillReceiveProps(nextProps) {
+    if (this.props.user !== nextProps.user) {
+      this.setState({
+        user: nextProps.user,
+      });
+    }
+  }
   changeView() {
     this.setState({
       view: 'none',
@@ -31,14 +38,15 @@ class Header extends React.Component {
   }
 
   render() {
-    const { handleLogin, user } = this.props;
+    const { handleLogin } = this.props;
+    const { user } = this.state;
     return (
       <div>{ user && <span>Welcome, {user} to </span> }<span>eatChic</span>
         { !user && <a href="/auth/google"> Log In Through Google </a> }
         { !user && <button onClick={this.changeLoginView}>Log In</button> }
         { !user && <button onClick={this.changeSignupView}>Sign Up</button> }
-        { this.state.view === 'login' && <Login user={user} handleLogin={handleLogin} changeView={this.changeView} /> }
-        { this.state.view === 'signup' && <Signup user={user} handleLogin={handleLogin} changeView={this.changeView} /> }
+        { this.state.view === 'login' && <Login /> }
+        { this.state.view === 'signup' && <Signup /> }
       </div>
     );
   }

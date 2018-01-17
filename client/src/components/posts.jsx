@@ -8,29 +8,54 @@ class Posts extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      posts: fakePostsData.post,
+      user: props.user,
+      posts: props.posts,
       headers: {
         'access-control-allow-origin': '*',
         'access-control-allow-methods': 'GET, POST, PUT, DELETE, OPTIONS',
         'access-control-allow-headers': 'content-type, accept',
       },
     };
+    
     this.handleClick = this.handleClick.bind(this);
     this.getPostsData = this.getPostsData.bind(this);
     this.postUpvote = this.postUpvote.bind(this);
     this.postDownvote = this.postDownvote.bind(this);
   }
-  componentDidMount() {
-    this.getPostsData();
+
+  // componentWillMount() {
+  //   this.getPostsData();
+  // }
+
+  componentWillReceiveProps(nextProps) {
+    if (this.props.posts !== nextProps.posts) {
+      this.setState({
+        posts: nextProps.posts,
+      });
+    }
   }
 
   getPostsData() {
-    $.ajax({
-      method: 'GET',
-      url: '/post',
-      dataType: 'json',
-      success: (data) => { this.setState(this.state.posts = data); },
-    });
+    if (this.state.user) {
+      $.get({
+        url: `/${this.state.user}`,
+        success: (data) => {
+          this.setState({
+            posts: data,
+          });
+        },
+        err: (err) => {
+          console.log(err);
+        },
+      });
+    } else {
+      $.ajax({
+        method: 'GET',
+        url: '/posts',
+        dataType: 'json',
+        success: (data) => { this.setState(this.state.posts = data); },
+      });
+    }
   }
 
   postUpvote(info, otherid) {
@@ -75,17 +100,17 @@ class Posts extends React.Component {
 
   handleClick(event, likes) {
     if (likes === 'like') {
-      console.log('event: ', event, 'likes: ', likes, 'user', this.props.userInfo);
-      this.postUpvote(event, this.props.userInfo);
-    } else if (likes === 'dislike' && this.props.userInfo) {
+      console.log('event: ', event, 'likes: ', likes, 'user', this.props.user);
+      this.postUpvote(event, this.props.user);
+    } else if (likes === 'dislike' && this.props.user) {
       console.log('event: ', event, 'likes: ', likes);
-      this.postDownvote(event, this.props.userInfo);
+      this.postDownvote(event, this.props.user);
     }
   }
 
 
   render() {
-    console.log('checking for users info:', this)
+    console.log(this.state.posts);
     return (
       <div>
         { this.state.posts.map(item =>

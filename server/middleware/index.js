@@ -7,7 +7,8 @@ module.exports = {
     models.users.checkUserCredential(username, password)
       .then((results) => {
         if (results.rowCount === 1) {
-          done(null, results.rows[0]);
+          const { username } = results.rows[0];
+          done(null, username);
         } else {
           done(null, false, { message: 'Incorrect username or password' });
         }

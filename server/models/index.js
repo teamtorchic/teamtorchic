@@ -27,9 +27,8 @@ module.exports = {
     },
     get: (post) => {
       const query = `select comments.*, users.username from comments left join users on comments.userId=users.id WHERE postId = ${post}`;
-      console.log(query);
       return db.client.query(query);
-    }
+    },
   },
   submit: {
     dish: ({ dish }) => db.client.query(`insert into dishes (name) values ('${dish}') ON CONFLICT (name) DO UPDATE SET name='${dish}' RETURNING id`),
@@ -127,7 +126,6 @@ module.exports = {
       const findUser = {
         text: 'select username from users where username = $1',
         values: [username],
-        rowMode: 'array',
       };
       return db.client.query(findUser);
     },
@@ -135,7 +133,6 @@ module.exports = {
       const createUser = {
         text: 'insert into users (username, password) values ($1, $2)',
         values: [username, password],
-        rowMode: 'array',
       };
       return db.client.query(createUser);
     },
@@ -143,7 +140,6 @@ module.exports = {
       const checkCredential = {
         text: 'select username from users where username = $1 and password = $2',
         values: [username, password],
-        rowMode: 'array',
       };
       return db.client.query(checkCredential);
     },

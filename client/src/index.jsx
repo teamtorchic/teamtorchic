@@ -1,63 +1,86 @@
 import React from 'react';
+import $ from 'jquery';
 import ReactDOM from 'react-dom';
-import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
-import Login from './components/login';
-import Signup from './components/signup';
-import Home from './components/home';
+import Header from './components/header';
+import Submit from './components/submit';
+import Posts from './components/posts';
 
-// class App extends React.Component {
-//   constructor(props) {
-//     super(props);
-//     this.state = {
-//       user: null,
-//     };
-//     this.handleLogin = this.handleLogin.bind(this);
-//     this.handleLogout = this.handleLogout.bind(this);
-//   }
+class App extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      user: null,
+      posts: [],
+    };
+    this.handleLogin = this.handleLogin.bind(this);
+    this.handleLogout = this.handleLogout.bind(this);
+  }
 
-//   handleLogin(user) {
-//     this.setState({ user });
-//   }
+  componentDidMount() {
+    $.get({
+      url: '/session',
+      success: (data) => {
+        if (data) {
+          this.setState({
+            user: data,
+          });
+          $.get({
+            url: `/${this.state.user}`,
+            success: (data) => {
+              this.setState({
+                posts: data,
+              });
+              console.log("indexSTate:", this.state);
+            },
+            err: (err) => {
+              console.log(err);
+            },
+          });
+        } else {
+          $.get({
+            url: '/posts',
+            success: (data) => {
+              this.setState({
+                posts: data,
+              });
+            },
+          });
+        }
+      },
+      err: (err) => {
+        console.log(err);
+      },
+    });
+  }
 
-//   handleLogout() {
-//     this.setState({
-//       user: null,
-//     });
-//   }
+  handleLogin(user) {
+    this.setState({ user });
+  }
 
-//   render() {
-//     return (
-//       <div>
-//         <div id="header">
-//           <Header
-//             user={this.state.user}
-//             handleLogin={this.handleLogin}
-//           />
-//           { this.state.user && <button onClick={this.handleLogout}> Logout</button> }
-//         </div>
-//         {this.state.user && <Submit user={this.state.user} />}
-//         <Posts
-//           userInfo={this.state.user}
-//         />
-//       </div>
-//     );
-//   }
-// }
+  handleLogout() {
+    $.get({
+      url: '/posts',
+      success: (data) => {
+        this.setState({
+          posts: data,
+          user: null,
+        });
+      },
+    });
+  }
 
-const App = () => (
-  <Router>
-    <div>
-      <ul>
-        <li><Link to="/home">Home</Link></li>
-        <li><Link to="/login">Log In</Link></li>
-        <li><Link to="/signup">Sign Up</Link></li>
-      </ul>
-      <hr />
+  render() {
+    return (
+      <div>
+        <div id="header">
+          <Header user={this.state.user} handleLogin={this.handleLogin} />
+          { this.state.user && <button onClick={this.handleLogout}> Logout</button> }
+        </div>
+        {this.state.user && <Submit user={this.state.user} />}
+        <Posts user={this.state.user} posts={this.state.posts} />
+      </div>
+    );
+  }
+}
 
-      <Route exact path="/home" component={Home} />
-      <Route path="/login" component={Login} />
-      <Route path="/signup" component={Signup} />
-    </div>
-  </Router>
-);
 ReactDOM.render(<App />, document.getElementById('app'));

@@ -26,6 +26,6 @@ router.post('/submit', isLoggedIn, upload.single('image'), controller.post.submi
 router.post('/votes/upvote', isLoggedIn, controller.dishlikes.upVote);
 router.post('/votes/downvote', isLoggedIn, controller.dishlikes.downVote);
 router.get('/user/profile', isLoggedIn, controller.user.getProfile);
-router.get('/:username', controller.user.getAllPost);
+router.get('/:username', isLoggedIn, controller.user.getAllPost);
 
 module.exports = router;

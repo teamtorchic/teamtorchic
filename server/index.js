@@ -24,6 +24,24 @@ const app = express();
 passport.use(localLogIn());
 passport.use(googleLogIn());
 
+passport.serializeUser((user, done) => {
+  done(null, user[0]);
+});
+
+passport.deserializeUser((username, done) => {
+  models.users.findByUsername(username)
+    .then((results) => {
+      if (results.rowCount === 1) {
+        done(null, results.rows[0]);
+      } else {
+        done(null, false);
+      }
+    })
+    .catch((err) => {
+      done(err);
+    });
+});
+
 // Middleware
 app.use(express.static(path.join(__dirname, '/../client/dist')));
 app.use('/images', express.static(path.join(__dirname, '/images')));
@@ -39,31 +57,16 @@ app.use(passport.initialize());
 app.use(passport.session());
 app.use(flash());
 
-app.use('/', express.static(path.join(__dirname, '/../client/dist')));
-app.use('/login', express.static(path.join(__dirname, '/../client/dist')));
+app.use(express.static(path.join(__dirname, '/../client/dist')));
+app.use('/login', express.static(path.join(__dirname, '/../client/dist/login.html')));
 app.use('/signup', express.static(path.join(__dirname, '/../client/dist')));
-app.use('/home', express.static(path.join(__dirname, '/../client/dist')));
-
-app.get('/', (req, res) => {
-  if (req.isAuthenticated()) {
-    const username = req.session.user;
-    res.body = {
-      data: username,
-    };
-    res.redirect('/home');
-  } else {
-    res.redirect('/posts');
-  }
-});
 
 app.get('/session', (req, res) => {
-  console.log ('hi');
-  console.log (req.session);
-  if (req.isAuthenticated()) {
-    console.log ("in/hone", req.session.user);
-    res.json({'a': 1});
+  if (req.session.user) {
+    const { user } = req.session;
+    res.json(user);
   } else {
-    res.redirect('/login');
+    res.json(null);
   }
 });
 
@@ -74,13 +77,17 @@ app.post('/signup', (req, res) => {
       if (results.rowCount === 0) {
         models.users.create(username, password)
           .then(() => {
-            res.redirect('/home');
+            req.session.regenerate(() => {
+              req.session.user = username;
+              res.redirect('/');
+            });
           })
           .catch((err) => {
             res.status(500).send(err);
           });
       } else {
-        res.send({ message: 'username already exists' });
+        res.redirect('/login');
+        // res.send({ message: 'username already exists' });
       }
     });
 });
@@ -93,11 +100,7 @@ app.post('/login', (req, res, next) => {
     }
     req.session.regenerate(() => {
       req.session.user = user;
-      res.body = {
-        data: { username: user },
-      };
-      console.log ('inlogin redirect', res);
-      res.redirect('/home');
+      res.redirect('/');
     });
   })(req, res, next);
 });
@@ -108,7 +111,7 @@ app.get('/auth/google/callback', passport.authenticate('google'), (req, res) => 
 });
 
 app.get('/logout', (req, res) => {
-  // res.clearCookie();
+  res.clearCookie();
   req.session.destroy(() => {
     res.redirect('/login');
   });
