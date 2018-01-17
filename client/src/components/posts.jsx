@@ -2,7 +2,7 @@ import React from 'react';
 import $ from 'jquery';
 
 import Post from './post';
-import fakePostsData from './fakePostsData';
+
 
 class Posts extends React.Component {
   constructor(props) {
@@ -10,6 +10,7 @@ class Posts extends React.Component {
     this.state = {
       user: props.user,
       posts: props.posts,
+      id: props.id,
       headers: {
         'access-control-allow-origin': '*',
         'access-control-allow-methods': 'GET, POST, PUT, DELETE, OPTIONS',

@@ -150,5 +150,12 @@ module.exports = {
       };
       return db.client.query(getUserInfo);
     },
+    getUserId: (username) => {
+      const getUserId = {
+        text: 'select id from users where username = $1',
+        values: [username],
+      };
+      return db.client.query(getUserId);
+    },
   },
 };

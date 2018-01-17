@@ -64,7 +64,13 @@ app.use('/signup', express.static(path.join(__dirname, '/../client/dist')));
 app.get('/session', (req, res) => {
   if (req.session.user) {
     const { user } = req.session;
-    res.json(user);
+    models.users.getUserId(user)
+      .then((result) => {
+        const { id } = result.rows[0];
+        console.log ("user, id", {user, id})
+        res.json({ user, id });
+      })
+      .catch(err => console.log(err));
   } else {
     res.json(null);
   }

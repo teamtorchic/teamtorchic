@@ -10,6 +10,7 @@ class App extends React.Component {
     super(props);
     this.state = {
       user: null,
+      id: null,
       posts: [],
     };
     this.handleLogin = this.handleLogin.bind(this);
@@ -22,7 +23,8 @@ class App extends React.Component {
       success: (data) => {
         if (data) {
           this.setState({
-            user: data,
+            user: data.user,
+            id: data.id,
           });
           $.get({
             url: `/${this.state.user}`,
@@ -77,7 +79,7 @@ class App extends React.Component {
           { this.state.user && <button onClick={this.handleLogout}> Logout</button> }
         </div>
         {this.state.user && <Submit user={this.state.user} />}
-        <Posts user={this.state.user} posts={this.state.posts} />
+        <Posts user={this.state.user} id={this.state.id} posts={this.state.posts} />
       </div>
     );
   }
