@@ -10,6 +10,12 @@ module.exports = {
       models.comments.post(data.body).then(() => res.send('success')).catch(err => console.log(err));
     },
   },
+  dishes: (req, res) => {
+    models.dishes().then(results => res.json(results));
+  },
+  restaurants: (req, res) => {
+    models.restaurants().then(results => res.json(results));
+  },
   post: {
     getAll: (req, res) => {
       models.post.getAll()
