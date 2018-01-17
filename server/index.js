@@ -6,8 +6,7 @@ const passport = require('passport');
 const flash = require('flash');
 const cookieParser = require('cookie-parser');
 const router = require('./routes.js');
-const { localLogIn } = require('./middleware');
-const { googleLogIn } = require('./middleware');
+const { localLogIn, googleLogIn } = require('./middleware');
 const models = require('./models');
 
 const PORT = process.env.PORT || 3000;
@@ -44,8 +43,8 @@ passport.deserializeUser((username, done) => {
 });
 
 // Middleware
-app.use('/images', express.static(path.join(__dirname, '../images')));
 app.use(express.static(path.join(__dirname, '/../client/dist')));
+app.use('/images', express.static(path.join(__dirname, '/images')));
 app.use(cookieParser());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -53,13 +52,72 @@ app.use(session({
   secret: 'keyboard cat',
   resave: false,
   saveUninitialized: true,
-  cookie: { secure: true },
 }));
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(flash());
-app.use('/', router);
 
+app.use(express.static(path.join(__dirname, '/../client/dist')));
+app.use('/login', express.static(path.join(__dirname, '/../client/dist/login.html')));
+app.use('/signup', express.static(path.join(__dirname, '/../client/dist')));
+
+app.get('/session', (req, res) => {
+  if (req.session.user) {
+    const { user } = req.session;
+    res.json(user);
+  } else {
+    res.json(null);
+  }
+});
+
+app.post('/signup', (req, res) => {
+  const { username, password } = req.body;
+  models.users.findByUsername(username)
+    .then((results) => {
+      if (results.rowCount === 0) {
+        models.users.create(username, password)
+          .then(() => {
+            req.session.regenerate(() => {
+              req.session.user = username;
+              res.redirect('/');
+            });
+          })
+          .catch((err) => {
+            res.status(500).send(err);
+          });
+      } else {
+        res.redirect('/login');
+        // res.send({ message: 'username already exists' });
+      }
+    });
+});
+
+app.post('/login', (req, res, next) => {
+  passport.authenticate('local', (err, user, info) => {
+    if (err) { return next(err); }
+    if (!user) {
+      return res.send(info);
+    }
+    req.session.regenerate(() => {
+      req.session.user = user;
+      res.redirect('/');
+    });
+  })(req, res, next);
+});
+
+app.get('/auth/google', passport.authenticate('google', { scope: ['https://www.googleapis.com/auth/plus.login'] }));
+app.get('/auth/google/callback', passport.authenticate('google'), (req, res) => {
+  res.end();
+});
+
+app.get('/logout', (req, res) => {
+  res.clearCookie();
+  req.session.destroy(() => {
+    res.redirect('/login');
+  });
+});
+
+app.use(router);
 
 app.listen(PORT, () => {
   console.log(`listening on port ${PORT}`);
