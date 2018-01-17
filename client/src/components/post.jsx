@@ -1,63 +1,66 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import Comment from './comment';
 
-const Post = props => (
-  <div className="post-ele">
-    <article className="ele">
-      <p>{props.postUserid}
-        {props.likeylike === 1 ? ' likes ' : null }
-        {props.likeylike === 0 ? ' dislikes ' : null}
-        {props.likeylike === null ? ' doesn\'t care for ' : null}
-        {props.postDish}
-      </p>
-      <p><img className="image" alt="post" src={props.postImage} /></p>
-      <p>
-        <i
-          onClick={() => props.clickyclick(props, 'like')}
-          role="presentation"
-          onKeyDown={() => props.clickyclick(props, 'like')}
-          className="material-icons"
-          id={props.likeylike === 1 && props.loggedUser === props.postUserid ?
-            'likes-selected' : null}
-        >
-      favorite_border
-        </i>
-        {props.votesPos}
-        <i
-          onClick={() => props.clickyclick(props, 'dislike')}
-          role="presentation"
-          onKeyUp={() => props.clickyclick(props, 'dislike')}
-          className="material-icons"
-          id={props.likeylike === 0 && props.loggedUser === props.postUserid ?
-            'dislikes-selected' : null}
-        >
-          mood_bad
-        </i>
-        {props.votesNeg}
-        <span className="content-ele">{props.postContent}</span>
-      </p>
-    </article>
-    <Comment post={props.postData.id} />
-  </div>
-);
 
-Post.propTypes = {
-  postImage: PropTypes.string,
-  clickyclick: PropTypes.func,
-  votesNeg: PropTypes.number,
-  votesPos: PropTypes.number,
-  postContent: PropTypes.string,
-  loggedUser: PropTypes.string,
-};
-
-Post.defaultProps = {
-  postImage: PropTypes.string,
-  clickyclick: PropTypes.func,
-  votesNeg: PropTypes.number,
-  votesPos: PropTypes.number,
-  postContent: PropTypes.string,
-  loggedUser: PropTypes.string,
+const Post = (props) => {
+  const {
+    handleClick,
+    post,
+    user,
+  } = props;
+  const {
+    id,
+    content,
+    likesdish,
+    dishname,
+    dishid,
+    image,
+    restaurantid,
+    restaurantname,
+    userid,
+    username,
+    votes,
+  } = post;
+  const { downvote, upvote } = votes;
+  return (
+    <div className="post-ele">
+      <article className="ele">
+        <p>{username}
+          {likesdish === 1 ? ' likes ' : null }
+          {likesdish === 0 ? ' dislikes ' : null}
+          {likesdish === null ? ' doesn\'t care for ' : null}
+          {dishname}
+        </p>
+        <p><img className="image" alt="post" src={image} /></p>
+        <p>
+          <i
+            onClick={() => handleClick({ restaurantid, dishid, likesdish }, 1)}
+            role="presentation"
+            onKeyDown={() => handleClick({ restaurantid, dishid, likesdish }, 1)}
+            className="up material-icons"
+            id={likesdish && user === username ?
+              'likes-selected' : null}
+          >
+        favorite_border
+          </i>
+          {upvote}
+          <i
+            onClick={() => handleClick({ restaurantid, dishid, likesdish }, 0)}
+            role="presentation"
+            onKeyUp={() => handleClick({ restaurantid, dishid, likesdish }, 0)}
+            className="material-icons"
+            id={(likesdish === 0) && user === username ?
+              'dislikes-selected' : null}
+          >
+            mood_bad
+          </i>
+          {downvote}
+          <span className="content-ele">{content}</span>
+        </p>
+      </article>
+      <Comment post={id} />
+    </div>
+  );
 };
 
 export default Post;
