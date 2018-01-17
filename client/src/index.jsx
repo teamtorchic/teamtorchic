@@ -27,12 +27,12 @@ class App extends React.Component {
             id: data.id,
           });
           $.get({
-            url: `/${this.state.user}`,
+            url: '/posts',
             success: (data) => {
               this.setState({
                 posts: data,
               });
-              console.log("indexSTate:", this.state);
+              console.log("Logged in user state:", this.state);
             },
             err: (err) => {
               console.log(err);
@@ -40,7 +40,7 @@ class App extends React.Component {
           });
         } else {
           $.get({
-            url: '/posts',
+            url: '/home',
             success: (data) => {
               this.setState({
                 posts: data,
@@ -61,17 +61,18 @@ class App extends React.Component {
 
   handleLogout() {
     $.get({
-      url: '/posts',
+      url: '/logout',
       success: (data) => {
         this.setState({
-          posts: data,
           user: null,
+          id: null,
         });
       },
     });
   }
 
   render() {
+    console.log ("visitor user state:", this.state);
     return (
       <div>
         <div id="header">

@@ -119,7 +119,7 @@ app.get('/auth/google/callback', passport.authenticate('google'), (req, res) => 
 app.get('/logout', (req, res) => {
   res.clearCookie();
   req.session.destroy(() => {
-    res.redirect('/login');
+    res.redirect('/home');
   });
 });
 

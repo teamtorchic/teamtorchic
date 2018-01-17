@@ -20,8 +20,8 @@ router.get('/comments', controller.comments.get);
 router.post('/comments', controller.comments.post);
 router.get('/restaurants', controller.restaurants);
 router.get('/dishes', controller.dishes);
-
-router.get('/posts', controller.post.getAll);
+router.get('/home', controller.post.getAll);
+router.get('/posts', isLoggedIn, controller.post.getAll);
 router.post('/submit', isLoggedIn, upload.single('image'), controller.post.submit);
 router.post('/votes/upvote', isLoggedIn, controller.dishlikes.upVote);
 router.post('/votes/downvote', isLoggedIn, controller.dishlikes.downVote);
