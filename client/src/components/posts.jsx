@@ -20,8 +20,6 @@ class Posts extends React.Component {
     this.postUpvote = this.postUpvote.bind(this);
     this.postDownvote = this.postDownvote.bind(this);
   }
-  // if the user has clicked the icon, needs to add one and keep it red. If the
-  // user has clicked the icon again, need to subtract one and make it black
   componentDidMount() {
     this.getPostsData();
   }
@@ -49,7 +47,7 @@ class Posts extends React.Component {
       },
       success: () => {
         this.getPostsData();
-        console.log('upvote success: ');
+        console.log('upvote success: ', info);
       },
       error: () => { },
     });
@@ -69,7 +67,7 @@ class Posts extends React.Component {
       },
       success: () => {
         this.getPostsData();
-        // console.log('downvote success: ');
+        console.log('downvote success: ');
       },
       error: () => { },
     });
