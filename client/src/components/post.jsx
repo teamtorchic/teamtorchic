@@ -40,26 +40,20 @@ const Post = props => (
   </div>
 );
 
-// Post.propTypes = {
-//   postUserid: PropTypes.string,
-//   likeylike: PropTypes.number,
-//   postDish: PropTypes.string,
-//   postImage: PropTypes.string,
-//   clickyclick: PropTypes.func,
-//   votesNeg: PropTypes.number,
-//   votesPos: PropTypes.number,
-//   postContent: PropTypes.string,
-// };
-//
-// Post.defaultProps = {
-//   postUserid: PropTypes.string,
-//   likeylike: PropTypes.number,
-//   postDish: PropTypes.string,
-//   postImage: PropTypes.string,
-//   clickyclick: PropTypes.func,
-//   votesNeg: PropTypes.number,
-//   votesPos: PropTypes.number,
-//   postContent: PropTypes.string,
-// };
+Post.propTypes = {
+  postImage: PropTypes.string,
+  clickyclick: PropTypes.func,
+  votesNeg: PropTypes.number,
+  votesPos: PropTypes.number,
+  postContent: PropTypes.string,
+};
+
+Post.defaultProps = {
+  postImage: PropTypes.string,
+  clickyclick: PropTypes.func,
+  votesNeg: PropTypes.number,
+  votesPos: PropTypes.number,
+  postContent: PropTypes.string,
+};
 
 export default Post;
