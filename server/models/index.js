@@ -49,8 +49,24 @@ module.exports = {
       } else {
         likesDish = null;
       }
+
       const encodedCommentary = data.commentary.replace("'", "''");
       const query = `insert into posts (content, likesDish, userId, dishId, restaurantId, image) values ('${encodedCommentary}', ${likesDish}, 2, ${data.dishId}, ${data.restaurantId}, '${data.image}')`;
+      return db.client.query(query);
+    },
+    recipe: (data) => {
+      let likesDish;
+      if (data.likes === 'likes') {
+        likesDish = 1;
+      } else if (data.dislikes === 'dislikes') {
+        likesDish = 0;
+      } else {
+        likesDish = null;
+      }
+
+      const encodedCommentary = data.commentary.replace("'", "''");
+
+      const query = `insert into posts (content, likesDish, userId, recipe, image) values ('${encodedCommentary}', ${likesDish}, 2, '${data.recipe}', '${data.image}')`;
       return db.client.query(query);
     },
   },
