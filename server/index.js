@@ -17,7 +17,7 @@ passport.use(localLogIn());
 passport.use(googleLogIn());
 
 passport.serializeUser((user, done) => {
-  done(null, user[0]);
+  done(null, user);
 });
 
 passport.deserializeUser((username, done) => {
@@ -102,8 +102,18 @@ app.post('/login', (req, res, next) => {
 });
 
 app.get('/auth/google', passport.authenticate('google', { scope: ['https://www.googleapis.com/auth/plus.login'] }));
-app.get('/auth/google/callback', passport.authenticate('google'), (req, res) => {
-  res.end();
+
+app.get('/auth/google/callback', (req, res, next) => {
+  passport.authenticate('google', (err, user, info) => {
+    if (err) { return next(err); }
+    if (!user) {
+      return res.send(info);
+    }
+    req.session.regenerate(() => {
+      req.session.user = user;
+      res.redirect('/');
+    });
+  })(req, res, next);
 });
 
 app.get('/logout', (req, res) => {

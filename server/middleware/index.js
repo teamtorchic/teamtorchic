@@ -21,7 +21,27 @@ module.exports = {
     clientID: process.env.EATCHIC_CLIENT_ID || 'YOUR CLIENT ID HERE',
     clientSecret: process.env.EATCHIC_CLIENT_SECRET || 'YOUR CLIENT SECRET HERE',
     callbackURL: process.env.EATCHIC_CALLBACK_URL || 'YOUR CALLBACK URL HERE',
-  }, (accessToken, refreshToken, profile, done) => done(null, profile)),
+  }, (accessToken, refreshToken, profile, done) => {
+    const { displayName } = profile;
+    models.users.findByUsername(displayName)
+      .then((results) => {
+        if (results.rowCount) {
+          const { username } = results.rows[0];
+          done(null, username);
+        } else {
+          models.users.create(displayName, '')
+            .then(() => {
+              done(null, displayName);
+            })
+            .catch((err) => {
+              done(err);
+            });
+        }
+      })
+      .catch((err) => {
+        done(err);
+      });
+  }),
   isLoggedIn: (req, res, next) => {
     if (req.session.user) {
       next();
