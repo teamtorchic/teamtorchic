@@ -7,10 +7,9 @@ class Posts extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      user: props.user,
-      posts: props.posts,
-      id: props.id,
-      voted:false,
+      user: this.props.user,
+      posts: this.props.posts,
+      id: this.props.id,
     };
 
     this.handleClick = this.handleClick.bind(this);
@@ -23,6 +22,8 @@ class Posts extends React.Component {
     if (this.props.posts !== nextProps.posts) {
       this.setState({
         posts: nextProps.posts,
+        user: nextProps.user,
+        id: nextProps.id,
       });
     }
   }
@@ -33,23 +34,20 @@ class Posts extends React.Component {
       url: '/votes/upvote',
       data: JSON.stringify(query),
       success: () => {
-        this.setState({
-          voted: !this.state.voted,
-        });
+        this.props.changeView();
       },
       error: () => { console.log('LORY IS MY BEST FRIEND'); },
     });
   }
 
   postDownvote(query) {
+    console.log (this.props)
     $.post({
       contentType: 'application/json',
-      url: '/votes/upvote',
+      url: '/votes/downvote',
       data: JSON.stringify(query),
       success: () => {
-        this.setState({
-          voted: !this.state.voted,
-        });
+        this.props.changeView();
       },
       error: () => { console.log('LORY IS MY BEST FRIEND'); },
     });
@@ -59,13 +57,13 @@ class Posts extends React.Component {
     if (vote) {
       console.log('origin query in upvote', query);
       query.likesdish = 1;
-      query.userid = this.props.id;
+      query.userid = this.state.id;
       console.log ("query after change for upvote", query);
       this.postUpvote(query);
     } else {
       console.log('origin query in downvote', query);
       query.likesdish = 0;
-      query.userid = this.props.id;
+      query.userid = this.state.id;
       console.log ("query after change for downvote", query);
       this.postDownvote(query);
     }
@@ -73,7 +71,8 @@ class Posts extends React.Component {
 
 
   render() {
-    console.log('user: ', this.props.posts);
+    console.log('user: ', this.props.user);
+    console.log (this.state);
     return (
       <div>
         { this.state.posts.map(post =>

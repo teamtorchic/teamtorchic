@@ -30,6 +30,8 @@ module.exports = {
           return Promise.all(Promises);
         })
         .then((results) => {
+          console.log ("recounting votes")
+          console.log (results);
           results = results.map(result => result.rows);
           results.forEach((dish, i) => {
             const vote = {
@@ -102,9 +104,9 @@ module.exports = {
     },
     upVote: (req, res) => {
       const {
-        dishId, likesdish, userId, restaurantId,
+        dishid, likesdish, userid, restaurantid,
       } = req.body;
-      models.dishlikes.upVote(dishId, likesdish, userId, restaurantId)
+      models.dishlikes.upVote(dishid, likesdish, userid, restaurantid)
         .then((results) => {
           console.log ('results:', results);
           res.json(results);
@@ -115,14 +117,16 @@ module.exports = {
     },
     downVote: (req, res) => {
       const {
-        dishId, likesdish, userId, restaurantId,
+        dishid, likesdish, userid, restaurantid,
       } = req.body;
-      models.dishlikes.downVote(dishId, likesdish, userId, restaurantId)
+      console.log (req.body);
+      models.dishlikes.downVote(dishid, likesdish, userid, restaurantid)
         .then((results) => {
           console.log ('results:', results);
           res.json(results);
         })
         .catch((err) => {
+          console.log ('hello')
           res.status(400).send(err);
         });
     },

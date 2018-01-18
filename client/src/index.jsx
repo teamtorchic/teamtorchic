@@ -15,9 +15,15 @@ class App extends React.Component {
     };
     this.handleLogin = this.handleLogin.bind(this);
     this.handleLogout = this.handleLogout.bind(this);
+    this.changeView = this.changeView.bind(this);
+    this.fetchData = this.fetchData.bind(this);
   }
 
   componentDidMount() {
+    this.fetchData();
+  }
+
+  fetchData() {
     $.get({
       url: '/session',
       success: (data) => {
@@ -71,6 +77,10 @@ class App extends React.Component {
     });
   }
 
+  changeView() {
+    this.fetchData();
+  }
+
   render() {
     console.log ("visitor user state:", this.state);
     return (
@@ -80,7 +90,12 @@ class App extends React.Component {
           { this.state.user && <button onClick={this.handleLogout}> Logout</button> }
         </div>
         {this.state.user && <Submit user={this.state.user} />}
-        <Posts user={this.state.user} id={this.state.id} posts={this.state.posts} />
+        <Posts
+          user={this.state.user}
+          changeView={this.changeView}
+          id={this.state.id}
+          posts={this.state.posts}
+        />
       </div>
     );
   }
