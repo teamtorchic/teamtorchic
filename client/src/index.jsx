@@ -78,17 +78,35 @@ class App extends React.Component {
   }
 
   handleSearch(searchTerm, value) {
-    $.get({
-      url: `/search/${searchTerm}/${value}`,
-      success: (data) => {
-        this.setState({
-          posts: data,
-        });
-      },
-      error: (err) => {
-        console.log(err);
-      },
-    });
+    if (value === '') {
+      return;
+    }
+    if (searchTerm === 'rating') {
+      $.get({
+        url: '/rating',
+        success: (data) => {
+          this.setState({
+            posts: data,
+          });
+        },
+        error: (err) => {
+          console.log(err);
+        },
+      });
+    } else {
+      $.get({
+        url: `/search/${searchTerm}/${value}`,
+        success: (data) => {
+          console.log(data);
+          this.setState({
+            posts: data,
+          });
+        },
+        error: (err) => {
+          console.log(err);
+        },
+      });
+    }
   }
 
   changeView() {
@@ -99,7 +117,11 @@ class App extends React.Component {
     return (
       <div>
         <div id="header">
-          <Header user={this.state.user} handleLogin={this.handleLogin} handleSearch={this.handleSearch} />
+          <Header
+            user={this.state.user}
+            handleLogin={this.handleLogin}
+            handleSearch={this.handleSearch}
+          />
           { this.state.user && <button onClick={this.handleLogout}> Logout</button> }
         </div>
         {this.state.user && <Submit user={this.state.user} />}

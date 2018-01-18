@@ -44,7 +44,7 @@ class Header extends React.Component {
     return (
       <div>
         <div className="searchBar">
-          <Search handleSearch={this.props.handleSearch} />
+          {user && <Search handleSearch={this.props.handleSearch} />}
         </div>
         { user && <span>Welcome, {user} to </span> }<span>eatChic</span>
         { !user && <a href="/auth/google"> Log In Through Google </a> }

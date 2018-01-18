@@ -26,16 +26,15 @@ module.exports = {
     return output;
   },
   sortByRating: (posts) => {
-    const sortable = [];
-    posts.forEach((post) => {
-      sortable.push([post, post.votes.upvoteUsers]);
-    });
-    sortable.sort((a, b) => {
-      if (a[1] < b[1]) {
+    console.log ('before sort:', posts);
+    posts.sort((a, b) => {
+      if (a.votes.upvote < b.votes.upvote) {
+        return 1;
+      } else if (a.votes.upvote > b.votes.upvote) {
         return -1;
       }
-      return a[1] > b[1];
+      return 0;
     });
-    return sortable.map(post => post[0]);
+    return posts;
   },
 };

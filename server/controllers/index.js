@@ -137,6 +137,8 @@ module.exports = {
             res.body.data[i].downvoteUsers = postData.downvoteUsers;
             res.body.data[i].votes = postData.votes;
           });
+          res.body.data = sortByRating(res.body.data);
+          console.log ("after sort:", res.body.data);
           res.json(res.body.data);
         })
         .catch((err) => {

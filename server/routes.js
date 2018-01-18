@@ -18,11 +18,7 @@ const upload = multer({ storage: storageObject });
 
 router.get('/search/:searchTerm/:searchValue', isLoggedIn, (req, res) => {
   const { searchTerm, searchValue } = req.params;
-  if (searchTerm === 'rating') {
-    res.redirect('/rating');
-  } else {
-    res.redirect(`/${searchTerm}/${searchValue}`);
-  }
+  res.redirect(`/${searchTerm}/${searchValue}`);
 });
 router.get('/comments', controller.comments.get);
 router.post('/comments', controller.comments.post);
