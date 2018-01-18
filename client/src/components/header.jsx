@@ -1,6 +1,7 @@
 import React from 'react';
 import Login from './login';
 import Signup from './signup';
+import Search from './search';
 
 class Header extends React.Component {
   constructor(props) {
@@ -41,7 +42,11 @@ class Header extends React.Component {
     const { handleLogin } = this.props;
     const { user } = this.state;
     return (
-      <div>{ user && <span>Welcome, {user} to </span> }<span>eatChic</span>
+      <div>
+        <div className="searchBar">
+          <Search handleSearch={this.props.handleSearch} />
+        </div>
+        { user && <span>Welcome, {user} to </span> }<span>eatChic</span>
         { !user && <a href="/auth/google"> Log In Through Google </a> }
         { !user && <button onClick={this.changeLoginView}>Log In</button> }
         { !user && <button onClick={this.changeSignupView}>Sign Up</button> }

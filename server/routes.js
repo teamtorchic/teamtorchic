@@ -16,6 +16,14 @@ const storageObject = multer.diskStorage({
 });
 const upload = multer({ storage: storageObject });
 
+router.get('/search/:searchTerm/:searchValue', isLoggedIn, (req, res) => {
+  const { searchTerm, searchValue } = req.params;
+  if (searchTerm === 'rating') {
+    res.redirect('/rating');
+  } else {
+    res.redirect(`/${searchTerm}/${searchValue}`);
+  }
+});
 router.get('/comments', controller.comments.get);
 router.post('/comments', controller.comments.post);
 router.get('/restaurants', controller.restaurants);
@@ -24,6 +32,10 @@ router.get('/likes', controller.likes.get);
 router.post('/likes', controller.likes.post);
 router.get('/home', controller.post.getAll);
 router.get('/posts', isLoggedIn, controller.post.getAll);
+router.get('/user/:username', isLoggedIn, controller.post.getByUsername);
+router.get('/rating', isLoggedIn, controller.post.getByRating);
+router.get('/dish/:dishname', isLoggedIn, controller.post.getByDish);
+router.get('/restaurant/:name', isLoggedIn, controller.post.getByRestaurant);
 router.post('/submit', isLoggedIn, upload.single('image'), controller.post.submit);
 router.post('/votes/upvote', isLoggedIn, controller.dishlikes.upVote);
 router.post('/votes/downvote', isLoggedIn, controller.dishlikes.downVote);
@@ -31,5 +43,4 @@ router.get('/user/profile', isLoggedIn, controller.user.getProfile);
 router.get('/:username', isLoggedIn, controller.user.getAllPost);
 router.get('/likes', controller.likes.get);
 router.post('/likes', controller.likes.post);
-
 module.exports = router;
