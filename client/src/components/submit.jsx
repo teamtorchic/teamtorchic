@@ -11,14 +11,15 @@ class Submit extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      likes: '',
-      dislikes: '',
+      likes: false,
+      dislikes: false,
       image: null,
       dish: '',
       restaurant: '',
       commentary: '',
       suggestedRestaurants: null,
       suggestedDishes: null,
+      isRecipe: false,
     };
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -27,6 +28,7 @@ class Submit extends React.Component {
     this.handleDrop = this.handleDrop.bind(this);
     this.suggest = this.suggest.bind(this);
     this.endSuggest = this.endSuggest.bind(this);
+    this.handleToggle = this.handleToggle.bind(this);
     this.handleAcceptDish = this.handleAcceptDish.bind(this);
     this.handleAcceptRestaurant = this.handleAcceptRestaurant.bind(this);
 
@@ -68,18 +70,6 @@ class Submit extends React.Component {
     this.setState({ image: file, photoURL: window.URL.createObjectURL(file) });
   }
 
-  handleClick(event) {
-    if (event.target.name === 'like' && this.state.likes !== 'likes') {
-      console.log(event.currentTarget.name);
-      this.setState({ likes: 'likes', dislikes: '' });
-    } else if (event.currentTarget.name === 'like' && this.state.likes === 'likes') {
-      this.setState({ likes: '' });
-    } else if (event.target.name === 'dislike' && this.state.dislikes !== 'dislikes') {
-      this.setState({ likes: '', dislikes: 'dislikes' });
-    } else {
-      this.setState({ dislikes: '' });
-    }
-  }
   handleChange(event) {
     this.setState({ [event.target.id]: event.target.value });
   }
@@ -93,16 +83,18 @@ class Submit extends React.Component {
   }
 
   suggest(event) {
-    let options;
-    const keyword = event.target.value;
-    const type = event.target.id;
-    if (type === 'restaurant') {
-      options = this.state.restaurants.filter(restaurant => RegExp(keyword, 'i').test(restaurant.name));
+    if (!this.state.isRecipe) {
+      let options;
+      const keyword = event.target.value;
+      const type = event.target.id;
+      if (type === 'restaurant') {
+        options = this.state.restaurants.filter(restaurant => RegExp(keyword, 'i').test(restaurant.name));
+      }
+      if (type === 'dish') {
+        options = this.state.dishes.filter(dish => (dish.name).match(keyword));
+      }
+      this.setState({ suggestions: options, active: type });
     }
-    if (type === 'dish') {
-      options = this.state.dishes.filter(dish => (dish.name).match(keyword));
-    }
-    this.setState({ suggestions: options, active: type });
   }
 
   endSuggest() {
@@ -112,9 +104,31 @@ class Submit extends React.Component {
   handleSubmit() {
     const postData = new FormData();
 
-    Object.entries(this.state).forEach((pair) => {
-      postData.append(pair[0], pair[1]);
-    });
+    postData.append('commentary', this.state.commentary);
+    postData.append('content', this.state.commentary);
+    postData.append('likes', this.state.likes);
+    postData.append('dislikes', this.state.dislikes);
+    postData.append('dish', this.state.dish);
+
+    if (this.state.likes) {
+      postData.append('likes', 1);
+    } else if (this.state.dislikes) {
+      postData.append('likes', 0);
+    } else {
+      postData.append('likes', null);
+    }
+
+    if (this.state.isRecipe) {
+      postData.append('recipe', this.state.restaurant);
+      postData.append('restaurant', '');
+    } else {
+      postData.append('restaurant', this.state.restaurant);
+      postData.append('recipe', '');
+    }
+
+    if (this.state.image) {
+      postData.append('image', this.state.image);
+    }
 
     $.post({
       url: '/submit',
@@ -127,10 +141,24 @@ class Submit extends React.Component {
         restaurant: '',
         dish: '',
         photoURL: undefined,
-        likes: '',
-        dislikes: '',
+        likes: false,
+        dislikes: false,
       });
     });
+  }
+  handleClick(event) {
+    if (event.currentTarget.name === 'like' && this.state.likes === false) {
+      this.setState({ likes: true, dislikes: false });
+    } else if (event.currentTarget.name === 'like' && this.state.likes === true) {
+      this.setState({ likes: false });
+    } else if (event.currentTarget.name === 'dislike' && this.state.dislikes === false) {
+      this.setState({ likes: false, dislikes: true });
+    } else {
+      this.setState({ dislikes: false });
+    }
+  }
+  handleToggle() {
+    this.setState({ isRecipe: !this.state.isRecipe });
   }
 
   handleFiles() {
@@ -174,37 +202,22 @@ class Submit extends React.Component {
             <div className="col">
               <div className="row">
                 <div className="col-3">
-                    the
-                </div>
-                <div className="col">
-                  <input
-                    id="dish"
-                    className="form-control"
-                    value={this.state.dish}
-                    onChange={this.handleChange}
-                    onKeyPress={this.suggest}
-                    placeholder="dish"
-                    type="text"
-                  />
-                  { this.state.suggestions && this.state.active === 'dish' &&
-                  (<Suggestions
-                    options={this.state.suggestions}
-                    handleAccept={this.handleAcceptDish}
-                    handleAdd={this.endSuggest}
-                    item={this.state.dish}
-                  />)}
-                </div>
-              </div>
-              <div className="row">
-                <div className="col-3">
-                 at
+                  <button
+                    type="button"
+                    className="btn-default recipe-btn"
+                    onClick={this.handleToggle}
+                  >
+                    &#9660;&nbsp;
+                    {!this.state.isRecipe && 'at'}
+                    {this.state.isRecipe && 'recipe'}
+                  </button>
                 </div>
                 <div className="col">
                   <input
                     id="restaurant"
                     className="form-control"
                     value={this.state.restaurant}
-                    onKeyPress={this.suggest}
+                    onKeyDown={this.suggest}
                     onChange={this.handleChange}
                     placeholder="the place"
                     type="text"
@@ -216,6 +229,29 @@ class Submit extends React.Component {
                     handleAdd={this.endSuggest}
                     item={this.state.restaurant}
                   />}
+                </div>
+              </div>
+              <div className="row">
+                <div className="col-3">
+                    the
+                </div>
+                <div className="col">
+                  <input
+                    id="dish"
+                    className="form-control"
+                    value={this.state.dish}
+                    onChange={this.handleChange}
+                    onKeyDown={this.suggest}
+                    placeholder="dish"
+                    type="text"
+                  />
+                  { this.state.suggestions && this.state.active === 'dish' &&
+                  (<Suggestions
+                    options={this.state.suggestions}
+                    handleAccept={this.handleAcceptDish}
+                    handleAdd={this.endSuggest}
+                    item={this.state.dish}
+                  />)}
                 </div>
               </div>
               <div className="row">

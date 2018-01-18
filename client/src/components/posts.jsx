@@ -75,6 +75,7 @@ class Posts extends React.Component {
             post={post}
             handleClick={this.handleClick}
             id={this.state.id}
+            currentUser={this.props.currentUser}
           />))}
       </div>
     );

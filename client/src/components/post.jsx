@@ -53,7 +53,7 @@ class Post extends React.Component {
             {likesdish === null ? ' doesn\'t care for ' : null}
             {dishname} at {restaurantname}
           </p>
-          <p><img className="image" alt="post" src={image} /></p>
+          <img className="image" alt="post" src={`/images/${image}`} />
           <p>
             <i
               onClick={() => handleClick({ restaurantid, dishid, likesdish }, 1)}
@@ -80,7 +80,7 @@ class Post extends React.Component {
             <span className="content-ele">{content}</span>
           </p>
         </article>
-        <Comment post={postid} />
+        <Comment post={postid} currentUser={this.props.id} />
       </div>
     );
   }
