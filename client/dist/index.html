@@ -3,23 +3,8 @@
 <head>
   <title>eatChic</title>
   <link rel="stylesheet" type="text/css" href="style-posts.css">
-  <script src="https://static.filestackapi.com/v3/filestack.js"></script>
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
       rel="stylesheet">
-<script type="text/javascript">
-  var fsClient = filestack.init('ARd6jqM4xTeWWyfq9HBSXz');
-  function openPicker() {
-    fsClient.pick({
-      fromSources:["local_file_system","instagram"],
-      accept:["image/*"],
-      transformations:{
-      crop:{ force: true}}
-    }).then(function(response) {
-      // declare this function to handle response
-      handleFilestack(response);
-    });
-  }
-</script>
   <link rel="shortcut icon" href="favicon.png">
   <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,400i,700" rel="stylesheet">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">

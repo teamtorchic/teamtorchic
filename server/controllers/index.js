@@ -11,7 +11,6 @@ module.exports = {
             userLiked = true;
           }
         });
-
         const results = {
           count: queryResults.rows.length,
           usersLike: userLiked,
@@ -137,7 +136,6 @@ module.exports = {
       } = req.body;
       models.dishlikes.upVote(dishId, likesdish, userId, restaurantId)
         .then((results) => {
-          console.log ('results:', results);
           res.json(results);
         })
         .catch((err) => {
@@ -150,7 +148,6 @@ module.exports = {
       } = req.body;
       models.dishlikes.downVote(dishId, likesdish, userId, restaurantId)
         .then((results) => {
-          console.log ('results:', results);
           res.json(results);
         })
         .catch((err) => {
@@ -178,8 +175,51 @@ module.exports = {
     },
   },
   user: {
-    landing: (req, res) => {
-      res.redirect(`/users/${req.body.username}`);
+    getProfile: (req, res) => {
+      const { username } = req.params;
+      models.users.getProfile(username)
+        .then((results) => {
+          res.json(results);
+        })
+        .catch((err) => {
+          res.status(401).send(err);
+        });
+    },
+    getAllPost: (req, res) => {
+      const { username } = req.params;
+      models.post.getByUsername(username)
+        .then((results) => {
+          results = JSON.parse(JSON.stringify(results.rows));
+          res.body = {};
+          res.body.data = results;
+          const Promises = results.map((post) => {
+            const { dishid } = post;
+            return models.dishlikes.get(dishid);
+          });
+          return Promise.all(Promises);
+        })
+        .catch(err => console.log(err))
+        .then((results) => {
+          results = results.map(result => result.rows);
+          results.forEach((dish, i) => {
+            const vote = {
+              upvote: 0,
+              downvote: 0,
+            };
+            dish.forEach((votes) => {
+              if (votes.likesdish) {
+                vote.upvote += 1;
+              } else {
+                vote.downvote += 1;
+              }
+            });
+            res.body.data[i].votes = vote;
+          });
+          res.json(res.body.data);
+        })
+        .catch((err) => {
+          res.status(404).send(err);
+        });
     },
   },
 };
