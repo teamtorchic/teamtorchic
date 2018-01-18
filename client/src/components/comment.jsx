@@ -59,7 +59,7 @@ class Comment extends React.Component {
 
   handleEnter(event) {
     if (event.key === 'Enter') {
-      console.log('this.state.currentUser = ', this.state.currentUser);
+      console.log('this.props.currentUser = ', this.props.currentUser);
       const content = event.target.value;
       $.post({
         url: '/comments',
@@ -125,7 +125,7 @@ class Comment extends React.Component {
             </div>
           </div>
         </div>
-
+        {comments}
         <textarea
           placeholder="Leave a comment..."
           className="leaveComment form-control"

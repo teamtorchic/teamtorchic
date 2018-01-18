@@ -35,7 +35,7 @@ passport.deserializeUser((username, done) => {
 });
 
 // Middleware
-app.use('/images', express.static(path.join(__dirname, '../images')));
+app.use('/images', express.static(path.join(__dirname, '/../images')));
 app.use(express.static(path.join(__dirname, '/../client/dist')));
 app.use(cookieParser());
 app.use(bodyParser.json());

@@ -17,19 +17,6 @@ module.exports = {
       return db.client.query(getAllPostByUsername);
     },
   },
-  dishes: () => db.client.query('select * from dishes'),
-  restaurants: () => db.client.query('select * from restaurants'),
-  comments: {
-    post: (comment) => {
-      const encodedComment = comment.comment.replace("'", "''");
-      const query = `insert into comments (content, userId, postId) values ('${encodedComment}', ${comment.userId}, ${comment.postId}) RETURNING id`;
-      return db.client.query(query);
-    },
-    get: (post) => {
-      const query = `select comments.*, users.username from comments left join users on comments.userId=users.id WHERE postId = ${post}`;
-      return db.client.query(query);
-    },
-  },
   likes: {
     get: ({ post }) => {
       const query = `select * from likes WHERE postId=${post}`;
@@ -45,7 +32,35 @@ module.exports = {
       return db.client.query(query);
     },
   },
+  dishes: () => db.client.query('select * from dishes'),
+  restaurants: () => db.client.query('select * from restaurants'),
+  comments: {
+    post: (comment) => {
+      const encodedComment = comment.comment.replace("'", "''");
+      const query = `insert into comments (content, userId, postId) values ('${encodedComment}', ${comment.userId}, ${comment.postId}) RETURNING id`;
+      return db.client.query(query);
+    },
+    get: (post) => {
+      const query = `select comments.*, users.username from comments left join users on comments.userId=users.id WHERE postId = ${post}`;
+      return db.client.query(query);
+    },
+  },
   submit: {
+    recipe: (data) => {
+       let likesDish;
+       if (typeof data.likes === 'object') {
+         likesDish = null;
+       } else if (data.likes) {
+         likesDish = 1;
+       } else {
+         likesDish = 0;
+       }
+
+       const encodedCommentary = data.commentary.replace("'", "''");
+       const query = `insert into posts (content, likesDish, userId, recipe, image) values ('${encodedCommentary}', ${likesDish}, 2, '${data.recipe}', '${data.image}')`;
+      console.log(query);
+       return db.client.query(query);
+    },
     dish: ({ dish }) => db.client.query(`insert into dishes (name) values ('${dish}') ON CONFLICT (name) DO UPDATE SET name='${dish}' RETURNING id`),
     restaurant: ({ restaurant }) => {
       const query = `insert into restaurants (name) values ('${restaurant}') ON CONFLICT (name) DO UPDATE SET name='${restaurant}' RETURNING id`;
@@ -67,22 +82,6 @@ module.exports = {
 
       const encodedCommentary = data.commentary.replace("'", "''");
       const query = `insert into posts (content, likesDish, userId, dishId, restaurantId, image) values ('${encodedCommentary}', ${likesDish}, 2, ${data.dishId}, ${data.restaurantId}, '${data.image}')`;
-      return db.client.query(query);
-    },
-    recipe: (data) => {
-      let likesDish;
-      if (typeof data.likes === 'object') {
-        likesDish = null;
-      } else if (data.likes) {
-        likesDish = 1;
-      } else {
-        likesDish = 0;
-      }
-
-      const encodedCommentary = data.commentary.replace("'", "''");
-
-      const query = `insert into posts (content, likesDish, userId, recipe, image) values ('${encodedCommentary}', ${likesDish}, 2, '${data.recipe}', '${data.image}')`;
-console.log(query);
       return db.client.query(query);
     },
   },

@@ -11,6 +11,7 @@ module.exports = {
             userLiked = true;
           }
         });
+
         const results = {
           count: queryResults.rows.length,
           usersLike: userLiked,
@@ -41,30 +42,36 @@ module.exports = {
   post: {
     getAll: (req, res) => {
       models.post.getAll()
-      .then(results => {
-        results = JSON.parse(JSON.stringify(results.rows));
-        res.body = {};
-        res.body.data = results;
-        const Promises = results.map(post => {
-          const {dishid} = post;
-          return models.dishlikes.get(dishid);
-        });
+        .then((results) => {
+          results = JSON.parse(JSON.stringify(results.rows));
+          res.body = {};
+          res.body.data = results;
+          const Promises = results.map((post) => {
+            const { dishid } = post;
+            return models.dishlikes.get(dishid);
+          });
           return Promise.all(Promises);
         })
-        .then(results => {
+        .then((results) => {
           results = results.map(result => result.rows);
-          const likeCounts = results.forEach((dish, i) => {
+          results.forEach((dish, i) => {
             const vote = {
               upvote: 0,
               downvote: 0,
             };
-            dish.forEach(votes => {
+            const upvoteUsers = [];
+            const downvoteUsers = [];
+            dish.forEach((votes) => {
               if (votes.likesdish) {
                 vote.upvote += 1;
+                upvoteUsers.push(votes.userid);
               } else if ((votes.likesdish === 0)) {
                 vote.downvote += 1;
+                downvoteUsers.push(votes.userid);
               }
-            })
+            });
+            res.body.data[i].upvoteUsers = upvoteUsers;
+            res.body.data[i].downvoteUsers = downvoteUsers;
             res.body.data[i].votes = vote;
           });
           res.json(res.body.data);
@@ -132,9 +139,9 @@ module.exports = {
     },
     upVote: (req, res) => {
       const {
-        dishId, likesdish, userId, restaurantId,
+        dishid, likesdish, userid, restaurantid,
       } = req.body;
-      models.dishlikes.upVote(dishId, likesdish, userId, restaurantId)
+      models.dishlikes.upVote(dishid, likesdish, userid, restaurantid)
         .then((results) => {
           res.json(results);
         })
@@ -144,33 +151,14 @@ module.exports = {
     },
     downVote: (req, res) => {
       const {
-        dishId, likesdish, userId, restaurantId,
+        dishid, likesdish, userid, restaurantid,
       } = req.body;
-      models.dishlikes.downVote(dishId, likesdish, userId, restaurantId)
+      models.dishlikes.downVote(dishid, likesdish, userid, restaurantid)
         .then((results) => {
           res.json(results);
         })
         .catch((err) => {
           res.status(400).send(err);
-        });
-    },
-  },
-  signup: {
-    submit: (req, res) => {
-      const { username, password } = req.body;
-      models.users.findByUsername(username)
-        .then((results) => {
-          if (results.rowCount === 0) {
-            models.users.create(username, password)
-              .then(() => {
-                res.redirect(`/users/${req.body.username}`);
-              })
-              .catch((err) => {
-                res.status(500).send(err);
-              });
-          } else {
-            res.send({ message: 'username already exists' });
-          }
         });
     },
   },
