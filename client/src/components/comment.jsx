@@ -9,6 +9,7 @@ class Comment extends React.Component {
     this.state = {
       comment: '',
       comments: [],
+      displayReviews: false,
       reviews: [],
       likes: 0,
       userLikes: false,
@@ -16,8 +17,11 @@ class Comment extends React.Component {
     this.handleChange = this.handleChange.bind(this);
     this.handleEnter = this.handleEnter.bind(this);
     this.handleLike = this.handleLike.bind(this);
+    this.getReviews = this.getReviews.bind(this);
+    this.showReviews = this.showReviews.bind(this);
+    this.hideReviews = this.hideReviews.bind(this);
 
-    console.log('posts ', this.props.post);
+    this.getReviews();
 
     $.get({
       url: '/comments',
@@ -31,7 +35,6 @@ class Comment extends React.Component {
       data: { post: this.props.post, user: this.props.currentUser },
       contentType: 'application/json',
     }).done((data) => {
-      console.log(data);
       this.setState({ likes: data.count, userLikes: data.usersLike });
     });
   }
@@ -57,6 +60,25 @@ class Comment extends React.Component {
     this.setState({ userLikes: !this.state.userLikes });
   }
 
+  getReviews() {
+    $.get({
+      url: '/reviews',
+      data: { post: this.props.post, dish: this.props.dishId },
+      contentType: 'application/json',
+    }).done((data) => {
+      console.log('reviews', data);
+
+      this.setState({ reviews: data });
+    });
+  }
+
+  showReviews() {
+    this.setState({ displayReviews: true });
+  }
+  hideReviews() {
+    this.setState({ displayReviews: false });
+  }
+
   handleEnter(event) {
     if (event.key === 'Enter') {
       console.log('this.props.currentUser = ', this.props.currentUser);
@@ -80,14 +102,15 @@ class Comment extends React.Component {
 
   render() {
     const comments = this.state.comments.map(comment => (
-      <li className="comment" key={comment.id}>@{comment.username}: {comment.content}</li>));
+      <li className="comment" key={comment.id}><span>@{comment.username}:</span> {comment.content}</li>));
+    const reviews = this.state.reviews.map(review => (
+      <li className="review" key={review.id}>@{review.username}: {review.content}</li>));
 
     return (
       <div className="comments">
         <div className="row">
-          <div className="col-10">
-            <div className="input-group mb-3">
-              <div className="input-group-prepend">
+          <div className="col-6">
+            <div className="btn-group">
                 <button
                   onClick={this.handleLike}
                   className="btn btn-outline-secondary likes-button"
@@ -95,7 +118,6 @@ class Comment extends React.Component {
                 >
                   <i className={`material-icons ${this.state.userLikes}`}>favorite_border</i>&nbsp;{this.state.likes}
                 </button>
-              </div>
               <button className="btn btn-outline-secondary" type="button">
                 <i className="material-icons">mood</i> 7
               </button>
@@ -104,28 +126,28 @@ class Comment extends React.Component {
               </button>
             </div>
           </div>
-          <div className="col">
-            <div className="input-group mb-3">
+          <div className="col-6">
+            <div className="btn-group">
               {(this.state.comments.length > 0) &&
                 <button
                   type="button"
-                  className="form-control"
-                  aria-label=""
-                  aria-describedby="basic-addon1"
-                ><i className="material-icons">message</i> {this.state.comments.length}
+                  className="btn btn-outline-secondary"
+                >
+                  <i className="material-icons">message</i>&nbsp;{this.state.comments.length}
                 </button>}
               {(this.state.reviews.length > 0) &&
               <button
                 type="button"
-                className="form-control"
-                aria-label=""
-                aria-describedby="basic-addon1"
-              ><i className="material-icons">star_rate</i> {this.state.reviews.length}
+                onClick={this.showReviews}
+                className="btn btn-outline-secondary"
+              >
+                <i className="material-icons">star_rate</i>&nbsp;{this.state.reviews.length}
               </button>}
             </div>
           </div>
         </div>
-        {comments}
+        { !this.state.displayReviews && <ul>{comments}</ul>}
+        { this.state.displayReviews && <ul>{reviews}</ul>}
         <textarea
           placeholder="Leave a comment..."
           className="leaveComment form-control"
@@ -133,7 +155,7 @@ class Comment extends React.Component {
           onChange={this.handleChange}
           onKeyPress={this.handleEnter}
         />
-      </div>);
+    </div>);
   }
 }
 

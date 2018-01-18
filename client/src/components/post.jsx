@@ -80,7 +80,7 @@ class Post extends React.Component {
             <span className="content-ele">{content}</span>
           </p>
         </article>
-        <Comment post={postid} currentUser={this.props.id} />
+        <Comment post={postid} currentUser={this.props.id} dishId={dishid} />
       </div>
     );
   }

@@ -6,7 +6,7 @@ module.exports = {
   post: {
     getAll: () => {
       const getAllPost = {
-        text: 'select content, posts.id as postid, image, dishid, userid, restaurantid, likesdish, users.username, restaurants.name as restaurantname, dishes.name as dishname from posts inner join users on users.id = userid inner join restaurants on restaurants.id = restaurantid inner join dishes on dishes.id = dishid where (posts.content IS NOT NULL OR posts.image IS NOT NULL) ORDER BY posts.id DESC',
+        text: 'select content, posts.id as postid, image, dishid, userid, restaurantid, likesdish, users.username, restaurants.name as restaurantname, dishes.name as dishname from posts inner join users on users.id = userid inner join restaurants on restaurants.id = restaurantid inner join dishes on dishes.id = dishid where (posts.image IS NOT NULL) ORDER BY posts.id DESC',
       };
       return db.client.query(getAllPost);
     },
@@ -31,6 +31,11 @@ module.exports = {
       };
       return db.client.query(getAllRestaurantPosts);
     },
+  },
+  reviews: ({ post, dish }) =>{
+    const query = `select posts.*, users.username, users.photo from posts LEFT JOIN users ON posts.userId=users.id WHERE posts.id!=${post} AND dishId=${dish}`;
+    console.log(query);
+    return db.client.query(query);
   },
   likes: {
     get: ({ post }) => {
@@ -73,16 +78,20 @@ module.exports = {
 
        const encodedCommentary = data.commentary.replace("'", "''");
        const query = `insert into posts (content, likesDish, userId, recipe, image) values ('${encodedCommentary}', ${likesDish}, 2, '${data.recipe}', '${data.image}')`;
-      console.log(query);
+      console.log('recipe', query);
        return db.client.query(query);
     },
     dish: ({ dish }) => db.client.query(`insert into dishes (name) values ('${dish}') ON CONFLICT (name) DO UPDATE SET name='${dish}' RETURNING id`),
     restaurant: ({ restaurant }) => {
       const query = `insert into restaurants (name) values ('${restaurant}') ON CONFLICT (name) DO UPDATE SET name='${restaurant}' RETURNING id`;
+      console.log('restaurant query', query);
+
       return db.client.query(query);
     },
     menu: (data) => {
       const query = `insert into menus (dishId, restaurantId) values ('${data.dishId}', '${data.restaurantId}') ON CONFLICT DO NOTHING`;
+      console.log('menu query', query);
+
       return db.client.query(query);
     },
     post: (data) => {
@@ -95,8 +104,12 @@ module.exports = {
         likesDish = 0;
       }
 
+      if (data.restaurantId === undefined) {
+        data.restaurantId = null;
+      }
+
       const encodedCommentary = data.commentary.replace("'", "''");
-      const query = `insert into posts (content, likesDish, userId, dishId, restaurantId, image) values ('${encodedCommentary}', ${likesDish}, 2, ${data.dishId}, ${data.restaurantId}, '${data.image}')`;
+      const query = `insert into posts (content, likesDish, userId, dishId, restaurantId, image) values ('${encodedCommentary}', ${likesDish}, 2, ${data.dishId}, ${data.restaurantId}, '${data.image}') RETURNING ID`;
       return db.client.query(query);
     },
   },
