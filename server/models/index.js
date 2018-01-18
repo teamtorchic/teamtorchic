@@ -4,7 +4,7 @@ db.client.connect();
 
 module.exports = {
   post: {
-    getAll: () => db.pool.connect().then(client => client.query('select * from posts')),
+    getAll: () => db.client.query('select * from posts'),
   },
   submit: {
     dish: ({ dish }) => db.client.query(`insert into dishes (name) values ('${dish}') ON CONFLICT (name) DO UPDATE SET name='${dish}' RETURNING id`),
