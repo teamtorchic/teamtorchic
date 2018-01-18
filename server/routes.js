@@ -27,5 +27,7 @@ router.post('/votes/upvote', isLoggedIn, controller.dishlikes.upVote);
 router.post('/votes/downvote', isLoggedIn, controller.dishlikes.downVote);
 router.get('/user/profile', isLoggedIn, controller.user.getProfile);
 router.get('/:username', isLoggedIn, controller.user.getAllPost);
+router.get('/likes', controller.likes.get);
+router.post('/likes', controller.likes.post);
 
 module.exports = router;
