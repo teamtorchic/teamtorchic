@@ -1,5 +1,5 @@
 const models = require('../models');
-
+const { sortByRating, countLikes } = require('../utils');
 module.exports = {
   likes: {
     get: (req, res) => {
@@ -53,30 +53,123 @@ module.exports = {
           return Promise.all(Promises);
         })
         .then((results) => {
-          results = results.map(result => result.rows);
-          results.forEach((dish, i) => {
-            const vote = {
-              upvote: 0,
-              downvote: 0,
-            };
-            const upvoteUsers = [];
-            const downvoteUsers = [];
-            dish.forEach((votes) => {
-              if (votes.likesdish) {
-                vote.upvote += 1;
-                upvoteUsers.push(votes.userid);
-              } else if ((votes.likesdish === 0)) {
-                vote.downvote += 1;
-                downvoteUsers.push(votes.userid);
-              }
-            });
-            res.body.data[i].upvoteUsers = upvoteUsers;
-            res.body.data[i].downvoteUsers = downvoteUsers;
-            res.body.data[i].votes = vote;
+          const data = countLikes(results);
+          data.forEach((postData, i) => {
+            res.body.data[i].upvoteUsers = postData.upvoteUsers;
+            res.body.data[i].downvoteUsers = postData.downvoteUsers;
+            res.body.data[i].votes = postData.votes;
           });
           res.json(res.body.data);
         })
         .catch((err) => {
+          res.status(404).send(err);
+        });
+    },
+    getByUsername: (req, res) => {
+      const { username } = req.params;
+      models.post.getByUsername(username)
+        .then((results) => {
+          results = JSON.parse(JSON.stringify(results.rows));
+          res.body = {};
+          res.body.data = results;
+          const Promises = results.map((post) => {
+            const { dishid } = post;
+            return models.dishlikes.get(dishid);
+          });
+          return Promise.all(Promises);
+        })
+        .then((results) => {
+          const data = countLikes(results);
+          data.forEach((postData, i) => {
+            res.body.data[i].upvoteUsers = postData.upvoteUsers;
+            res.body.data[i].downvoteUsers = postData.downvoteUsers;
+            res.body.data[i].votes = postData.votes;
+          });
+          res.json(res.body.data);
+        })
+        .catch((err) => {
+          res.status(404).send(err);
+        });
+    },
+    getByDish: (req, res) => {
+      const { dishname } = req.params;
+      models.post.getByDish(dishname)
+        .then((results) => {
+          results = JSON.parse(JSON.stringify(results.rows));
+          res.body = {};
+          res.body.data = results;
+          const Promises = results.map((post) => {
+            const { dishid } = post;
+            return models.dishlikes.get(dishid);
+          });
+          return Promise.all(Promises);
+        })
+        .then((results) => {
+          const data = countLikes(results);
+          data.forEach((postData, i) => {
+            res.body.data[i].upvoteUsers = postData.upvoteUsers;
+            res.body.data[i].downvoteUsers = postData.downvoteUsers;
+            res.body.data[i].votes = postData.votes;
+          });
+          res.json(res.body.data);
+        })
+        .catch((err) => {
+          res.status(404).send(err);
+        });
+    },
+    getByRestaurant: (req, res) => {
+      const { name } = req.params;
+      models.post.getByRestaurant(name)
+        .then((results) => {
+          results = JSON.parse(JSON.stringify(results.rows));
+          res.body = {};
+          res.body.data = results;
+          const Promises = results.map((post) => {
+            const { dishid } = post;
+            return models.dishlikes.get(dishid);
+          });
+          return Promise.all(Promises);
+        })
+        .then((results) => {
+          const data = countLikes(results);
+          data.forEach((postData, i) => {
+            res.body.data[i].upvoteUsers = postData.upvoteUsers;
+            res.body.data[i].downvoteUsers = postData.downvoteUsers;
+            res.body.data[i].votes = postData.votes;
+          });
+          res.body.data = sortByRating(res.body.data);
+          console.log ("after sort:", res.body.data);
+          res.json(res.body.data);
+        })
+        .catch((err) => {
+          res.status(404).send(err);
+        });
+    },
+    getByRating: (req, res) => {
+      console.log ('hi')
+      models.post.getAll()
+        .then((results) => {
+          results = JSON.parse(JSON.stringify(results.rows));
+          res.body = {};
+          res.body.data = results;
+          const Promises = results.map((post) => {
+            const { dishid } = post;
+            return models.dishlikes.get(dishid);
+          });
+          return Promise.all(Promises);
+        })
+        .then((results) => {
+          console.log ('succu')
+          const data = countLikes(results);
+          data.forEach((postData, i) => {
+            res.body.data[i].upvoteUsers = postData.upvoteUsers;
+            res.body.data[i].downvoteUsers = postData.downvoteUsers;
+            res.body.data[i].votes = postData.votes;
+          });
+          res.json(res.body.data);
+        })
+        .catch((err) => {
+          console.log(err);
           res.status(404).send(err);
         });
     },
@@ -171,42 +264,6 @@ module.exports = {
         })
         .catch((err) => {
           res.status(401).send(err);
-        });
-    },
-    getAllPost: (req, res) => {
-      const { username } = req.params;
-      models.post.getByUsername(username)
-        .then((results) => {
-          results = JSON.parse(JSON.stringify(results.rows));
-          res.body = {};
-          res.body.data = results;
-          const Promises = results.map((post) => {
-            const { dishid } = post;
-            return models.dishlikes.get(dishid);
-          });
-          return Promise.all(Promises);
-        })
-        .catch(err => console.log(err))
-        .then((results) => {
-          results = results.map(result => result.rows);
-          results.forEach((dish, i) => {
-            const vote = {
-              upvote: 0,
-              downvote: 0,
-            };
-            dish.forEach((votes) => {
-              if (votes.likesdish) {
-                vote.upvote += 1;
-              } else {
-                vote.downvote += 1;
-              }
-            });
-            res.body.data[i].votes = vote;
-          });
-          res.json(res.body.data);
-        })
-        .catch((err) => {
-          res.status(404).send(err);
         });
     },
   },

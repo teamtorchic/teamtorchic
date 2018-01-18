@@ -6,15 +6,30 @@ module.exports = {
   post: {
     getAll: () => {
       const getAllPost = {
-        text: 'select content, posts.id as postid, image, dishid, userid, restaurantid, likesdish, users.username, restaurants.name as restaurantname, dishes.name as dishname from posts inner join users on users.id = userid inner join restaurants on restaurants.id = restaurantid inner join dishes on dishes.id = dishid where (posts.content IS NOT NULL OR posts.image IS NOT NULL)',
+        text: 'select content, posts.id as postid, image, dishid, userid, restaurantid, likesdish, users.username, restaurants.name as restaurantname, dishes.name as dishname from posts inner join users on users.id = userid inner join restaurants on restaurants.id = restaurantid inner join dishes on dishes.id = dishid where (posts.content IS NOT NULL OR posts.image IS NOT NULL) ORDER BY posts.id DESC',
       };
       return db.client.query(getAllPost);
     },
     getByUsername: (username) => {
       const getAllPostByUsername = {
-        text: `select content, posts.id as postid, image, dishid, userid, restaurantid, likesdish, users.username, restaurants.name as restaurantname, dishes.name as dishname from posts inner join users on users.id = userid inner join restaurants on restaurants.id = restaurantid inner join dishes on dishes.id = dishid where users.username = '${username}' and content IS NOT NULL`,
+        text: 'select content, posts.id as postid, image, dishid, userid, restaurantid, likesdish, users.username, restaurants.name as restaurantname, dishes.name as dishname from posts inner join users on users.id = userid inner join restaurants on restaurants.id = restaurantid inner join dishes on dishes.id = dishid where users.username = $1 and content IS NOT NULL ORDER BY posts.id DESC',
+        values: [username]
       };
       return db.client.query(getAllPostByUsername);
+    },
+    getByDish: (dishname) => {
+      const getAllDishPosts = {
+        text: 'select content, posts.id as postid, image, dishid, userid, restaurantid, likesdish, users.username, restaurants.name as restaurantname, dishes.name as dishname from posts inner join users on users.id = userid inner join restaurants on restaurants.id = restaurantid inner join dishes on dishes.id = dishid where dishes.name = $1 and (posts.content IS NOT NULL OR posts.image IS NOT NULL) ORDER BY posts.id DESC',
+        values: [dishname],
+      };
+      return db.client.query(getAllDishPosts);
+    },
+    getByRestaurant: (name) => {
+      const getAllRestaurantPosts = {
+        text: 'select content, posts.id as postid, image, dishid, userid, restaurantid, likesdish, users.username, restaurants.name as restaurantname, dishes.name as dishname from posts inner join users on users.id = userid inner join restaurants on restaurants.id = restaurantid inner join dishes on dishes.id = dishid where restaurants.name = $1 and (posts.content IS NOT NULL OR posts.image IS NOT NULL) ORDER BY posts.id DESC',
+        values: [name],
+      };
+      return db.client.query(getAllRestaurantPosts);
     },
   },
   likes: {

@@ -17,6 +17,7 @@ class App extends React.Component {
     this.handleLogout = this.handleLogout.bind(this);
     this.changeView = this.changeView.bind(this);
     this.fetchData = this.fetchData.bind(this);
+    this.handleSearch = this.handleSearch.bind(this);
   }
 
   componentDidMount() {
@@ -76,6 +77,38 @@ class App extends React.Component {
     });
   }
 
+  handleSearch(searchTerm, value) {
+    if (value === '') {
+      return;
+    }
+    if (searchTerm === 'rating') {
+      $.get({
+        url: '/rating',
+        success: (data) => {
+          this.setState({
+            posts: data,
+          });
+        },
+        error: (err) => {
+          console.log(err);
+        },
+      });
+    } else {
+      $.get({
+        url: `/search/${searchTerm}/${value}`,
+        success: (data) => {
+          console.log(data);
+          this.setState({
+            posts: data,
+          });
+        },
+        error: (err) => {
+          console.log(err);
+        },
+      });
+    }
+  }
+
   changeView() {
     this.fetchData();
   }
@@ -84,10 +117,14 @@ class App extends React.Component {
     return (
       <div>
         <div id="header">
-          <Header user={this.state.user} handleLogin={this.handleLogin} />
+          <Header
+            user={this.state.user}
+            handleLogin={this.handleLogin}
+            handleSearch={this.handleSearch}
+          />
           { this.state.user && <button onClick={this.handleLogout}> Logout</button> }
         </div>
-        {this.state.user && <Submit user={this.state.user} />}
+        {this.state.user && <Submit user={this.state.user} id={this.state.id} />}
         <Posts
           user={this.state.user}
           changeView={this.changeView}
