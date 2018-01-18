@@ -7,18 +7,12 @@ class Posts extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      user: props.user,
-      posts: props.posts,
-      id: props.id,
-      headers: {
-        'access-control-allow-origin': '*',
-        'access-control-allow-methods': 'GET, POST, PUT, DELETE, OPTIONS',
-        'access-control-allow-headers': 'content-type, accept',
-      },
+      user: this.props.user,
+      posts: this.props.posts,
+      id: this.props.id,
     };
 
     this.handleClick = this.handleClick.bind(this);
-    this.getPostsData = this.getPostsData.bind(this);
     this.postUpvote = this.postUpvote.bind(this);
     this.postDownvote = this.postDownvote.bind(this);
   }
@@ -28,102 +22,59 @@ class Posts extends React.Component {
     if (this.props.posts !== nextProps.posts) {
       this.setState({
         posts: nextProps.posts,
+        user: nextProps.user,
+        id: nextProps.id,
       });
     }
   }
 
-  getPostsData() {
-    if (this.state.user) {
-      $.get({
-        url: `/${this.state.user}`,
-        success: (data) => {
-          this.setState({
-            posts: data,
-          });
-        },
-        err: (err) => {
-          console.log(err);
-        },
-      });
-    } else {
-      $.ajax({
-        method: 'GET',
-        url: '/posts',
-        dataType: 'json',
-        success: (data) => { this.setState(this.state.posts = data); },
-      });
-    }
-  }
-
-  postUpvote(info, otherid) {
-    $.ajax({
-      method: 'POST',
-      dataType: 'json',
-      headers: this.state.headers,
+  postUpvote(query) {
+    $.post({
+      contentType: 'application/json',
       url: '/votes/upvote',
-      data: {
-        'dishId': info.postData.dishid,
-        'likesDish': 1,
-        'userId': otherid,
-        'restaurantId': info.postData.restaurantid,
-      },
+      data: JSON.stringify(query),
       success: () => {
-        this.getPostsData();
-        console.log('upvote success: ', otherid);
-      },
-      error: () => { console.log('MISH IS MY BEST FRIEND'); },
-    });
-  }
-
-  postDownvote(info, otherid) {
-    $.ajax({
-      method: 'POST',
-      dataType: 'json',
-      url: '/votes/downvote',
-      headers: this.state.headers,
-      data: {
-        'dishId': info.postData.dishid,
-        'likesDish': 0,
-        'userId': otherid,
-        'restaurantId': info.postData.restaurantid,
-      },
-      success: () => {
-        this.getPostsData();
-        console.log('downvote success: ', otherid);
+        this.props.changeView();
       },
       error: () => { console.log('LORY IS MY BEST FRIEND'); },
     });
   }
 
-  handleClick(event, likes) {
-    if (likes === 'like' && this.props.user) {
-      console.log('event: ', event, 'likes: ', likes, 'user', this.props.id);
-      this.postUpvote(event, this.props.id);
-    } else if (likes === 'dislike' && this.props.user) {
-      console.log('event: ', event, 'likes: ', likes);
-      this.postDownvote(event, this.props.id);
+  postDownvote(query) {
+    $.post({
+      contentType: 'application/json',
+      url: '/votes/downvote',
+      data: JSON.stringify(query),
+      success: () => {
+        this.props.changeView();
+      },
+      error: () => { console.log('LORY IS MY BEST FRIEND'); },
+    });
+  }
+
+  handleClick(query, vote) {
+    if (vote) {
+      query.likesdish = 1;
+      query.userid = this.state.id;
+      this.postUpvote(query);
+    } else {
+      query.likesdish = 0;
+      query.userid = this.state.id;
+      this.postDownvote(query);
     }
   }
 
 
   render() {
-    console.log('user: ', this.props.user);
     return (
       <div>
-        { this.state.posts.map(item =>
+        { this.state.posts.map(post =>
           (<Post
-            postId={item.id}
-            key={item.id}
-            postData={item}
-            postImage={item.image}
-            postContent={item.content}
-            postUserid={item.username}
-            loggedUser={this.props.user}
-            postDish={item.dishname}
-            votesPos={item.votes.upvote}
-            votesNeg={item.votes.downvote}
-            clickyclick={this.handleClick}
-            likeylike={item.likesdish}
+            key={post.postid}
+            user={this.state.user}
+            post={post}
+            handleClick={this.handleClick}
+            id={this.state.id}
           />))}
       </div>
     );

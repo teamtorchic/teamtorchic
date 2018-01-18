@@ -67,7 +67,6 @@ app.get('/session', (req, res) => {
     models.users.getUserId(user)
       .then((result) => {
         const { id } = result.rows[0];
-        console.log ("user, id", {user, id})
         res.json({ user, id });
       })
       .catch(err => console.log(err));
@@ -93,7 +92,6 @@ app.post('/signup', (req, res) => {
           });
       } else {
         res.redirect('/login');
-        // res.send({ message: 'username already exists' });
       }
     });
 });
