@@ -11,6 +11,8 @@ class Submit extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      id: props.id,
+      user: props.user,
       likes: false,
       dislikes: false,
       image: null,

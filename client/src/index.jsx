@@ -124,7 +124,7 @@ class App extends React.Component {
           />
           { this.state.user && <button onClick={this.handleLogout}> Logout</button> }
         </div>
-        {this.state.user && <Submit user={this.state.user} />}
+        {this.state.user && <Submit user={this.state.user} id={this.state.id} />}
         <Posts
           user={this.state.user}
           changeView={this.changeView}
