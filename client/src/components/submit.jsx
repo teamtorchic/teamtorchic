@@ -19,6 +19,7 @@ class Submit extends React.Component {
       commentary: '',
       suggestedRestaurants: null,
       suggestedDishes: null,
+      isRecipe: false,
     };
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -27,6 +28,7 @@ class Submit extends React.Component {
     this.handleDrop = this.handleDrop.bind(this);
     this.suggest = this.suggest.bind(this);
     this.endSuggest = this.endSuggest.bind(this);
+    this.handleToggle = this.handleToggle.bind(this);
     this.handleAcceptDish = this.handleAcceptDish.bind(this);
     this.handleAcceptRestaurant = this.handleAcceptRestaurant.bind(this);
 
@@ -69,14 +71,17 @@ class Submit extends React.Component {
   }
 
   handleClick(event) {
-    if (event.target.name === 'like' && this.state.likes !== 'likes') {
-      console.log(event.currentTarget.name);
+    console.log(event.currentTarget.name);
+
+    if (event.currentTarget.name === 'like' && this.state.likes !== 'likes') {
       this.setState({ likes: 'likes', dislikes: '' });
     } else if (event.currentTarget.name === 'like' && this.state.likes === 'likes') {
       this.setState({ likes: '' });
-    } else if (event.target.name === 'dislike' && this.state.dislikes !== 'dislikes') {
+    } else if (event.currentTarget.name === 'dislike' && this.state.dislikes !== 'dislikes') {
       this.setState({ likes: '', dislikes: 'dislikes' });
     } else {
+      console.log(event.currentTarget.name);
+
       this.setState({ dislikes: '' });
     }
   }
@@ -112,9 +117,25 @@ class Submit extends React.Component {
   handleSubmit() {
     const postData = new FormData();
 
-    Object.entries(this.state).forEach((pair) => {
-      postData.append(pair[0], pair[1]);
-    });
+    postData.append('commentary', this.state.commentary);
+    postData.append('content', this.state.commentary);
+    postData.append('likes', this.state.likes);
+    postData.append('dislikes', this.state.dislikes);
+    postData.append('dish', this.state.dish);
+
+    if (this.state.isRecipe) {
+      postData.append('recipe', this.state.restaurant);
+      postData.append('restaurant', '');
+
+    } else {
+      postData.append('restaurant', this.state.restaurant);
+      postData.append('recipe', '');
+
+    }
+
+    if (this.state.image) {
+      postData.append('image', this.state.image);
+    }
 
     $.post({
       url: '/submit',
@@ -131,6 +152,11 @@ class Submit extends React.Component {
         dislikes: '',
       });
     });
+  }
+
+  handleToggle() {
+    const recipe = !this.state.isRecipe;
+    this.setState({ isRecipe: recipe });
   }
 
   handleFiles() {
@@ -174,6 +200,33 @@ class Submit extends React.Component {
             <div className="col">
               <div className="row">
                 <div className="col-3">
+                  <button type="button" className="btn-default recipe-btn" onClick={this.handleToggle}>
+                    &#9660;&nbsp;
+                    {!this.state.isRecipe && 'at'}
+                    {this.state.isRecipe && 'recipe'}
+                  </button>
+                </div>
+                <div className="col">
+                  <input
+                    id="restaurant"
+                    className="form-control"
+                    value={this.state.restaurant}
+                    onKeyPress={this.suggest}
+                    onChange={this.handleChange}
+                    placeholder="the place"
+                    type="text"
+                  />
+                  { this.state.suggestions && this.state.active === 'restaurant' &&
+                  <Suggestions
+                    options={this.state.suggestions}
+                    handleAccept={this.handleAcceptRestaurant}
+                    handleAdd={this.endSuggest}
+                    item={this.state.restaurant}
+                  />}
+                </div>
+              </div>
+              <div className="row">
+                <div className="col-3">
                     the
                 </div>
                 <div className="col">
@@ -193,29 +246,6 @@ class Submit extends React.Component {
                     handleAdd={this.endSuggest}
                     item={this.state.dish}
                   />)}
-                </div>
-              </div>
-              <div className="row">
-                <div className="col-3">
-                 at
-                </div>
-                <div className="col">
-                  <input
-                    id="restaurant"
-                    className="form-control"
-                    value={this.state.restaurant}
-                    onKeyPress={this.suggest}
-                    onChange={this.handleChange}
-                    placeholder="the place"
-                    type="text"
-                  />
-                  { this.state.suggestions && this.state.active === 'restaurant' &&
-                  <Suggestions
-                    options={this.state.suggestions}
-                    handleAccept={this.handleAcceptRestaurant}
-                    handleAdd={this.endSuggest}
-                    item={this.state.restaurant}
-                  />}
                 </div>
               </div>
               <div className="row">
