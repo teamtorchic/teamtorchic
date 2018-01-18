@@ -1,6 +1,29 @@
 const models = require('../models');
 
 module.exports = {
+  likes: {
+    get: (req, res) => {
+      const data = req.query;
+      models.likes.get(data).then((queryResults) => {
+        let userLiked = false;
+        queryResults.rows.forEach((row) => {
+          if (row.userid == data.user) {
+            userLiked = true;
+          }
+        });
+
+        const results = {
+          count: queryResults.rows.length,
+          usersLike: userLiked,
+        };
+        res.json(results);
+      });
+    },
+    post: (req, res) => {
+      const data = req.body;
+      models.likes.post(data).then(results => res.json(results));
+    },
+  },
   comments: {
     get: (req, res) => {
       const { post } = req.query;
@@ -19,36 +42,30 @@ module.exports = {
   post: {
     getAll: (req, res) => {
       models.post.getAll()
-        .then((results) => {
-          results = JSON.parse(JSON.stringify(results.rows));
-          res.body = {};
-          res.body.data = results;
-          const Promises = results.map((post) => {
-            const { dishid } = post;
-            return models.dishlikes.get(dishid);
-          });
+      .then(results => {
+        results = JSON.parse(JSON.stringify(results.rows));
+        res.body = {};
+        res.body.data = results;
+        const Promises = results.map(post => {
+          const {dishid} = post;
+          return models.dishlikes.get(dishid);
+        });
           return Promise.all(Promises);
         })
-        .then((results) => {
+        .then(results => {
           results = results.map(result => result.rows);
-          results.forEach((dish, i) => {
+          const likeCounts = results.forEach((dish, i) => {
             const vote = {
               upvote: 0,
               downvote: 0,
             };
-            const upvoteUsers = [];
-            const downvoteUsers = [];
-            dish.forEach((votes) => {
+            dish.forEach(votes => {
               if (votes.likesdish) {
                 vote.upvote += 1;
-                upvoteUsers.push(votes.userid);
               } else if ((votes.likesdish === 0)) {
                 vote.downvote += 1;
-                downvoteUsers.push(votes.userid);
               }
-            });
-            res.body.data[i].upvoteUsers = upvoteUsers;
-            res.body.data[i].downvoteUsers = downvoteUsers;
+            })
             res.body.data[i].votes = vote;
           });
           res.json(res.body.data);
@@ -116,10 +133,11 @@ module.exports = {
     },
     upVote: (req, res) => {
       const {
-        dishid, likesdish, userid, restaurantid,
+        dishId, likesdish, userId, restaurantId,
       } = req.body;
-      models.dishlikes.upVote(dishid, likesdish, userid, restaurantid)
+      models.dishlikes.upVote(dishId, likesdish, userId, restaurantId)
         .then((results) => {
+          console.log ('results:', results);
           res.json(results);
         })
         .catch((err) => {
@@ -128,10 +146,11 @@ module.exports = {
     },
     downVote: (req, res) => {
       const {
-        dishid, likesdish, userid, restaurantid,
+        dishId, likesdish, userId, restaurantId,
       } = req.body;
-      models.dishlikes.downVote(dishid, likesdish, userid, restaurantid)
+      models.dishlikes.downVote(dishId, likesdish, userId, restaurantId)
         .then((results) => {
+          console.log ('results:', results);
           res.json(results);
         })
         .catch((err) => {
@@ -139,52 +158,28 @@ module.exports = {
         });
     },
   },
-  user: {
-    getProfile: (req, res) => {
-      const { username } = req.params;
-      models.users.getProfile(username)
+  signup: {
+    submit: (req, res) => {
+      const { username, password } = req.body;
+      models.users.findByUsername(username)
         .then((results) => {
-          res.json(results);
-        })
-        .catch((err) => {
-          res.status(401).send(err);
+          if (results.rowCount === 0) {
+            models.users.create(username, password)
+              .then(() => {
+                res.redirect(`/users/${req.body.username}`);
+              })
+              .catch((err) => {
+                res.status(500).send(err);
+              });
+          } else {
+            res.send({ message: 'username already exists' });
+          }
         });
     },
-    getAllPost: (req, res) => {
-      const { username } = req.params;
-      models.post.getByUsername(username)
-        .then((results) => {
-          results = JSON.parse(JSON.stringify(results.rows));
-          res.body = {};
-          res.body.data = results;
-          const Promises = results.map((post) => {
-            const { dishid } = post;
-            return models.dishlikes.get(dishid);
-          });
-          return Promise.all(Promises);
-        })
-        .catch(err => console.log(err))
-        .then((results) => {
-          results = results.map(result => result.rows);
-          results.forEach((dish, i) => {
-            const vote = {
-              upvote: 0,
-              downvote: 0,
-            };
-            dish.forEach((votes) => {
-              if (votes.likesdish) {
-                vote.upvote += 1;
-              } else {
-                vote.downvote += 1;
-              }
-            });
-            res.body.data[i].votes = vote;
-          });
-          res.json(res.body.data);
-        })
-        .catch((err) => {
-          res.status(404).send(err);
-        });
+  },
+  user: {
+    landing: (req, res) => {
+      res.redirect(`/users/${req.body.username}`);
     },
   },
 };
