@@ -38,7 +38,6 @@ class App extends React.Component {
               this.setState({
                 posts: data,
               });
-              console.log("Logged in user state:", this.state);
             },
             err: (err) => {
               console.log(err);
@@ -82,7 +81,6 @@ class App extends React.Component {
   }
 
   render() {
-    console.log ("visitor user state:", this.state);
     return (
       <div>
         <div id="header">

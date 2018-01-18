@@ -92,7 +92,6 @@ app.post('/signup', (req, res) => {
           });
       } else {
         res.redirect('/login');
-        // res.send({ message: 'username already exists' });
       }
     });
 });

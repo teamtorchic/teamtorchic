@@ -6,13 +6,13 @@ module.exports = {
   post: {
     getAll: () => {
       const getAllPost = {
-        text: 'select content, posts.id, image, dishid, userid, restaurantid, likesdish, users.username, restaurants.name as restaurantname, dishes.name as dishname from posts inner join users on users.id = userid inner join restaurants on restaurants.id = restaurantid inner join dishes on dishes.id = dishid where (posts.content IS NOT NULL OR posts.image IS NOT NULL)',
+        text: 'select content, posts.id as postid, image, dishid, userid, restaurantid, likesdish, users.username, restaurants.name as restaurantname, dishes.name as dishname from posts inner join users on users.id = userid inner join restaurants on restaurants.id = restaurantid inner join dishes on dishes.id = dishid where (posts.content IS NOT NULL OR posts.image IS NOT NULL)',
       };
       return db.client.query(getAllPost);
     },
     getByUsername: (username) => {
       const getAllPostByUsername = {
-        text: `select content, image, dishid, userid, restaurantid, likesdish, users.username, restaurants.name as restaurantname, dishes.name as dishname from posts inner join users on users.id = userid inner join restaurants on restaurants.id = restaurantid inner join dishes on dishes.id = dishid where users.username = '${username}' and content IS NOT NULL`,
+        text: `select content, posts.id as postid, image, dishid, userid, restaurantid, likesdish, users.username, restaurants.name as restaurantname, dishes.name as dishname from posts inner join users on users.id = userid inner join restaurants on restaurants.id = restaurantid inner join dishes on dishes.id = dishid where users.username = '${username}' and content IS NOT NULL`,
       };
       return db.client.query(getAllPostByUsername);
     },

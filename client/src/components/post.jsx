@@ -3,7 +3,7 @@ import Comment from './comment';
 
 
 class Post extends React.Component {
-  constructor (props) {
+  constructor(props) {
     super(props);
     this.state = {
       upvote: this.props.post.votes.upvote,
@@ -12,7 +12,8 @@ class Post extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if ((this.props.post.votes.upvote !== nextProps.post.votes.upvote) || (this.props.post.votes.downvote !== nextProps.post.votes.downvote)) {
+    if ((this.props.post.votes.upvote !== nextProps.post.votes.upvote)
+    || (this.props.post.votes.downvote !== nextProps.post.votes.downvote)) {
       this.setState({
         upvote: nextProps.post.votes.upvote,
         downvote: nextProps.post.votes.downvote,
@@ -21,14 +22,14 @@ class Post extends React.Component {
   }
 
   render() {
-    console.log ("rendering", this.state);
     const {
       handleClick,
       post,
       user,
+      id,
     } = this.props;
     const {
-      id,
+      postid,
       content,
       likesdish,
       dishname,
@@ -38,6 +39,8 @@ class Post extends React.Component {
       restaurantname,
       userid,
       username,
+      upvoteUsers,
+      downvoteUsers,
       votes,
     } = post;
     const { downvote, upvote } = this.state;
@@ -48,7 +51,7 @@ class Post extends React.Component {
             {likesdish === 1 ? ' likes ' : null }
             {likesdish === 0 ? ' dislikes ' : null}
             {likesdish === null ? ' doesn\'t care for ' : null}
-            {dishname}
+            {dishname} at {restaurantname}
           </p>
           <p><img className="image" alt="post" src={image} /></p>
           <p>
@@ -56,8 +59,8 @@ class Post extends React.Component {
               onClick={() => handleClick({ restaurantid, dishid, likesdish }, 1)}
               role="presentation"
               onKeyDown={() => handleClick({ restaurantid, dishid, likesdish }, 1)}
-              className="up material-icons"
-              id={likesdish && user === username ?
+              className="material-icons"
+              id={upvoteUsers.includes(id) ?
                 'likes-selected' : null}
             >
           favorite_border
@@ -68,7 +71,7 @@ class Post extends React.Component {
               role="presentation"
               onKeyUp={() => handleClick({ restaurantid, dishid, likesdish }, 0)}
               className="material-icons"
-              id={(likesdish === 0) && user === username ?
+              id={downvoteUsers.includes(id) ?
                 'dislikes-selected' : null}
             >
               mood_bad
@@ -77,7 +80,7 @@ class Post extends React.Component {
             <span className="content-ele">{content}</span>
           </p>
         </article>
-        <Comment post={id} />
+        <Comment post={postid} />
       </div>
     );
   }

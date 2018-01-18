@@ -30,21 +30,25 @@ module.exports = {
           return Promise.all(Promises);
         })
         .then((results) => {
-          console.log ("recounting votes")
-          console.log (results);
           results = results.map(result => result.rows);
           results.forEach((dish, i) => {
             const vote = {
               upvote: 0,
               downvote: 0,
             };
+            const upvoteUsers = [];
+            const downvoteUsers = [];
             dish.forEach((votes) => {
               if (votes.likesdish) {
                 vote.upvote += 1;
+                upvoteUsers.push(votes.userid);
               } else if ((votes.likesdish === 0)) {
                 vote.downvote += 1;
+                downvoteUsers.push(votes.userid);
               }
             });
+            res.body.data[i].upvoteUsers = upvoteUsers;
+            res.body.data[i].downvoteUsers = downvoteUsers;
             res.body.data[i].votes = vote;
           });
           res.json(res.body.data);
@@ -108,7 +112,6 @@ module.exports = {
       } = req.body;
       models.dishlikes.upVote(dishid, likesdish, userid, restaurantid)
         .then((results) => {
-          console.log ('results:', results);
           res.json(results);
         })
         .catch((err) => {
@@ -119,14 +122,11 @@ module.exports = {
       const {
         dishid, likesdish, userid, restaurantid,
       } = req.body;
-      console.log (req.body);
       models.dishlikes.downVote(dishid, likesdish, userid, restaurantid)
         .then((results) => {
-          console.log ('results:', results);
           res.json(results);
         })
         .catch((err) => {
-          console.log ('hello')
           res.status(400).send(err);
         });
     },

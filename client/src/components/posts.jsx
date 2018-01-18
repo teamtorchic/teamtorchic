@@ -41,7 +41,6 @@ class Posts extends React.Component {
   }
 
   postDownvote(query) {
-    console.log (this.props)
     $.post({
       contentType: 'application/json',
       url: '/votes/downvote',
@@ -55,28 +54,28 @@ class Posts extends React.Component {
 
   handleClick(query, vote) {
     if (vote) {
-      console.log('origin query in upvote', query);
       query.likesdish = 1;
       query.userid = this.state.id;
-      console.log ("query after change for upvote", query);
       this.postUpvote(query);
     } else {
-      console.log('origin query in downvote', query);
       query.likesdish = 0;
       query.userid = this.state.id;
-      console.log ("query after change for downvote", query);
       this.postDownvote(query);
     }
   }
 
 
   render() {
-    console.log('user: ', this.props.user);
-    console.log (this.state);
     return (
       <div>
         { this.state.posts.map(post =>
-          (<Post key={post.id} user={this.state.user} post={post} handleClick={this.handleClick} />))}
+          (<Post
+            key={post.postid}
+            user={this.state.user}
+            post={post}
+            handleClick={this.handleClick}
+            id={this.state.id}
+          />))}
       </div>
     );
   }
