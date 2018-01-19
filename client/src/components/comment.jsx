@@ -107,11 +107,11 @@ class Comment extends React.Component {
         className="comment"
         key={comment.id}
       >
-        <span>@{comment.username}:</span>
+        <span className="username">{comment.username}:</span>
         {comment.content}
       </li>));
     const reviews = this.state.reviews.map(review => (
-      <li className="review" key={review.id}>@{review.username}: {review.content}</li>));
+      <li className="review" key={review.id}><span className="username">{review.username}:</span> {review.content}</li>));
     const {
       currentUser,
       restaurantid,
@@ -126,61 +126,71 @@ class Comment extends React.Component {
     return (
       <div className="comments">
         <div className="row">
-          <div className="col-6">
-            <div className="btn-group">
-              <button
-                onClick={this.handleLike}
-                className="btn btn-outline-secondary likes-button"
-                type="button"
-              >
-                <i className={`material-icons ${this.state.userLikes}`}>favorite_border</i>&nbsp;{this.state.likes}
-              </button>
-              <button className="btn btn-outline-secondary" type="button">
-                <i
-                  onClick={() => handleClick({ restaurantid, dishid, likesdish }, 1)}
-                  role="presentation"
-                  onKeyDown={() => handleClick({ restaurantid, dishid, likesdish }, 1)}
-                  className="material-icons"
-                  id={upvoteUsers.includes(currentUser) ?
-                    'likes-selected' : null}
-                >
-            insert_emoticon
-                </i>
-                {upvote}
-              </button>
-              <button className="btn btn-outline-secondary" type="button">
-                <i
-                  onClick={() => handleClick({ restaurantid, dishid, likesdish }, 0)}
-                  role="presentation"
-                  onKeyUp={() => handleClick({ restaurantid, dishid, likesdish }, 0)}
-                  className="material-icons"
-                  id={downvoteUsers.includes(currentUser) ?
-                    'dislikes-selected' : null}
-                >
-              mood_bad
-                </i>
-                {downvote}
-              </button>
-            </div>
+          <div className="col-2">
+            <button
+              onClick={this.handleLike}
+              type="button"
+              title="Like this post"
+              className="btn btn-outline-secondary likes-button"
+            >
+              <i className={`material-icons ${this.state.userLikes}`}>favorite_border</i>
+              <span className="counter">{this.state.likes}</span>
+            </button>
           </div>
-          <div className="col-6">
-            <div className="btn-group">
-              {(this.state.comments.length > 0) &&
-                <button
-                  type="button"
-                  className="btn btn-outline-secondary"
-                >
-                  <i className="material-icons">message</i>&nbsp;{this.state.comments.length}
-                </button>}
-              {(this.state.reviews.length > 0) &&
+          <div className="col-2">
+            {(this.state.comments.length > 0) &&
               <button
                 type="button"
-                onClick={this.showReviews}
                 className="btn btn-outline-secondary"
+                title={`${this.state.comments.length} comments`}
               >
-                <i className="material-icons">star_rate</i>&nbsp;{this.state.reviews.length}
+                <i className="material-icons">message</i>
+                <span className="counter">{this.state.comments.length}</span>
               </button>}
-            </div>
+          </div>
+          <div className="col-2">
+          </div>
+          <div className="col-2">
+            {(this.state.reviews.length > 0) &&
+            <button
+              type="button"
+              onClick={this.showReviews}
+              title={`See what ${this.state.reviews.length} others said about this dish`}
+              className="btn btn-outline-secondary"
+            >
+              <i className="material-icons">star_rate</i>
+              <span className="counter">{this.state.reviews.length}</span>
+            </button>}
+          </div>
+          <div className="col-2">
+            <button className="btn btn-outline-secondary" title="I like this dish." type="button">
+              <i
+                onClick={() => handleClick({ restaurantid, dishid, likesdish }, 1)}
+                role="presentation"
+                onKeyDown={() => handleClick({ restaurantid, dishid, likesdish }, 1)}
+                className="material-icons col-2"
+                id={upvoteUsers.includes(currentUser) ?
+                  'likes-selected' : null}
+              >
+          insert_emoticon
+              </i>
+              <span className="counter">{upvote}</span>
+            </button>
+          </div>
+          <div className="col-2">
+            <button className="btn btn-outline-secondary" title="I don't this dish." type="button">
+              <i
+                onClick={() => handleClick({ restaurantid, dishid, likesdish }, 0)}
+                role="presentation"
+                onKeyUp={() => handleClick({ restaurantid, dishid, likesdish }, 0)}
+                className="material-icons col-2"
+                id={downvoteUsers.includes(currentUser) ?
+                  'dislikes-selected' : null}
+              >
+              mood_bad
+              </i>
+              <span className="counter">{downvote}</span>
+            </button>
           </div>
         </div>
         { !this.state.displayReviews && <ul>{comments}</ul>}

@@ -15,6 +15,7 @@ const Post = (props) => {
     dishname,
     dishid,
     image,
+    recipe,
     restaurantid,
     restaurantname,
     userid,
@@ -27,14 +28,18 @@ const Post = (props) => {
   return (
     <div className="post-ele">
       <article className="ele">
-        <p>{username}
-          {likesdish === 1 ? ' likes ' : null }
-          {likesdish === 0 ? ' dislikes ' : null}
-          {likesdish === null ? ' doesn\'t care for ' : null}
-          {dishname} at {restaurantname}
+        <p><b>{username}</b>
+          {(recipe && recipe.length > 0) ? ' cooked ' : null }
+          {!(recipe && recipe.length > 0) && likesdish === 1 ? ' likes the ' : null }
+          {!(recipe && recipe.length > 0) && likesdish === 0 ? ' did not like the ' : null}
+          {!(recipe && recipe.length > 0) && likesdish === null ? ' ate the ' : null}
+          <b><a href={recipe}>{dishname}</a></b>
+          {!(recipe && recipe.length > 0) && (restaurantname && restaurantname.length > 0) ? ' from ' : null }
+          {!(recipe && recipe.length > 0) && (restaurantname && restaurantname.length > 0) ? <b>{restaurantname}</b>
+ : null }
         </p>
+        <p className="content-ele">{content}</p>
         {image && <img className="image" alt="post" src={`/images/${image}`} />}
-        <div className="content-ele">{content}</div>
       </article>
       <Comment
         upvoteUsers={upvoteUsers}

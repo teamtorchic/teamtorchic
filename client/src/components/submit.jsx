@@ -20,6 +20,7 @@ class Submit extends React.Component {
       dishes: null,
       isRecipe: false,
     };
+    this.preventDefault = this.preventDefault.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleClick = this.handleClick.bind(this);
@@ -43,21 +44,9 @@ class Submit extends React.Component {
     });
   }
 
-  componentDidMount() {
-    function dragenter(e) {
-      e.stopPropagation();
-      e.preventDefault();
-    }
-
-    function dragover(e) {
-      e.stopPropagation();
-      e.preventDefault();
-    }
-
-    const dropbox = document.getElementById('dropzone');
-    dropbox.addEventListener('dragenter', dragenter, false);
-    dropbox.addEventListener('dragover', dragover, false);
-    dropbox.addEventListener('drop', this.handleDrop, false);
+  preventDefault(e) {
+    e.stopPropagation();
+    e.preventDefault();
   }
 
   handleDrop(e) {
@@ -190,6 +179,9 @@ class Submit extends React.Component {
                 id="dropzone"
                 onClick={dropzoneClick}
                 onKeyDown={dropzoneClick}
+                onDrop={this.handleDrop}
+                onDragEnter={this.preventDefault}
+                onDragOver={this.preventDefault}
                 role="button"
                 tabIndex={0}
               >
@@ -226,6 +218,7 @@ class Submit extends React.Component {
                     options={this.state.suggestions}
                     handleAccept={this.handleAcceptRestaurant}
                     handleAdd={this.endSuggest}
+                    type="restaurant"
                     item={this.state.restaurant}
                   />}
                 </div>
@@ -250,6 +243,7 @@ class Submit extends React.Component {
                     handleAccept={this.handleAcceptDish}
                     handleAdd={this.endSuggest}
                     item={this.state.dish}
+                    type="dish"
                   />)}
                 </div>
               </div>

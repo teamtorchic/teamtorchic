@@ -1,8 +1,22 @@
-.comment span{color: #EC407A; padding-right:20px;};
-.comment{margin-bottom:.5em;list-style-type:none}
-.comments .username{font-weight:500}
+.comment {
+  margin-bottom:.5em;
+  list-style-type:none;
+
+  span{color: #EC407A; padding-right:20px;}
+}
 
 textarea.form-control{border:1px solid rgba(0,0,0,.15) !important; margin-top:3em}
+
+.comments .username{font-weight:600}
+
+.comments .material-icons{width:30px}
+.comments .col-2{padding: 0; text-align:right}
+.comments .btn{padding: 0 4px}
+.comments .col-2:first-child,.comments .col-2:nth-child(2){text-align: left}
+.btn, .material-icons{max-width: 100%}
+.material-icons{min-width:40px}
+.counter{position: relative;top:-6px}
+.comments .btn-outline-secondary:hover {border-color: white; background-color: white}
 
 b{color: #EC407A}
 
@@ -22,30 +36,10 @@ b{color: #EC407A}
   box-shadow: none;
 }
 
-.likes-button{border-radius: 0 0 0 .25rem; border-right-width:0}
-
 .btn-outline-secondary:hover {
-  background-color: #f2f2f2 !important;
   color: red;
 }
 
-div.post-ele {
-  margin-bottom:75px;
-  padding: 0;
-}
-
-.ele{border: none}
-
-
-
-.content-ele{
-  font-style: italic;
-  margin: .75em 0;
-
-::before{content: '&ldquo;'}
-::after{content: '&rdquo;'}
-
-}
 
 
 .image > p{display: none !important}
@@ -55,22 +49,17 @@ div.post-ele {
   padding: 0;
   margin: 0;
 
-  textarea{margin-top:1em}
-
   .col{padding: 0}
-  .row{margin:0 !important}
+  .row{margin:24px 0 !important;}
 
   textarea {
     width: 100%;
+    margin-top:1.5em;
   }
 
   ul {
     margin: 0;
     padding: 0;
     list-style-type: none;
-
-    li {
-
-    }
   }
 }
