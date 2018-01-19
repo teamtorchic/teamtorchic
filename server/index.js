@@ -92,7 +92,8 @@ app.post('/login', (req, res, next) => {
   passport.authenticate('local', (err, user, info) => {
     if (err) { return next(err); }
     if (!user) {
-      return res.send(info);
+      // return res.send(info);
+      return res.redirect('/login');
     }
     req.session.regenerate(() => {
       req.session.user = user;
