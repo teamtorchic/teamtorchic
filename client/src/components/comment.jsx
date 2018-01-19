@@ -1,5 +1,3 @@
-/* eslint react/prop-types: "off" */
-
 import React from 'react';
 import $ from 'jquery';
 
@@ -17,8 +15,6 @@ class Comment extends React.Component {
     this.handleEnter = this.handleEnter.bind(this);
     this.handleLike = this.handleLike.bind(this);
 
-    console.log('posts ', this.props.post);
-
     $.get({
       url: '/comments',
       data: { post: this.props.post },
@@ -31,7 +27,6 @@ class Comment extends React.Component {
       data: { post: this.props.post, user: this.props.currentUser },
       contentType: 'application/json',
     }).done((data) => {
-      console.log(data);
       this.setState({ likes: data.count, userLikes: data.usersLike });
     });
   }
@@ -44,7 +39,11 @@ class Comment extends React.Component {
     const newOpinion = !this.state.userLikes;
     $.post({
       url: '/likes',
-      data: JSON.stringify({ likes: newOpinion, post: this.props.post, user: this.props.currentUser }),
+      data: JSON.stringify({
+        likes: newOpinion,
+        post: this.props.post,
+        user: this.props.currentUser,
+      }),
       contentType: 'application/json',
     });
 
@@ -59,12 +58,15 @@ class Comment extends React.Component {
 
   handleEnter(event) {
     if (event.key === 'Enter') {
-      console.log('this.props.currentUser = ', this.props.currentUser);
       const content = event.target.value;
       $.post({
         url: '/comments',
         contentType: 'application/json',
-        data: JSON.stringify({ comment: content, userId: this.props.currentUser, postId: this.props.post }),
+        data: JSON.stringify({
+          comment: content,
+          userId: this.props.currentUser,
+          postId: this.props.post,
+        }),
       }).done(() => {
         this.setState({ comment: '' });
         $.get({
@@ -81,7 +83,17 @@ class Comment extends React.Component {
   render() {
     const comments = this.state.comments.map(comment => (
       <li className="comment" key={comment.id}>@{comment.username}: {comment.content}</li>));
-
+    const {
+      currentUser,
+      restaurantid,
+      dishid,
+      likesdish,
+      handleClick,
+      votes,
+      upvoteUsers,
+      downvoteUsers,
+    } = this.props;
+    const { upvote, downvote } = votes;
     return (
       <div className="comments">
         <div className="row">
@@ -97,10 +109,30 @@ class Comment extends React.Component {
                 </button>
               </div>
               <button className="btn btn-outline-secondary" type="button">
-                <i className="material-icons">mood</i> 7
+                <i
+                  onClick={() => handleClick({ restaurantid, dishid, likesdish }, 1)}
+                  role="presentation"
+                  onKeyDown={() => handleClick({ restaurantid, dishid, likesdish }, 1)}
+                  className="material-icons"
+                  id={upvoteUsers.includes(currentUser) ?
+                    'likes-selected' : null}
+                >
+            insert_emoticon
+                </i>
+                {upvote}
               </button>
               <button className="btn btn-outline-secondary" type="button">
-                <i className="material-icons">mood_bad</i> 2
+                <i
+                  onClick={() => handleClick({ restaurantid, dishid, likesdish }, 0)}
+                  role="presentation"
+                  onKeyUp={() => handleClick({ restaurantid, dishid, likesdish }, 0)}
+                  className="material-icons"
+                  id={downvoteUsers.includes(currentUser) ?
+                    'dislikes-selected' : null}
+                >
+              mood_bad
+                </i>
+                {downvote}
               </button>
             </div>
           </div>
