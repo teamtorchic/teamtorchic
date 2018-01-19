@@ -39,12 +39,12 @@ class Header extends React.Component {
   }
 
   render() {
-    const { handleLogin } = this.props;
+    const { handleLogin, handleSearch } = this.props;
     const { user } = this.state;
     return (
       <div>
         <div className="searchBar">
-          {user && <Search handleSearch={this.props.handleSearch} />}
+          {user && <Search handleSearch={handleSearch} />}
         </div>
         { user && <span>Welcome, {user} to </span> }<span>eatChic</span>
         { !user && <a href="/auth/google"> Log In Through Google </a> }

@@ -1,5 +1,3 @@
-/* eslint react/prop-types: "off" */
-
 import React from 'react';
 import $ from 'jquery';
 
@@ -20,7 +18,6 @@ class Comment extends React.Component {
     this.getReviews = this.getReviews.bind(this);
     this.showReviews = this.showReviews.bind(this);
     this.hideReviews = this.hideReviews.bind(this);
-
     this.getReviews();
 
     $.get({
@@ -39,15 +36,25 @@ class Comment extends React.Component {
     });
   }
 
-  handleChange(event) {
-    this.setState({ comment: event.target.value });
+  getReviews() {
+    $.get({
+      url: '/reviews',
+      data: { post: this.props.post, dish: this.props.dishid },
+      contentType: 'application/json',
+    }).done((data) => {
+      this.setState({ reviews: data });
+    });
   }
 
   handleLike() {
     const newOpinion = !this.state.userLikes;
     $.post({
       url: '/likes',
-      data: JSON.stringify({ likes: newOpinion, post: this.props.post, user: this.props.currentUser }),
+      data: JSON.stringify({
+        likes: newOpinion,
+        post: this.props.post,
+        user: this.props.currentUser,
+      }),
       contentType: 'application/json',
     });
 
@@ -60,18 +67,9 @@ class Comment extends React.Component {
     this.setState({ userLikes: !this.state.userLikes });
   }
 
-  getReviews() {
-    $.get({
-      url: '/reviews',
-      data: { post: this.props.post, dish: this.props.dishId },
-      contentType: 'application/json',
-    }).done((data) => {
-      console.log('reviews', data);
-
-      this.setState({ reviews: data });
-    });
+  handleChange(event) {
+    this.setState({ comment: event.target.value });
   }
-
   showReviews() {
     this.setState({ displayReviews: true });
   }
@@ -81,12 +79,15 @@ class Comment extends React.Component {
 
   handleEnter(event) {
     if (event.key === 'Enter') {
-      console.log('this.props.currentUser = ', this.props.currentUser);
       const content = event.target.value;
       $.post({
         url: '/comments',
         contentType: 'application/json',
-        data: JSON.stringify({ comment: content, userId: this.props.currentUser, postId: this.props.post }),
+        data: JSON.stringify({
+          comment: content,
+          userId: this.props.currentUser,
+          postId: this.props.post,
+        }),
       }).done(() => {
         this.setState({ comment: '' });
         $.get({
@@ -102,27 +103,63 @@ class Comment extends React.Component {
 
   render() {
     const comments = this.state.comments.map(comment => (
-      <li className="comment" key={comment.id}><span>@{comment.username}:</span> {comment.content}</li>));
+      <li
+        className="comment"
+        key={comment.id}
+      >
+        <span>@{comment.username}:</span>
+        {comment.content}
+      </li>));
     const reviews = this.state.reviews.map(review => (
       <li className="review" key={review.id}>@{review.username}: {review.content}</li>));
-
+    const {
+      currentUser,
+      restaurantid,
+      dishid,
+      likesdish,
+      handleClick,
+      votes,
+      upvoteUsers,
+      downvoteUsers,
+    } = this.props;
+    const { upvote, downvote } = votes;
     return (
       <div className="comments">
         <div className="row">
           <div className="col-6">
             <div className="btn-group">
-                <button
-                  onClick={this.handleLike}
-                  className="btn btn-outline-secondary likes-button"
-                  type="button"
-                >
-                  <i className={`material-icons ${this.state.userLikes}`}>favorite_border</i>&nbsp;{this.state.likes}
-                </button>
-              <button className="btn btn-outline-secondary" type="button">
-                <i className="material-icons">mood</i> 7
+              <button
+                onClick={this.handleLike}
+                className="btn btn-outline-secondary likes-button"
+                type="button"
+              >
+                <i className={`material-icons ${this.state.userLikes}`}>favorite_border</i>&nbsp;{this.state.likes}
               </button>
               <button className="btn btn-outline-secondary" type="button">
-                <i className="material-icons">mood_bad</i> 2
+                <i
+                  onClick={() => handleClick({ restaurantid, dishid, likesdish }, 1)}
+                  role="presentation"
+                  onKeyDown={() => handleClick({ restaurantid, dishid, likesdish }, 1)}
+                  className="material-icons"
+                  id={upvoteUsers.includes(currentUser) ?
+                    'likes-selected' : null}
+                >
+            insert_emoticon
+                </i>
+                {upvote}
+              </button>
+              <button className="btn btn-outline-secondary" type="button">
+                <i
+                  onClick={() => handleClick({ restaurantid, dishid, likesdish }, 0)}
+                  role="presentation"
+                  onKeyUp={() => handleClick({ restaurantid, dishid, likesdish }, 0)}
+                  className="material-icons"
+                  id={downvoteUsers.includes(currentUser) ?
+                    'dislikes-selected' : null}
+                >
+              mood_bad
+                </i>
+                {downvote}
               </button>
             </div>
           </div>
@@ -155,7 +192,7 @@ class Comment extends React.Component {
           onChange={this.handleChange}
           onKeyPress={this.handleEnter}
         />
-    </div>);
+      </div>);
   }
 }
 
