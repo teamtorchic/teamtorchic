@@ -22,10 +22,15 @@ coverage
 
 # Compiled Dirs (http://nodejs.org/api/addons.html)
 build/
-dist/
+bundle.js
+stylus.css
+package-lock.json
 
 # Dependency directorys
 # Deployed apps should consider commenting these lines out:
 # see https://npmjs.org/doc/faq.html#Should-I-check-my-node_modules-folder-into-git
+images/
 node_modules/
 bower_components/
+client/dist/bundle.js
+client/dist/stylus.css
