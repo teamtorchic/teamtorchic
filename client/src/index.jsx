@@ -83,9 +83,6 @@ class App extends React.Component {
   }
 
   handleSearch(searchTerm, value) {
-    if (value === '') {
-      return;
-    }
     if (searchTerm === 'rating') {
       $.get({
         url: '/rating',
@@ -98,6 +95,8 @@ class App extends React.Component {
           console.log(err);
         },
       });
+    } else if (value === '') {
+      return;
     } else {
       $.get({
         url: `/search/${searchTerm}/${value}`,

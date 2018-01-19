@@ -13,35 +13,52 @@ module.exports = {
     getByUsername: (username) => {
       const getAllPostByUsername = {
         text: 'select content, posts.id as postid, image, dishid, userid, restaurantid, likesdish, users.username, restaurants.name as restaurantname, dishes.name as dishname from posts inner join users on users.id = userid inner join restaurants on restaurants.id = restaurantid inner join dishes on dishes.id = dishid where users.username = $1 and content IS NOT NULL ORDER BY posts.id DESC',
-        values: [username]
+        values: [username],
       };
       return db.client.query(getAllPostByUsername);
     },
     getByDish: (dishname) => {
-      const query = `select content, posts.id as postid, posts.image, dishid, userid, restaurantid, likesdish, users.username, restaurants.name as restaurantname, dishes.name as dishname from posts inner join users on users.id = userid inner join restaurants on restaurants.id = restaurantid inner join dishes on dishes.id = dishid where dishes.name LIKE '%${dishname}%' and (posts.content IS NOT NULL OR posts.image IS NOT NULL) ORDER BY posts.id DESC`;
+      const query = {
+        text: 'select content, posts.id as postid, posts.image, dishid, userid, restaurantid, likesdish, users.username, restaurants.name as restaurantname, dishes.name as dishname from posts inner join users on users.id = userid inner join restaurants on restaurants.id = restaurantid inner join dishes on dishes.id = dishid where dishes.name LIKE $1 and (posts.content IS NOT NULL OR posts.image IS NOT NULL) ORDER BY posts.id DESC',
+        values: [`%${dishname}%`],
+      };
       return db.client.query(query);
     },
     getByRestaurant: (name) => {
-      const query = `select content, posts.id as postid, image, dishid, userid, restaurantid, likesdish, users.username, restaurants.name as restaurantname, dishes.name as dishname from posts inner join users on users.id = userid inner join restaurants on restaurants.id = restaurantid inner join dishes on dishes.id = dishid where restaurants.name LIKE '%${name}%' and (posts.content IS NOT NULL OR posts.image IS NOT NULL) ORDER BY posts.id DESC`;
+      const query = {
+        text: 'select content, posts.id as postid, image, dishid, userid, restaurantid, likesdish, users.username, restaurants.name as restaurantname, dishes.name as dishname from posts inner join users on users.id = userid inner join restaurants on restaurants.id = restaurantid inner join dishes on dishes.id = dishid where restaurants.name LIKE $1 and (posts.content IS NOT NULL OR posts.image IS NOT NULL) ORDER BY posts.id DESC',
+        values: [`%${name}%`],
+      };
       return db.client.query(query);
     },
   },
-  reviews: ({ post, dish }) =>{
-    const query = `select posts.*, users.username, users.photo from posts LEFT JOIN users ON posts.userId=users.id WHERE posts.id!=${post} AND dishId=${dish}`;
-    console.log('reviews query', query);
+  reviews: ({ post, dish }) => {
+    const query = {
+      text: 'select posts.*, users.username, users.photo from posts LEFT JOIN users ON posts.userId=users.id WHERE posts.id!=$1 AND dishId=$2',
+      values: [post, dish],
+    };
     return db.client.query(query);
   },
   likes: {
     get: ({ post }) => {
-      const query = `select * from likes WHERE postId=${post}`;
+      const query = {
+        text: 'select * from likes WHERE postId=$1',
+        values: [post],
+      };
       return db.client.query(query);
     },
     post: ({ user, post, likes }) => {
       let query;
       if (likes) {
-        query = `insert into likes (userId, postId) values (${user}, ${post}) RETURNING ID`;
+        query = {
+          text: 'insert into likes (userId, postId) values ($1, $2) RETURNING ID',
+          values: [user, post],
+        };
       } else {
-        query = `delete from likes WHERE (userId=${user} AND postId=${post})`;
+        query = {
+          text: 'delete from likes WHERE (userId=$1 AND postId=$2)',
+          values: [user, post],
+        };
       }
       return db.client.query(query);
     },
@@ -51,11 +68,18 @@ module.exports = {
   comments: {
     post: (comment) => {
       const encodedComment = comment.comment.replace("'", "''");
-      const query = `insert into comments (content, userId, postId) values ('${encodedComment}', ${comment.userId}, ${comment.postId}) RETURNING id`;
+      const { userId, postId } = comment;
+      const query = {
+        text: 'insert into comments (content, userId, postId) values ($1, $2, $3) RETURNING id',
+        values: [encodedComment, userId, postId],
+      };
       return db.client.query(query);
     },
     get: (post) => {
-      const query = `select comments.*, users.username from comments left join users on comments.userId=users.id WHERE postId = ${post}`;
+      const query = {
+        text: 'select comments.*, users.username from comments left join users on comments.userId=users.id WHERE postId = $1',
+        values: [post],
+      };
       return db.client.query(query);
     },
   },
@@ -97,13 +121,21 @@ module.exports = {
         .catch(err => console.log (err));
     },
     menu: (data) => {
-      const query = `insert into menus (dishId, restaurantId) values ('${data.dishId}', '${data.restaurantId}') ON CONFLICT DO NOTHING`;
-      console.log('menu query', query);
-
+      const { dishId, restaurantId } = data;
+      const query = {
+        text: 'insert into menus (dishId, restaurantId) values ($1, $2) ON CONFLICT DO NOTHING',
+        values: [dishId, restaurantId],
+      };
       return db.client.query(query);
     },
     post: (data) => {
-      const { likesdish, userid, dishid, restaurantid, image, recipe } = data;
+      const {
+        likesdish,
+        userid, dishid,
+        restaurantid,
+        image,
+        recipe,
+      } = data;
       const content = data.content.replace("'", "''");
       const query = {
         text: 'insert into posts (content, likesDish, userId, dishId, restaurantId, image, recipe) values ($1, $2, $3, $4, $5, $6, $7)',

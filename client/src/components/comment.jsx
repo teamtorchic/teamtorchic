@@ -36,8 +36,14 @@ class Comment extends React.Component {
     });
   }
 
-  handleChange(event) {
-    this.setState({ comment: event.target.value });
+  getReviews() {
+    $.get({
+      url: '/reviews',
+      data: { post: this.props.post, dish: this.props.dishid },
+      contentType: 'application/json',
+    }).done((data) => {
+      this.setState({ reviews: data });
+    });
   }
 
   handleLike() {
@@ -61,18 +67,9 @@ class Comment extends React.Component {
     this.setState({ userLikes: !this.state.userLikes });
   }
 
-  getReviews() {
-    $.get({
-      url: '/reviews',
-      data: { post: this.props.post, dish: this.props.dishId },
-      contentType: 'application/json',
-    }).done((data) => {
-      console.log('reviews', data);
-
-      this.setState({ reviews: data });
-    });
+  handleChange(event) {
+    this.setState({ comment: event.target.value });
   }
-
   showReviews() {
     this.setState({ displayReviews: true });
   }
@@ -106,8 +103,13 @@ class Comment extends React.Component {
 
   render() {
     const comments = this.state.comments.map(comment => (
-
-      <li className="comment" key={comment.id}><span>@{comment.username}:</span> {comment.content}</li>));
+      <li
+        className="comment"
+        key={comment.id}
+      >
+        <span>@{comment.username}:</span>
+        {comment.content}
+      </li>));
     const reviews = this.state.reviews.map(review => (
       <li className="review" key={review.id}>@{review.username}: {review.content}</li>));
     const {

@@ -1,10 +1,13 @@
 const models = require('../models');
 const { sortByRating, countLikes } = require('../utils');
+
 module.exports = {
   reviews: (req, res) => {
     const data = req.query;
     console.log('date:', data);
-    models.reviews(data).then(results => res.json(results.rows));
+    models.reviews(data)
+      .then(results => res.json(results.rows))
+      .catch(err => res.status(404).send(err));
   },
   likes: {
     get: (req, res) => {
@@ -168,6 +171,7 @@ module.exports = {
             res.body.data[i].downvoteUsers = postData.downvoteUsers;
             res.body.data[i].votes = postData.votes;
           });
+          res.body.data = sortByRating(res.body.data);
           res.json(res.body.data);
         })
         .catch((err) => {
