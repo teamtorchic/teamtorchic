@@ -60,27 +60,56 @@ module.exports = {
     },
   },
   submit: {
-    recipe: (data) => {
-       let likesDish;
-       if (typeof data.likes === 'object') {
-         likesDish = null;
-       } else if (data.likes) {
-         likesDish = 1;
-       } else {
-         likesDish = 0;
-       }
+    // recipe: (data) => {
+    //   let likesDish;
+    //   if (typeof data.likes === 'object') {
+    //     likesDish = null;
+    //   } else if (data.likes) {
+    //     likesDish = 1;
+    //   } else {
+    //     likesDish = 0;
+    //   }
 
-       const encodedCommentary = data.commentary.replace("'", "''");
-       const query = `insert into posts (content, likesDish, userId, recipe, image) values ('${encodedCommentary}', ${likesDish}, 2, '${data.recipe}', '${data.image}')`;
-      console.log('recipe', query);
-       return db.client.query(query);
+    //   const encodedCommentary = data.commentary.replace("'", "''");
+    //   const query = `insert into posts (content, likesDish, userId, recipe, image) values ('${encodedCommentary}', ${likesDish}, 2, '${data.recipe}', '${data.image}')`;
+    //   console.log(query);
+    //   return db.client.query(query);
+    // },
+    dish: (dish) => {
+      const findDish = {
+        text: 'select id from dishes where name = $1',
+        values: [dish],
+      };
+      const createDish = {
+        text: 'insert into dishes (name) values ($1) RETURNING id',
+        values: [dish],
+      };
+      return db.client.query(findDish)
+        .then((results) => {
+          if (results.rowCount) {
+            return results;
+          }
+          return db.client.query(createDish);
+        })
+        .catch(err => console.log (err));
     },
-    dish: ({ dish }) => db.client.query(`insert into dishes (name) values ('${dish}') ON CONFLICT (name) DO UPDATE SET name='${dish}' RETURNING id`),
-    restaurant: ({ restaurant }) => {
-      const query = `insert into restaurants (name) values ('${restaurant}') ON CONFLICT (name) DO UPDATE SET name='${restaurant}' RETURNING id`;
-      console.log('restaurant query', query);
-
-      return db.client.query(query);
+    restaurant: (restaurant) => {
+      const findRestaurant = {
+        text: 'select id from restaurants where name = $1',
+        values: [restaurant],
+      };
+      const createRestaurant = {
+        text: 'insert into restaurants (name) values ($1) RETURNING id',
+        values: [restaurant],
+      };
+      return db.client.query(findRestaurant)
+        .then((results) => {
+          if (results.rowCount) {
+            return results;
+          }
+          return db.client.query(createRestaurant);
+        })
+        .catch(err => console.log (err));
     },
     menu: (data) => {
       const query = `insert into menus (dishId, restaurantId) values ('${data.dishId}', '${data.restaurantId}') ON CONFLICT DO NOTHING`;
@@ -89,21 +118,21 @@ module.exports = {
       return db.client.query(query);
     },
     post: (data) => {
-      let likesDish;
-      if (typeof data.likes === 'object') {
-        likesDish = null;
-      } else if (data.likes) {
-        likesDish = 1;
-      } else {
-        likesDish = 0;
-      }
+      const { content, likesdish, userid, dishid, restaurantid, image, recipe } = data;
+      // let likesDish;
+      // if (typeof data.likes === 'object') {
+      //   likesDish = null;
+      // } else if (data.likes) {
+      //   likesDish = 1;
+      // } else {
+      //   likesDish = 0;
+      // }
 
-      if (data.restaurantId === undefined) {
-        data.restaurantId = null;
-      }
-
-      const encodedCommentary = data.commentary.replace("'", "''");
-      const query = `insert into posts (content, likesDish, userId, dishId, restaurantId, image) values ('${encodedCommentary}', ${likesDish}, 2, ${data.dishId}, ${data.restaurantId}, '${data.image}') RETURNING ID`;
+      // const encodedCommentary = data.commentary.replace("'", "''");
+      const query = {
+        text: 'insert into posts (content, likesDish, userId, dishId, restaurantId, image, recipe) values ($1, $2, $3, $4, $5, $6, $7)',
+        values: [content, likesdish, userid, dishid, restaurantid, image, recipe],
+      };
       return db.client.query(query);
     },
   },
