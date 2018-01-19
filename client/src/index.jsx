@@ -18,6 +18,7 @@ class App extends React.Component {
     this.changeView = this.changeView.bind(this);
     this.fetchData = this.fetchData.bind(this);
     this.handleSearch = this.handleSearch.bind(this);
+    this.handlePostSubmit = this.handlePostSubmit.bind(this);
   }
 
   componentDidMount() {
@@ -35,9 +36,9 @@ class App extends React.Component {
           });
           $.get({
             url: '/posts',
-            success: (data) => {
+            success: (result) => {
               this.setState({
-                posts: data,
+                posts: result,
               });
             },
             err: (err) => {
@@ -47,9 +48,9 @@ class App extends React.Component {
         } else {
           $.get({
             url: '/home',
-            success: (data) => {
+            success: (result) => {
               this.setState({
-                posts: data,
+                posts: result,
               });
             },
           });
@@ -61,6 +62,10 @@ class App extends React.Component {
     });
   }
 
+  handlePostSubmit() {
+    this.fetchData();
+  }
+
   handleLogin(user) {
     this.setState({ user });
   }
@@ -68,7 +73,7 @@ class App extends React.Component {
   handleLogout() {
     $.get({
       url: '/logout',
-      success: (data) => {
+      success: () => {
         this.setState({
           user: null,
           id: null,
@@ -97,7 +102,6 @@ class App extends React.Component {
       $.get({
         url: `/search/${searchTerm}/${value}`,
         success: (data) => {
-          console.log(data);
           this.setState({
             posts: data,
           });
@@ -124,7 +128,12 @@ class App extends React.Component {
           />
           { this.state.user && <button onClick={this.handleLogout}> Logout</button> }
         </div>
-        {this.state.user && <Submit user={this.state.user} id={this.state.id} />}
+        {this.state.user &&
+        <Submit
+          user={this.state.user}
+          id={this.state.id}
+          handlePostSubmit={this.handlePostSubmit}
+        />}
         <Posts
           user={this.state.user}
           changeView={this.changeView}

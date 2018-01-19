@@ -11,16 +11,13 @@ class Submit extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      id: props.id,
-      user: props.user,
-      likes: false,
-      dislikes: false,
+      likesdish: null,
       image: null,
       dish: '',
       restaurant: '',
-      commentary: '',
-      suggestedRestaurants: null,
-      suggestedDishes: null,
+      content: '',
+      restaurants: null,
+      dishes: null,
       isRecipe: false,
     };
     this.handleChange = this.handleChange.bind(this);
@@ -105,20 +102,16 @@ class Submit extends React.Component {
 
   handleSubmit() {
     const postData = new FormData();
-
-    postData.append('commentary', this.state.commentary);
-    postData.append('content', this.state.commentary);
-    postData.append('likes', this.state.likes);
-    postData.append('dislikes', this.state.dislikes);
-    postData.append('dish', this.state.dish);
-
-    if (this.state.likes) {
-      postData.append('likes', 1);
-    } else if (this.state.dislikes) {
-      postData.append('likes', 0);
+    if (this.state.likesdish === true) {
+      postData.append('likesdish', 1);
+    } else if (this.state.likesdish === false) {
+      postData.append('likesdish', 0);
     } else {
-      postData.append('likes', null);
+      postData.append('likesdish', this.state.likesdish);
     }
+    postData.append('content', this.state.content);
+    postData.append('dish', this.state.dish);
+    postData.append('userid', this.props.id);
 
     if (this.state.isRecipe) {
       postData.append('recipe', this.state.restaurant);
@@ -137,26 +130,30 @@ class Submit extends React.Component {
       data: postData,
       processData: false,
       contentType: false,
-    }).done(() => {
-      this.setState({
-        commentary: '',
-        restaurant: '',
-        dish: '',
-        photoURL: undefined,
-        likes: false,
-        dislikes: false,
-      });
+      success: () => {
+        this.props.handlePostSubmit();
+        this.setState({
+          content: '',
+          restaurant: '',
+          dish: '',
+          photoURL: undefined,
+          likesdish: null,
+        });
+      },
+      error: (err) => {
+        console.log (err);
+      },
     });
   }
   handleClick(event) {
-    if (event.currentTarget.name === 'like' && this.state.likes === false) {
-      this.setState({ likes: true, dislikes: false });
-    } else if (event.currentTarget.name === 'like' && this.state.likes === true) {
-      this.setState({ likes: false });
-    } else if (event.currentTarget.name === 'dislike' && this.state.dislikes === false) {
-      this.setState({ likes: false, dislikes: true });
+    if (event.currentTarget.name === 'like' && (this.state.likesdish === null || this.state.likesdish === false)) {
+      this.setState({ likesdish: true });
+    } else if (event.currentTarget.name === 'like' && this.state.likesdish === true) {
+      this.setState({ likesdish: null });
+    } else if (event.currentTarget.name === 'dislike' && (this.state.likesdish === null || this.state.likesdish === true)) {
+      this.setState({ likesdish: false });
     } else {
-      this.setState({ dislikes: false });
+      this.setState({ likesdish: null });
     }
   }
   handleToggle() {
@@ -262,9 +259,9 @@ class Submit extends React.Component {
                 </div>
                 <div className="col">
                   <textarea
-                    id="commentary"
+                    id="content"
                     className="form-control"
-                    value={this.state.commentary}
+                    value={this.state.content}
                     onChange={this.handleChange}
                     placeholder="...delicious?"
                   />
@@ -275,7 +272,7 @@ class Submit extends React.Component {
                   <div className="btn-group">
                     <button
                       type="button"
-                      className={`like-btn btn btn-default ${this.state.likes}`}
+                      className={`like-btn btn btn-default ${this.state.likesdish}`}
                       aria-label="Left Align"
                       name="like"
                       onClick={this.handleClick}
@@ -285,7 +282,7 @@ class Submit extends React.Component {
                     <button
                       type="button"
                       name="dislike"
-                      className={`like-btn btn btn-default ${this.state.dislikes}`}
+                      className={`like-btn btn btn-default ${this.state.likesdish === false}`}
                       aria-label="Center Align"
                       onClick={this.handleClick}
                     >
