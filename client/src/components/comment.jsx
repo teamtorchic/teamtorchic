@@ -18,7 +18,6 @@ class Comment extends React.Component {
     this.getReviews = this.getReviews.bind(this);
     this.showReviews = this.showReviews.bind(this);
     this.hideReviews = this.hideReviews.bind(this);
-
     this.getReviews();
 
     $.get({
@@ -107,11 +106,10 @@ class Comment extends React.Component {
 
   render() {
     const comments = this.state.comments.map(comment => (
+
       <li className="comment" key={comment.id}><span>@{comment.username}:</span> {comment.content}</li>));
     const reviews = this.state.reviews.map(review => (
       <li className="review" key={review.id}>@{review.username}: {review.content}</li>));
-
-      <li className="comment" key={comment.id}>@{comment.username}: {comment.content}</li>));
     const {
       currentUser,
       restaurantid,
@@ -128,13 +126,13 @@ class Comment extends React.Component {
         <div className="row">
           <div className="col-6">
             <div className="btn-group">
-                <button
-                  onClick={this.handleLike}
-                  className="btn btn-outline-secondary likes-button"
-                  type="button"
-                >
-                  <i className={`material-icons ${this.state.userLikes}`}>favorite_border</i>&nbsp;{this.state.likes}
-                </button>
+              <button
+                onClick={this.handleLike}
+                className="btn btn-outline-secondary likes-button"
+                type="button"
+              >
+                <i className={`material-icons ${this.state.userLikes}`}>favorite_border</i>&nbsp;{this.state.likes}
+              </button>
               <button className="btn btn-outline-secondary" type="button">
                 <i
                   onClick={() => handleClick({ restaurantid, dishid, likesdish }, 1)}
@@ -192,7 +190,7 @@ class Comment extends React.Component {
           onChange={this.handleChange}
           onKeyPress={this.handleEnter}
         />
-    </div>);
+      </div>);
   }
 }
 
