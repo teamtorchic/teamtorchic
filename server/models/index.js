@@ -60,21 +60,6 @@ module.exports = {
     },
   },
   submit: {
-    // recipe: (data) => {
-    //   let likesDish;
-    //   if (typeof data.likes === 'object') {
-    //     likesDish = null;
-    //   } else if (data.likes) {
-    //     likesDish = 1;
-    //   } else {
-    //     likesDish = 0;
-    //   }
-
-    //   const encodedCommentary = data.commentary.replace("'", "''");
-    //   const query = `insert into posts (content, likesDish, userId, recipe, image) values ('${encodedCommentary}', ${likesDish}, 2, '${data.recipe}', '${data.image}')`;
-    //   console.log(query);
-    //   return db.client.query(query);
-    // },
     dish: (dish) => {
       const findDish = {
         text: 'select id from dishes where name = $1',
@@ -118,17 +103,8 @@ module.exports = {
       return db.client.query(query);
     },
     post: (data) => {
-      const { content, likesdish, userid, dishid, restaurantid, image, recipe } = data;
-      // let likesDish;
-      // if (typeof data.likes === 'object') {
-      //   likesDish = null;
-      // } else if (data.likes) {
-      //   likesDish = 1;
-      // } else {
-      //   likesDish = 0;
-      // }
-
-      // const encodedCommentary = data.commentary.replace("'", "''");
+      const { likesdish, userid, dishid, restaurantid, image, recipe } = data;
+      const content = data.content.replace("'", "''");
       const query = {
         text: 'insert into posts (content, likesDish, userId, dishId, restaurantId, image, recipe) values ($1, $2, $3, $4, $5, $6, $7)',
         values: [content, likesdish, userid, dishid, restaurantid, image, recipe],
