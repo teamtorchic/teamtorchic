@@ -141,6 +141,7 @@ class Comment extends React.Component {
             {(this.state.comments.length > 0) &&
               <button
                 type="button"
+                onClick={this.hideReviews}
                 className="btn btn-outline-secondary"
                 title={`${this.state.comments.length} comments`}
               >
