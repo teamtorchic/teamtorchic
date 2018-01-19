@@ -1,0 +1,6 @@
+{
+  "name": "eatChic",
+  "jest": {
+    "verbose": true
+  }
+}
