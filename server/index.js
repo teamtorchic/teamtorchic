@@ -8,6 +8,7 @@ const cookieParser = require('cookie-parser');
 const router = require('./routes.js');
 const { localLogIn, googleLogIn } = require('./middleware');
 const models = require('./models');
+const CryptoJS = require('crypto-js');
 
 const PORT = process.env.PORT || 3000;
 
@@ -69,10 +70,11 @@ app.get('/session', (req, res) => {
 
 app.post('/signup', (req, res) => {
   const { username, password } = req.body;
+  const hash = CryptoJS.AES.encrypt(password, 'eatchic');
   models.users.findByUsername(username)
     .then((results) => {
       if (results.rowCount === 0) {
-        models.users.create(username, password)
+        models.users.create(username, hash)
           .then(() => {
             req.session.regenerate(() => {
               req.session.user = username;
