@@ -6,7 +6,7 @@ module.exports = {
   post: {
     getAll: () => {
       const getAllPost = {
-        text: 'select content, recipe, posts.id as postid, image, dishid, userid, restaurantid, likesdish, users.username, restaurants.name as restaurantname, dishes.name as dishname from posts inner join users on users.id = userid inner join restaurants on restaurants.id = restaurantid inner join dishes on dishes.id = dishid where (posts.image IS NOT NULL) ORDER BY posts.id DESC',
+        text: 'select content, recipe, posts.id as postid, image, dishid, userid, restaurantid, likesdish, users.username, restaurants.name as restaurantname, dishes.name as dishname from posts inner join users on users.id = userid inner join restaurants on restaurants.id = restaurantid inner join dishes on dishes.id = dishid where (posts.content IS NOT NULL) ORDER BY posts.id DESC',
       };
       return db.client.query(getAllPost);
     },

@@ -18,7 +18,8 @@ module.exports = {
         query: {
           presets: ['react', 'es2015'],
         },
-      }],
+      },
+    ],
   },
   resolve: {
     extensions: ['.jsx', '.js', '.css'],
