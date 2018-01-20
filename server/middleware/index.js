@@ -1,12 +1,12 @@
 const GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
 const LocalStrategy = require('passport-local').Strategy;
 const models = require('../models');
-const CryptoJS = require('crypto-js');
+// const CryptoJS = require('crypto-js');
 
 module.exports = {
   localLogIn: () => new LocalStrategy((username, password, done) => {
-    const hash = CryptoJS.AES.encrypt(password, 'eatchic');
-    models.users.checkUserCredential(username, hash)
+    // const hash = CryptoJS.AES.encrypt(password, 'eatchic');
+    models.users.checkUserCredential(username, password)
       .then((results) => {
         if (results.rowCount === 1) {
           const { username } = results.rows[0];
