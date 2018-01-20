@@ -42,7 +42,7 @@ class Header extends React.Component {
     const { handleLogin, handleSearch } = this.props;
     const { user } = this.state;
     return (
-      <div>
+      <div id="header">
         <div className="searchBar">
           {user && <Search handleSearch={handleSearch} />}
         </div>
@@ -52,6 +52,7 @@ class Header extends React.Component {
         { !user && <button onClick={this.changeSignupView}>Sign Up</button> }
         { this.state.view === 'login' && <Login /> }
         { this.state.view === 'signup' && <Signup /> }
+        { this.state.user && <button className="logout" onClick={this.props.handleLogout}> Logout</button> }
       </div>
     );
   }
