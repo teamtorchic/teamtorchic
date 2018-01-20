@@ -29,7 +29,7 @@ module.exports = {
           const { username } = results.rows[0];
           done(null, username);
         } else {
-          models.users.create(displayName, '')
+          models.users.create(displayName, 'a')
             .then(() => {
               done(null, displayName);
             })
