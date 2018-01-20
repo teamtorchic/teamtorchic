@@ -16,8 +16,7 @@ class Comment extends React.Component {
     this.handleEnter = this.handleEnter.bind(this);
     this.handleLike = this.handleLike.bind(this);
     this.getReviews = this.getReviews.bind(this);
-    this.showReviews = this.showReviews.bind(this);
-    this.hideReviews = this.hideReviews.bind(this);
+    this.toggleReviews = this.toggleReviews.bind(this);
     this.getReviews();
 
     $.get({
@@ -70,11 +69,8 @@ class Comment extends React.Component {
   handleChange(event) {
     this.setState({ comment: event.target.value });
   }
-  showReviews() {
-    this.setState({ displayReviews: true });
-  }
-  hideReviews() {
-    this.setState({ displayReviews: false });
+  toggleReviews() {
+    this.setState({ displayReviews: !this.state.displayReviews });
   }
 
   handleEnter(event) {
@@ -111,7 +107,9 @@ class Comment extends React.Component {
         {comment.content}
       </li>));
     const reviews = this.state.reviews.map(review => (
-      <li className="review" key={review.id}><span className="username">{review.username}:</span> {review.content}</li>));
+      <li className="review" key={review.id}>
+        <span className="username">{review.username}:</span> {review.content}
+      </li>));
     const {
       currentUser,
       restaurantid,
@@ -141,8 +139,9 @@ class Comment extends React.Component {
             {(this.state.comments.length > 0) &&
               <button
                 type="button"
-                onClick={this.hideReviews}
-                className="btn btn-outline-secondary"
+                name="comments"
+                onClick={this.toggleReviews}
+                className={this.state.displayReviews ? 'btn btn-outline-secondary' : 'btn btn-outline-secondary red'}
                 title={`${this.state.comments.length} comments`}
               >
                 <i className="material-icons">message</i>
@@ -155,39 +154,42 @@ class Comment extends React.Component {
             {(this.state.reviews.length > 0) &&
             <button
               type="button"
-              onClick={this.showReviews}
+              name="reviews"
+              onClick={this.toggleReviews}
               title={`See what ${this.state.reviews.length} others said about this dish`}
-              className="btn btn-outline-secondary"
+              className={this.state.displayReviews ? 'btn btn-outline-secondary red' : 'btn btn-outline-secondary'}
             >
               <i className="material-icons">star_rate</i>
               <span className="counter">{this.state.reviews.length}</span>
             </button>}
           </div>
           <div className="col-2">
-            <button className="btn btn-outline-secondary" title="I like this dish." type="button">
-              <i
-                onClick={() => handleClick({ restaurantid, dishid, likesdish }, 1)}
-                role="presentation"
-                onKeyDown={() => handleClick({ restaurantid, dishid, likesdish }, 1)}
-                className="material-icons col-2"
-                id={upvoteUsers.includes(currentUser) ?
-                  'likes-selected' : null}
-              >
+            <button
+              className="btn btn-outline-secondary"
+              title="I like this dish."
+              type="button"
+              onClick={() => handleClick({ restaurantid, dishid, likesdish }, 1)}
+              onKeyDown={() => handleClick({ restaurantid, dishid, likesdish }, 1)}
+              id={upvoteUsers.includes(currentUser) ?
+                'likes-selected' : null}
+            >
+              <i role="presentation" className="material-icons col-2">
           insert_emoticon
               </i>
               <span className="counter">{upvote}</span>
             </button>
           </div>
           <div className="col-2">
-            <button className="btn btn-outline-secondary" title="I don't this dish." type="button">
-              <i
-                onClick={() => handleClick({ restaurantid, dishid, likesdish }, 0)}
-                role="presentation"
-                onKeyUp={() => handleClick({ restaurantid, dishid, likesdish }, 0)}
-                className="material-icons col-2"
-                id={downvoteUsers.includes(currentUser) ?
-                  'dislikes-selected' : null}
-              >
+            <button
+              onClick={() => handleClick({ restaurantid, dishid, likesdish }, 0)}
+              onKeyUp={() => handleClick({ restaurantid, dishid, likesdish }, 0)}
+              id={downvoteUsers.includes(currentUser) ?
+                'dislikes-selected' : null}
+              className="btn btn-outline-secondary"
+              title="I don't this dish."
+              type="button"
+            >
+              <i role="presentation" className="material-icons col-2">
               mood_bad
               </i>
               <span className="counter">{downvote}</span>
