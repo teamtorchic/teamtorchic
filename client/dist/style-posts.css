@@ -13,9 +13,15 @@
 .post-ele {
   align-content: center;
   padding: 10px;
-  width: 50%;
   margin: auto;
 }
+
+@media(min-width: 1000px){
+  .post-ele {
+    width: 50%;
+  }  
+}
+
 
 .content-ele {
   margin-left: 0.3cm;
