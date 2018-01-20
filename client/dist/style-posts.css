@@ -4,6 +4,7 @@
   margin-right: auto;
   width: 80%;
   height: 80%;
+  border-bottom: solid gray;
 }
 
 .image {
@@ -14,5 +15,20 @@
   padding: 10px;
   width: 50%;
   margin: auto;
-  border-style: solid;
+}
+
+.content-ele {
+  margin-left: 0.3cm;
+}
+
+#dislikes-selected {
+  color: red;
+}
+
+#likes-selected {
+  color: red;
+}
+
+i:hover {
+  color: red;
 }

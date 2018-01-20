@@ -2,87 +2,80 @@ import React from 'react';
 import $ from 'jquery';
 
 import Post from './post';
-import fakePostsData from './fakePostsData';
 
 class Posts extends React.Component {
   constructor(props) {
     super(props);
-
     this.state = {
-      posts: fakePostsData,
-      dishLikes: 'dishLikes',
-      voteCountUp: { upvote: 1 },
-      voteCountDown: { downvote: 2 },
+      user: this.props.user,
+      posts: this.props.posts,
+      id: this.props.id,
     };
-    this.addVote = this.addVote.bind(this);
-    this.subtractVote = this.addVote.bind(this);
-    this.dishGetUpVotes = this.dishPostUpVotes.bind(this);
-    this.dishGetDownVotes = this.dishPostDownVotes.bind(this);
-    this.dishGetPosts = this.dishGetPosts.bind(this);
-    this.dishGetLikes = this.dishGetLikes.bind(this);
+
+    this.handleClick = this.handleClick.bind(this);
+    this.postUpvote = this.postUpvote.bind(this);
+    this.postDownvote = this.postDownvote.bind(this);
   }
 
-  addVote() {
-    this.setState({
-      voteCountUp: this.state.voteCountUp.upvote + 1,
+
+  componentWillReceiveProps(nextProps) {
+    if (this.props.posts !== nextProps.posts) {
+      this.setState({
+        posts: nextProps.posts,
+        user: nextProps.user,
+        id: nextProps.id,
+      });
+    }
+  }
+
+  postUpvote(query) {
+    $.post({
+      contentType: 'application/json',
+      url: '/votes/upvote',
+      data: JSON.stringify(query),
+      success: () => {
+        this.props.changeView();
+      },
+      error: () => { console.log('LORY IS MY BEST FRIEND'); },
     });
   }
 
-  subtractVote() {
-    this.setState({
-      voteCountDown: this.state.voteCountDown.downvote - 1,
+  postDownvote(query) {
+    $.post({
+      contentType: 'application/json',
+      url: '/votes/downvote',
+      data: JSON.stringify(query),
+      success: () => {
+        this.props.changeView();
+      },
+      error: () => { console.log('LORY IS MY BEST FRIEND'); },
     });
   }
 
-  dishPostUpVotes() {
-    this.d = 'a';
-    // $.ajax({
-    //   method: 'POST',
-    //   url: 'http://localhost:3000/votes/downvote',
-    //   dataType: 'json',
-    //   success: (data) => { this.setState(this.state.voteCountUp = data.upvote); },
-    // });
+  handleClick(query, vote) {
+    if (vote) {
+      query.likesdish = 1;
+      query.userid = this.state.id;
+      this.postUpvote(query);
+    } else {
+      query.likesdish = 0;
+      query.userid = this.state.id;
+      this.postDownvote(query);
+    }
   }
 
-  dishPostDownVotes() {
-    this.c = 'a';
-    // $.ajax({
-    //   method: 'POST',
-    //   url: 'http://localhost:3000/votes/upvote',
-    //   dataType: 'json',
-    //   success: (data) => { this.setState(this.state.voteCount = data.downvote); },
-    // });
-  }
-
-  dishGetPosts() {
-    this.b = 'a';
-    // $.ajax({
-    //   method: 'GET',
-    //   url: 'http://localhost:3000/post',
-    //   dataType: 'json',
-    //   success: (data) => { this.setState(this.state = data); },
-    // });
-  }
-
-  dishGetLikes() {
-    this.state.dishLikes = 'a';
-    // $.ajax({
-    //   method: 'GET',
-    //   url: 'http://localhost:3000/post/votes/:dishId',
-    //   dataType: 'json',
-    //   success: (data) => { this.setState(this.state.dishLikes = data.dishid); },
-    // });
-  }
 
   render() {
-    console.log(this.state);
     return (
       <div>
-        { this.state.posts.post.map(item =>
+        { this.state.posts.map(post =>
           (<Post
-            postData={item}
-            votesPos={this.state.voteCountUp}
-            votesNeg={this.state.voteCountDown}
+            key={post.postid}
+            user={this.state.user}
+            post={post}
+            handleClick={this.handleClick}
+            id={this.state.id}
+            currentUser={this.props.currentUser}
           />))}
       </div>
     );

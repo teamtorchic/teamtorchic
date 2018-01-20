@@ -46,10 +46,16 @@ body {
   vertical-align: middle;
   margin-left: 4px;
 }
+#header button.logout {
+  margin-left: 30px;
+}
 .searchBar {
   block: display;
   float: left;
   height: 80%;
+}
+.logout {
+  margin-left: 20px;
 }
 #title {
   position: absolute;
@@ -164,78 +170,125 @@ body {
 #submit textarea {
   margin-bottom: 13px;
 }
-b {
+.ele {
+  border: none;
+}
+.ele b {
   color: #ec407a;
+  font-weight: 600;
 }
-.likes-button .true {
-  color: #f00;
+.ele .content-ele {
+  padding-left: 60px;
+  border-left: 8px solid #eee;
+  margin: 1em 0 1.25em;
+  font-style: italic;
 }
-.likesComments {
-  border-radius: 0;
+.ele .content-ele::before {
+  content: '“';
+  color: #aaa;
+  letter-spacing: 2px;
+  padding-right: 1px;
 }
-.btn-outline-secondary {
-  border-color: #fff;
-}
-.voteButtons .btn {
-  border-width: 1px 0;
-}
-.input-group-prepend .btn {
-  border-radius: 0;
-}
-.comments .form-control {
-  border-color: #fff;
-}
-.btn-outline-secondary.focus,
-.btn-outline-secondary:focus {
-  box-shadow: none;
-}
-.likes-button {
-  border-radius: 0 0 0 0.25rem;
-  border-right-width: 0;
-}
-.btn-outline-secondary:hover {
-  background-color: #f2f2f2 !important;
-  color: #f00;
+.ele .content-ele::after {
+  content: "”";
+  color: #aaa;
+  letter-spacing: 2px;
+  padding-left: 1px;
 }
 div.post-ele {
   margin-bottom: 75px;
   padding: 0;
-}
-.ele {
-  border: none;
-}
-.content-ele {
-  font-style: italic;
-  margin: 0.75em 0;
-}
-.content-ele ::before {
-  content: '&ldquo;';
-}
-.content-ele ::after {
-  content: '&rdquo;';
-}
-.image > p {
-  display: none !important;
-}
-.votes {
-  display: none;
 }
 .comments {
   width: 100%;
   padding: 0;
   margin: 0;
 }
-.comments textarea {
-  margin-top: 1em;
+.comments .red {
+  color: #f00;
+}
+.comments .comment,
+.comments .review {
+  margin-bottom: 0.5em;
+  list-style-type: none;
+}
+.comments .comment span,
+.comments .review span {
+  color: #ec407a;
+  padding-right: 20px;
+}
+.comments .username {
+  font-weight: 600;
+}
+.comments .material-icons {
+  width: 30px;
+  min-width: 40px;
+  max-width: 100%;
+}
+.comments .col-2 {
+  padding: 0;
+  text-align: right;
+}
+.comments .col-2:first-child,
+.comments .col-2:nth-child(2) {
+  text-align: left;
+}
+.comments .btn {
+  padding: 0;
+  max-width: 100%;
+}
+.comments .counter {
+  position: relative;
+  top: -6px;
+}
+.comments .btn-outline-secondary:hover {
+  border-color: #fff;
+  background-color: #fff;
+}
+.comments b {
+  color: #ec407a;
+}
+.comments .likes-button .true {
+  color: #f00;
+}
+.comments .likesComments {
+  border-radius: 0;
+}
+.comments .btn-outline-secondary {
+  border-color: #fff;
+}
+.comments .voteButtons .btn {
+  border-width: 1px 0;
+}
+.comments .input-group-prepend .btn {
+  border-radius: 0;
+}
+.comments .form-control {
+  border-color: #fff;
+}
+.comments .btn-outline-secondary.focus,
+.comments .btn-outline-secondary:focus {
+  box-shadow: none;
+}
+.comments .btn-outline-secondary:hover {
+  color: #f00;
+}
+.comments .image > p {
+  display: none !important;
+}
+.comments .votes {
+  display: none;
 }
 .comments .col {
   padding: 0;
 }
 .comments .row {
-  margin: 0 !important;
+  margin: 24px 0 !important;
 }
-.comments textarea {
+.comments textarea.form-control {
   width: 100%;
+  border: 1px solid rgba(0,0,0,0.15) !important;
+  margin-top: 2.5em;
 }
 .comments ul {
   margin: 0;
