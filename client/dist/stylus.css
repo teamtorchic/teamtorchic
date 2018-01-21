@@ -31,6 +31,8 @@ body {
   font-weight: 300;
   letter-spacing: 4px;
 }
+#login,
+#signup,
 #header button {
   color: #fff;
   background-color: #d9534f;
@@ -49,10 +51,31 @@ body {
 #header button.logout {
   margin-left: 30px;
 }
+#username,
+#password {
+  margin-left: 8px;
+  margin-bottom: 10px;
+  height: 40px;
+  border: 1px solid rgba(0,0,0,0.15);
+  border-radius: 0.25em;
+}
 .searchBar {
   block: display;
   float: left;
   height: 80%;
+}
+#searchValue {
+  margin-left: 8px;
+  height: 40%;
+  border: 1px solid rgba(0,0,0,0.15);
+  border-radius: 0.25em;
+}
+#searchTerm {
+  font-weight: 400;
+  margin-left: 8px;
+  height: 40%;
+  border: 1px solid rgba(0,0,0,0.15);
+  border-radius: 0.25em;
 }
 .logout {
   margin-left: 20px;

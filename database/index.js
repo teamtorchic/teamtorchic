@@ -1,6 +1,6 @@
-const { Pool, Client } = require('pg');
+const { Client } = require('pg');
 
-// const pool = new Pool({
+// const client = new Client({
 //   user: 'eatchic',
 //   password: 'eatchic',
 //   database: 'eat_chic',

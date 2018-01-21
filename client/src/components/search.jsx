@@ -32,6 +32,7 @@ class Search extends React.Component {
     return (
       <form>
         <input
+          id="searchValue"
           name="searchValue"
           placeholder="search"
           type="text"
@@ -39,6 +40,7 @@ class Search extends React.Component {
           onChange={this.handleOnChange}
         />
         <select
+          id="searchTerm"
           name="searchTerm"
           value={this.state.searchTerm}
           onChange={this.handleOnChange}

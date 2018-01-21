@@ -4,14 +4,14 @@ const Login = () => (
   <form action="/login" method="post">
     <div>
       <label>Username:</label>
-      <input type="text" name="username" />
+      <input id="username" placeholder="username" type="text" name="username" />
     </div>
     <div>
       <label>Password:</label>
-      <input type="password" name="password" />
+      <input id="password" placeholder="password" type="password" name="password" />
     </div>
     <div>
-      <input type="submit" value="Log In" />
+      <input id="login" type="submit" value="Log In" />
     </div>
   </form>
 );
