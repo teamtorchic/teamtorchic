@@ -6,7 +6,7 @@
   text-align: right;
   letter-spacing: 1px;
   margin-bottom: 20px;
-  padding-right: 40px;
+  padding-right: 0px;
   line-height: 60px;
 
   a {color: white;padding-left: 40px;}
@@ -25,16 +25,43 @@
   white-space: nowrap;
   vertical-align: middle;
   margin-left: 4px;
+  height: 60px;
 }
 
 #header button.logout{
   margin-left: 30px;
+  display:none;
 }
+
+#header .dropdown{
+  position: relative;
+}
+
+button.logout{display: none; position: absolute}
+
+ #header .dropdown:hover button.logout{
+   display:block;
+   right: 0;
+   text-align:right;
+   padding: .75em 1.25em 1em;
+   line-height: 1;
+   margin-left: 0;
+   background: #EC407A;
+   border-radius: 0;
+   height: 60px;
+   background-color: #ec407a;
+   &:hover{background-color: #E91E63}
+
+ }
+ #welcome{padding:0 1.5em}
+ .dropdown:hover #welcome{
+   background-color: #E91E63;
+ }
 
 .searchBar {
   block: display;
   float: left;
-  height: 80%;
+  height: 60px;
 }
 
 .logout {

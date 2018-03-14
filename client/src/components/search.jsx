@@ -30,7 +30,7 @@ class Search extends React.Component {
 
   render() {
     return (
-      <form>
+      <form className="nav-item">
         <input
           name="searchValue"
           placeholder="search"

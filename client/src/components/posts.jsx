@@ -15,6 +15,8 @@ class Posts extends React.Component {
     this.handleClick = this.handleClick.bind(this);
     this.postUpvote = this.postUpvote.bind(this);
     this.postDownvote = this.postDownvote.bind(this);
+    this.deletePost = this.deletePost.bind(this);
+
   }
 
 
@@ -26,6 +28,14 @@ class Posts extends React.Component {
         id: nextProps.id,
       });
     }
+  }
+
+  deletePost(postid){
+    $.post({
+      contentType: 'application/json',
+      url: '/delete',
+      data: JSON.stringify({ post: postid }),
+    });
   }
 
   postUpvote(query) {
@@ -75,6 +85,7 @@ class Posts extends React.Component {
             post={post}
             handleClick={this.handleClick}
             id={this.state.id}
+            deletePost={this.deletePost}
             currentUser={this.props.currentUser}
           />))}
       </div>

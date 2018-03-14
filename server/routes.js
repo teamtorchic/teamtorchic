@@ -27,6 +27,7 @@ router.get('/restaurants', controller.restaurants);
 router.get('/dishes', controller.dishes);
 router.get('/likes', controller.likes.get);
 router.get('/reviews', controller.reviews);
+router.post('delete', controller.post.delete);
 router.post('/likes', isLoggedIn, controller.likes.post);
 router.get('/posts', isLoggedIn, controller.post.getAll);
 router.get('/user/:username', isLoggedIn, controller.post.getByUsername);

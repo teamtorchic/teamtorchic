@@ -198,6 +198,9 @@ ALTER TABLE menus ADD CONSTRAINT menu_unique_name UNIQUE (dish_id, restaurantcod
 -- ALTER TABLE notifications ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 -- ALTER TABLE followers ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 -- ALTER TABLE likes ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+-- ALTER TABLE restaurants ADD COLUMN thumb VARCHAR;
+-- ALTER TABLE restaurants ADD COLUMN res_id INTEGER;
+-- ALTER TABLE restaurants ADD COLUMN photo TEXT;
 
 -- ---
 -- Test Data

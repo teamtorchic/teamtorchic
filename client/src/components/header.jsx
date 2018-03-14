@@ -42,18 +42,21 @@ class Header extends React.Component {
     const { handleLogin, handleSearch } = this.props;
     const { user } = this.state;
     return (
-      <div id="header">
-        <div className="searchBar">
+      <nav id="header" className="nav justify-content-between">
+        <div className="searchBar nav-item">
           {user && <Search handleSearch={handleSearch} />}
         </div>
-        { user && <span>Welcome, {user} to </span> }<span>eatChic</span>
         { !user && <a href="/auth/google"> Log In Through Google </a> }
         { !user && <button onClick={this.changeLoginView}>Log In</button> }
         { !user && <button onClick={this.changeSignupView}>Sign Up</button> }
         { this.state.view === 'login' && <Login /> }
         { this.state.view === 'signup' && <Signup /> }
-        { this.state.user && <button className="logout" onClick={this.props.handleLogout}> Logout</button> }
-      </div>
+        { user && (
+        <div className="dropdown">
+          <div id="welcome" className="nav-item">Welcome, {user} to eatChic ▾</div>
+          <button className="logout" onClick={this.props.handleLogout}> Logout</button>
+        </div>)}
+      </nav>
     );
   }
 }

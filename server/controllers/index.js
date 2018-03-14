@@ -48,6 +48,9 @@ module.exports = {
     models.restaurants().then(results => res.json(results));
   },
   post: {
+    delete: (req, res) => {
+      models.post.delete(req).then(() => res.send("Deleted"));
+    },
     getAll: (req, res) => {
       models.post.getAll()
         .then((results) => {

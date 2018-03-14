@@ -7,6 +7,7 @@ const Post = (props) => {
     post,
     user,
     id,
+    deletePost,
   } = props;
   const {
     postid,
@@ -37,6 +38,7 @@ const Post = (props) => {
           {!(recipe && recipe.length > 0) && (restaurantname && restaurantname.length > 0) ? ' from ' : null }
           {!(recipe && recipe.length > 0) && (restaurantname && restaurantname.length > 0) ? <b>{restaurantname}</b>
  : null }
+          {userid == id && <button type="button" className="delete" onClick={() => deletePost(postid)}>X</button>}
         </p>
         <p className="content-ele">{content}</p>
         {image && <img className="image" alt="post" src={`/images/${image}`} />}
